@@ -194,7 +194,7 @@
       </script>
 
       <div style="text-align:center;">
-      <a class="description">Discover and play top online games, explore school tools, and have fun safely at WTFQ.online!</a>
+        <a class="description">Discover and play top online games, explore school tools, and have fun safely at WTFQ.online!</a>
       </div>
       
       <p style="white-space: nowrap; text-align: center; font-size: 1.2rem; margin: 4px 0 12px;">
@@ -226,47 +226,47 @@
       <p class="footer-note">Tip: you can click <code>Alt</code> on your keyboard to close the site.</p>
     </div>
   </div>
-  
-<footer style="text-align:center; margin-top: 36px; color: #94a3b8; font-size:0.85rem; line-height:1.4;">
-  <p>
-    © 2026 WTFQ.online • 
-    <a href="/about.html" style="color: #60a5fa;">About</a> • 
-    <a href="/privacy.html" style="color: #60a5fa;">Privacy</a> • 
-    Contact: 
-    <a href="/cdn-cgi/l/email-protection#e1828e8f95808295a196958790cf8e8f8d888f84" style="color: #60a5fa;"><span class="__cf_email__" data-cfemail="bdded2d3c9dcdec9fdcac9dbcc93d2d3d1d4d3d8">[email&#160;protected]</span></a> 
-    or TikTok: 
-    <a href="https://www.tiktok.com/@www.wtfq.online" target="_blank" rel="noopener noreferrer" style="color: #60a5fa;">@www.wtfq.online</a>
-  </p>
-  <p style="color: #94a3b8; font-size: 0.8rem;">
-    All links and content are safe and verified for students.
-  </p>
-</footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // ── Search ──────────────────────────────────────────────────────────────
-    const searchInput = document.getElementById('search-input');
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.toLowerCase();
-      document.querySelectorAll('#links-grid a.link').forEach(link => {
-        const text = (link.textContent + ' ' + (link.dataset.key || '')).toLowerCase();
-        link.style.display = text.includes(query) ? 'inline-block' : 'none';
-      });
-    });
+  <footer style="text-align:center; margin-top: 36px; color: #94a3b8; font-size:0.85rem; line-height:1.4;">
+    <p>
+      © 2026 WTFQ.online • 
+      <a href="/about.html" style="color: #60a5fa;">About</a> • 
+      <a href="/privacy.html" style="color: #60a5fa;">Privacy</a> • 
+      Contact: 
+      <a href="mailto:contact@wtfq.online" style="color: #60a5fa;">contact@wtfq.online</a> 
+      or TikTok: 
+      <a href="https://www.tiktok.com/@www.wtfq.online" target="_blank" rel="noopener noreferrer" style="color: #60a5fa;">@www.wtfq.online</a>
+    </p>
+    <p style="color: #94a3b8; font-size: 0.8rem;">
+      All links and content are safe and verified for students.
+    </p>
+  </footer>
 
-    // ── Build grid from games.json ──────────────────────────────────────────
-    function buildGrid(games) {
+  <script>
+    // ── Load games from games.json and render the grid ──────────────────────
+    async function loadGames() {
       const grid = document.getElementById('links-grid');
 
+      let games;
+      try {
+        const res = await fetch('games.json');
+        games = await res.json();
+      } catch (e) {
+        grid.innerHTML = '<p style="color:#f87171">Failed to load games.json</p>';
+        return;
+      }
+
       // Sort: hot first, then new, then the rest
-      const hot  = games.filter(g => g.hot);
-      const newG = games.filter(g => g.new && !g.hot);
-      const rest = games.filter(g => !g.hot && !g.new);
+      const hot  = games.filter(g => g.badge === 'hot');
+      const newG = games.filter(g => g.badge === 'new');
+      const rest = games.filter(g => !g.badge);
       const sorted = [...hot, ...newG, ...rest];
 
-      sorted.forEach(game => {
+      grid.innerHTML = '';
+      for (const game of sorted) {
         const a = document.createElement('a');
         a.className = 'link';
-        a.dataset.key = game.key || '';
+        a.dataset.key = game.key;
         a.textContent = game.label;
 
         if (game.url && game.url.trim()) {
@@ -278,17 +278,28 @@
           a.setAttribute('aria-disabled', 'true');
         }
 
-        if (game.hot) a.classList.add('hot');
-        if (game.new) a.classList.add('new');
+        if (game.badge === 'new') a.classList.add('new');
+        if (game.badge === 'hot') a.classList.add('hot');
 
         grid.appendChild(a);
-      });
+      }
     }
 
-    fetch('/games.json')
-      .then(r => r.json())
-      .then(buildGrid)
-      .catch(err => {
-        console.error('Failed to load games.json:', err);
-        document.getElementById('links-grid').innerHTML =
-          '<p style="color:#f87171;grid-column:1/-1">Could no
+    loadGames();
+
+    // ── Search ───────────────────────────────────────────────────────────────
+    document.getElementById('search-input').addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      document.querySelectorAll('#links-grid a.link').forEach(link => {
+        const text = (link.textContent + ' ' + link.dataset.key).toLowerCase();
+        link.style.display = text.includes(query) ? 'inline-block' : 'none';
+      });
+    });
+  </script>
+
+  <script src="closeTab.js"></script>
+  <script src="https://wtfq.online/bannerad.js"></script>
+  <script src="https://wtfq.online/Tokens/tokendisplay.js"></script>
+
+</body>
+</html>
