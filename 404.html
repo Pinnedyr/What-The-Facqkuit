@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - WTFQ</title>
+
+<link rel="icon" type="image/png" href="https://wtfq.online/images/Logo.png"> 
+
+<style>
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+
+  .box {
+    max-width: 600px;
+    padding: 30px;
+  }
+
+  h1 {
+    font-size: 6rem;
+    margin: 0;
+    background: linear-gradient(90deg, #38bdf8, #60a5fa);
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: glow 2s infinite alternate;
+  }
+
+  @keyframes glow {
+    from { filter: drop-shadow(0 0 10px #38bdf8); }
+    to { filter: drop-shadow(0 0 25px #60a5fa); }
+  }
+
+  h2 {
+    margin-top: 10px;
+    font-weight: normal;
+    opacity: 0.9;
+  }
+
+  p {
+    opacity: 0.7;
+    margin-bottom: 20px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    border-radius: 14px;
+    background: #1f2937;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    text-decoration: none;
+    transition: 0.15s;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    background: #111827;
+    border-color: #475569;
+  }
+
+  .primary {
+    background: #2563eb;
+    border-color: #3b82f6;
+  }
+
+  .primary:hover {
+    background: #1d4ed8;
+  }
+
+  .funny {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    min-height: 20px;
+  }
+
+  .glitch {
+    animation: glitch 1.2s infinite;
+  }
+
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1 class="glitch">404</h1>
+  <h2>What The Facqkuit…?</h2>
+
+  <p>This page doesn’t exist (or it escaped 🏃‍♂️)</p>
+
+  <div class="buttons">
+    <a href="https://www.wtfq.online/" class="btn primary">
+      ⬅ Back to WTFQ
+    </a>
+
+    <button class="btn" onclick="location.reload()">
+      🔄 Try again
+    </button>
+  </div>
+
+  <div class="funny" id="randomMsg"></div>
+</div>
+
+<script>
+  const messages = [
+    "You clicked something you weren’t supposed to 😳",
+    "This page got lost during math class 📚",
+    "Even we don’t know how you got here",
+    "Skill issue honestly 🗿",
+    "Try again… or don’t 🤷",
+    "404 = Brain not found",
+    "Bro really found the void 💀",
+    "Nothing here... like your homework folder",
+    "You unlocked a secret level (there’s nothing here)",
+    "Error 404: Page went to get milk 🥛",
+    "You went too far this time 🚫",
+    "This page rage quit",
+    "Mission failed successfully",
+    "You broke the internet (again)",
+    "This wasn’t in the lesson plan 📖",
+    "Page not found… but at least you tried",
+    "Congrats, you found absolutely nothing 🎉",
+    "This page got banned 🚫",
+    "Loading… oh wait, never mind",
+    "The page is on vacation 🏝️"
+  ];
+
+  const msg = document.getElementById("randomMsg");
+
+  function newMessage() {
+    msg.textContent = messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  newMessage();
+
+  // Change message every 4 seconds
+  setInterval(newMessage, 4000);
+</script>
+
+</body>
+</html>
