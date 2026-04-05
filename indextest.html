@@ -285,7 +285,7 @@
       });
     }
 
-    fetch('https://corsproxy.io/?url=https://wtfq.online/games.json')
+    fetch('/games.json')
       .then(r => r.json())
       .then(buildGrid)
       .catch(err => {
