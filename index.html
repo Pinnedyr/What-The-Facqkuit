@@ -114,8 +114,6 @@
       font-size: 0.9rem;
     }
 
-  
-
     h1 .w1 { animation: letterExpand 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards; }
     h1 .t1 { animation: letterExpand 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards; }
     h1 .f1 { animation: letterExpand 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.7s forwards; }
@@ -196,7 +194,7 @@
       </script>
 
       <div style="text-align:center;">
-      <a class="description">Discover and play top online games, explore school tools, and have fun safely at WTFQ.online!</a>
+        <a class="description">Discover and play top online games, explore school tools, and have fun safely at WTFQ.online!</a>
       </div>
       
       <p style="white-space: nowrap; text-align: center; font-size: 1.2rem; margin: 4px 0 12px;">
@@ -222,192 +220,86 @@
         onfocus="this.style.background='#111827'; this.style.borderColor='#475569';"
         onblur="this.style.background='#1f2937'; this.style.borderColor='#334155';"
       />
-    
-    <script>
-      const searchInput = document.getElementById('search-input');
-      searchInput.addEventListener('input', () => {
-        const query = searchInput.value.toLowerCase();
-        document.querySelectorAll('#links-grid a.link').forEach(link => {
-          const text = (link.textContent + ' ' + link.dataset.key).toLowerCase();
-          link.style.display = text.includes(query) ? 'inline-block' : 'none';
-        });
-      });
-    </script>
-      
-        <div class="grid" id="links-grid">
-      <a class="link" data-key="poke-rouge">PokeRouge</a>
-      <a class="link" data-key="thorns-and-balloons">Thorns and balloons</a>
-      <a class="link" data-key="best-brownie-recipe">Best brownie recipe</a>
-      <a class="link" data-key="sandboxels">Sandboxels</a>
-      <a class="link" data-key="kikora">Kikora</a>
-      <a class="link" data-key="poki">Poki</a>
-      <a class="link" data-key="classic-minecraft">Classic Minecraft</a>
-      <a class="link" data-key="capybara-clicker">Capybara Clicker</a>
-      <a class="link" data-key="scratch">Scratch</a>
-      <a class="link" data-key="classroom-6x-games">Classroom 6x games</a>
-      <a class="link" data-key="google-dino">Google dino</a>
-      <a class="link" data-key="big-shot-boxing">Big shot boxing</a>
-      <a class="link" data-key="quick-draw">Quick draw</a>
-      <a class="link" data-key="loneliness-game">Loneliness game</a>
-      <a class="link" data-key="granny">Granny</a>
-      <a class="link" data-key="virtual-piano">Virtual piano</a>
-      <a class="link" data-key="bitlife">Bitlife</a>
-      <a class="link" data-key="youtube-library">Youtube library</a>
-      <a class="link" data-key="skribbl-io">Skribbl.io</a>
-      <a class="link" data-key="spotify">Spotify</a>
-      <a class="link" data-key="spillespill">Spillespill</a>
-      <a class="link" data-key="finn">Finn</a>
-      <a class="link" data-key="chess">Chess</a>
-      <a class="link" data-key="make-it-meme">Make it meme</a>
-      <a class="link" data-key="ai-generator">Ai generator</a>
-      <a class="link" data-key="google-doodle">Google Doodle</a>
-      <a class="link" data-key="uno">UNO</a>
-      <a class="link" data-key="agar-io">Agar.io</a>
-      <a class="link" data-key="neal-fun">Neal fun</a>
-      <a class="link" data-key="planet-clicker-2">Planet clicker 2</a>
-      <a class="link" data-key="italian-brainrot-clicker-2">Italian brainrot clicker 2</a>
-      <a class="link" data-key="clash-royale-online">Clash royale online</a>
-      <a class="link" data-key="tung-tung-sahur-clicker">Tung Tung Sahur Clicker</a>
-      <a class="link" data-key="youtube">Youtube</a>
-      <a class="link" data-key="chatgpt">ChatGPT</a>
-      <a class="link" data-key="soundboard">Soundboard</a>
-      <a class="link" data-key="battleship">Battleship</a>
-      <a class="link" data-key="wings-io">Wings.io</a>
-      <a class="link" data-key="territorial">Territorial</a>
-      <a class="link" data-key="happy-glass">Happy glass</a>
-      <a class="link" data-key="omegle">Omegle</a>
-      <a class="link" data-key="games">Games</a>
-      <a class="link" data-key="fnaf">FNAF</a>
-      <a class="link" data-key="geoguesser">Geoguesser</a>
-      <a class="link" data-key="ai-humanizer">Ai humanizer</a>
-      <a class="link" data-key="arbeidsplaner">Arbeidsplaner</a>
-      <a class="link" data-key="fake-stake">Fake Stake</a>
-      <a class="link" data-key="gartic-phone">Gartic Phone</a>
-      <a class="link" data-key="cineby">Cineby</a>
-      <a class="link" data-key="wordle">Wordle</a>
-      <a class="link" data-key="snowrider">Snowrider 3D</a>
-      <a class="link" data-key="musiclab">Chrome Musiclab</a>
-      <a class="link" data-key="crazy-cattle">Crazy Cattle</a>
-      <a class="link" data-key="orbit-kick" data-new>Orbit kick</a>
-      </div>
+
+      <div class="grid" id="links-grid"></div>
 
       <p class="footer-note">Tip: you can click <code>Alt</code> on your keyboard to close the site.</p>
     </div>
   </div>
-  
 
-<footer style="text-align:center; margin-top: 36px; color: #94a3b8; font-size:0.85rem; line-height:1.4;">
-  <p>
-    © 2026 WTFQ.online • 
-    <a href="/about.html" style="color: #60a5fa;">About</a> • 
-    <a href="/privacy.html" style="color: #60a5fa;">Privacy</a> • 
-    Contact: 
-    <a href="mailto:contact@wtfq.online" style="color: #60a5fa;">contact@wtfq.online</a> 
-    or TikTok: 
-    <a href="https://www.tiktok.com/@www.wtfq.online" target="_blank" rel="noopener noreferrer" style="color: #60a5fa;">@www.wtfq.online</a>
-  </p>
-  <p style="color: #94a3b8; font-size: 0.8rem;">
-    All links and content are safe and verified for students.
-  </p>
-</footer>
+  <footer style="text-align:center; margin-top: 36px; color: #94a3b8; font-size:0.85rem; line-height:1.4;">
+    <p>
+      © 2026 WTFQ.online • 
+      <a href="/about.html" style="color: #60a5fa;">About</a> • 
+      <a href="/privacy.html" style="color: #60a5fa;">Privacy</a> • 
+      Contact: 
+      <a href="mailto:contact@wtfq.online" style="color: #60a5fa;">contact@wtfq.online</a> 
+      or TikTok: 
+      <a href="https://www.tiktok.com/@www.wtfq.online" target="_blank" rel="noopener noreferrer" style="color: #60a5fa;">@www.wtfq.online</a>
+    </p>
+    <p style="color: #94a3b8; font-size: 0.8rem;">
+      All links and content are safe and verified for students.
+    </p>
+  </footer>
 
   <script>
-    const LINKS = {
-      'poke-rouge': 'https://www.google.com/url?q=https%3A%2F%2Fpokerogue.net%2F&sa=D&sntz=1&usg=AOvVaw3LJ6QMXlhXJNBFxsKVqYWA',
-      'thorns-and-balloons': 'https://thornandballoons.com/',
-      'best-brownie-recipe': 'https://sites.google.com/bergensskolen.com/brownies/start',
-      'sandboxels': 'https://sandboxels.r74n.com/',
-      'kikora': 'https://feide.kikora.no/c/#/home',
-      'poki': 'https://poki.com/',
-      'classic-minecraft': 'https://classic.minecraft.net/',
-      'capybara-clicker': 'https://capybara-game.com/',
-      'scratch': 'https://scratch.mit.edu/',
-      'classroom-6x-games': 'https://sites.google.com/view/classroom6x/',
-      'google-dino': 'https://trex-runner.com/',
-      'big-shot-boxing': 'https://poki.com/en/g/big-shot-boxing',
-      'quick-draw': 'https://quickdraw.withgoogle.com/?locale=en_US',
-      'loneliness-game': 'https://www.necessarygames.com/my-games/loneliness',
-      'granny': 'https://granny-games.com/',
-      'virtual-piano': 'https://virtualpiano.net/',
-      'bitlife': 'https://thornandballoons.com/bitlifesimulator',
-      'youtube-library': 'https://docs.google.com/document/d/1AnW937KYcoqtzOSGPY8Y68GjJqjSBId_ZrrPQ4Y6mbE/edit?usp=sharing',
-      'skribbl-io': 'https://skribbl.io/',
-      'spotify': 'https://open.spotify.com/',
-      'spillespill': 'https://www.spillespill.no/',
-      'finn': 'http://finn.no',
-      'chess': 'http://chess.com',
-      'make-it-meme': 'https://makeitmeme.com/',
-      'ai-generator': 'https://perchance.org/ai-text-to-image-generator',
-      'google-doodle': 'https://doodles.google/search/?form_tags=interactive%20game',
-      'uno': 'https://www.solitaireparadise.com/games_list/uno-online.html',
-      'agar-io': 'https://agar.io/',
-      'neal-fun': 'http://neal.fun',
-      'planet-clicker-2': 'https://cookieclickercity.com/planet-clicker-2',
-      'italian-brainrot-clicker-2': 'https://azgames.io/italian-brainrot-clicker-2',
-      'clash-royale-online': 'https://www.greenfoot.org/scenarios/27793',
-      'tung-tung-sahur-clicker': 'http://capybara-game.com/tung-sahur-clicker',
-      'youtube': 'http://youtube.com/',
-      'chatgpt': 'http://chatgpt.com/',
-      'soundboard': 'https://www.myinstants.com/en/categories/sound%20effects/',
-      'battleship': 'https://papergames.io/en/battleship',
-      'wings-io': 'https://wings.io/',
-      'territorial': 'https://territorial.io/',
-      'happy-glass': 'https://poki.com/en/g/happy-glass',
-      'omegle': 'http://uhmegle.com',
-      'games': 'https://watchdocumentaries.com/games/#google_vignette',
-      'fnaf': 'https://fnafgame.io/',
-      'geoguesser': 'https://geotastic.net/home',
-      'ai-humanizer': 'https://www.rephraser.co/no/ai-humanizer',
-      'arbeidsplaner': 'https://www.bergen.kommune.no/omkommunen/avdelinger/mjolkeraen-skole/arbeidsplaner',
-      'fake-stake': 'https://fakestake.vercel.app/',
-      'gartic-phone': 'https://garticphone.com/',
-      'cineby': 'https://www.cineby.app/',
-      'wordle': 'https://www.nytimes.com/games/wordle/index.html',
-      'snowrider': 'https://snowriderio.io/',
-      'musiclab': 'https://musiclab.chromeexperiments.com/Song-Maker/',
-      'crazy-cattle': 'https://crazy-cattle.co/',
-      'orbit-kick': 'https://orbitkick.hotglue.me'
-    };
+    // ── Load games from games.json and render the grid ──────────────────────
+    async function loadGames() {
+      const grid = document.getElementById('links-grid');
 
-
-    const grid = document.getElementById("links-grid");
-    const links = Array.from(document.querySelectorAll('a.link[data-key]'));
-
-    links.forEach(a => {
-      const key = a.getAttribute('data-key');
-      const url = LINKS[key];
-
-      if (url && url.trim() !== '') {
-        a.href = url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-      } else {
-        a.setAttribute('href', 'javascript:void(0)');
-        a.setAttribute('aria-disabled', 'true');
+      let games;
+      try {
+        const res = await fetch('games.json');
+        games = await res.json();
+      } catch (e) {
+        grid.innerHTML = '<p style="color:#f87171">Failed to load games.json</p>';
+        return;
       }
 
-      if (a.hasAttribute("data-new")) {
-        a.classList.add("new");
-      }
+      // Sort: hot first, then new, then the rest
+      const hot  = games.filter(g => g.badge === 'hot');
+      const newG = games.filter(g => g.badge === 'new');
+      const rest = games.filter(g => !g.badge);
+      const sorted = [...hot, ...newG, ...rest];
 
-      if (a.hasAttribute("data-hot")) {
-        a.classList.add("hot");
+      grid.innerHTML = '';
+      for (const game of sorted) {
+        const a = document.createElement('a');
+        a.className = 'link';
+        a.dataset.key = game.key;
+        a.textContent = game.label;
+
+        if (game.url && game.url.trim()) {
+          a.href = game.url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+        } else {
+          a.href = 'javascript:void(0)';
+          a.setAttribute('aria-disabled', 'true');
+        }
+
+        if (game.badge === 'new') a.classList.add('new');
+        if (game.badge === 'hot') a.classList.add('hot');
+
+        grid.appendChild(a);
       }
+    }
+
+    loadGames();
+
+    // ── Search ───────────────────────────────────────────────────────────────
+    document.getElementById('search-input').addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      document.querySelectorAll('#links-grid a.link').forEach(link => {
+        const text = (link.textContent + ' ' + link.dataset.key).toLowerCase();
+        link.style.display = text.includes(query) ? 'inline-block' : 'none';
+      });
     });
-
-    const newLinks = links.filter(a => a.hasAttribute("data-new"));
-    const hotLinks = links.filter(a => a.hasAttribute("data-hot"));
-    const oldLinks = links.filter(a => !a.hasAttribute("data-new") && !a.hasAttribute("data-hot"));
-
-    grid.innerHTML = "";
-    hotLinks.forEach(a => grid.appendChild(a));
-    newLinks.forEach(a => grid.appendChild(a));
-    oldLinks.forEach(a => grid.appendChild(a));
   </script>
-<script src="closeTab.js"></script>
-<script src="https://wtfq.online/bannerad.js"></script>
-<script src="https://wtfq.online/Tokens/tokendisplay.js"></script>
 
+  <script src="closeTab.js"></script>
+  <script src="https://wtfq.online/bannerad.js"></script>
+  <script src="https://wtfq.online/Tokens/tokendisplay.js"></script>
 
 </body>
 </html>
