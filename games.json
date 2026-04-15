@@ -53,4 +53,5 @@
   { "key": "musiclab",                  "label": "Chrome Musiclab",            "url": "https://musiclab.chromeexperiments.com/Song-Maker/" },
   { "key": "crazy-cattle",              "label": "Crazy Cattle",               "url": "https://crazy-cattle.co/" },
   { "key": "orbit-kick",               "label": "Orbit kick",                 "url": "https://orbitkick.hotglue.me", "badge": "new" }
+  { "key": "orbit-kick",               "label": "Ragebait sim",                 "url": "https://r74n.com/mini/ragebait", "badge": "hot" }
 ]
