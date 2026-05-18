@@ -1,1 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aria Download</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --bg: #070a10;
+      --border: #1a2035;
+      --text: #c8d4e8;
+      --accent: #3a7bff;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Sora', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem;
+      max-width: 1024px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+    }
+
+    /* Feature Cards */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      margin-bottom: 3.5rem;
+    }
+
+    .card {
+      background: #0b0f18;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.7s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.2s; }
+    .card:nth-child(2) { animation-delay: 0.35s; }
+    .card:nth-child(3) { animation-delay: 0.5s; }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.3;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 30px rgba(58, 123, 255, 0.25);
+      border-color: rgba(58, 123, 255, 0.4);
+    }
+
+    .card-icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 0.75rem;
+      background: rgba(58, 123, 255, 0.1);
+      border: 1px solid rgba(58, 123, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    .card-icon svg {
+      width: 1.75rem;
+      height: 1.75rem;
+      color: var(--accent);
+    }
+
+    .card-icon:nth-child(1) { animation-delay: 0s; }
+    .card:nth-child(2) .card-icon { animation-delay: 0.5s; }
+    .card:nth-child(3) .card-icon { animation-delay: 1s; }
+
+    .card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.875rem;
+      opacity: 0.6;
+      line-height: 1.6;
+    }
+
+    /* Download Section */
+    .download-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      animation: fadeInUp 0.6s ease-out 0.9s both;
+    }
+
+    .coming-soon {
+      text-align: center;
+    }
+
+    .coming-soon-label {
+      font-size: 0.875rem;
+      opacity: 0.5;
+      margin-bottom: 0.5rem;
+    }
+
+    .coming-soon-badge {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(58, 123, 255, 0.3);
+      background: rgba(58, 123, 255, 0.05);
+      color: white;
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(58, 123, 255, 0.6);
+      font-family: 'Orbitron', monospace;
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .button-beta {
+      background: linear-gradient(135deg, #3a7bff, #1a4fd4);
+      color: white;
+    }
+
+    .button-beta:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(58, 123, 255, 0.5);
+    }
+
+    .button-beta:active {
+      transform: scale(0.97);
+    }
+
+    .button-contact {
+      background: rgba(58, 123, 255, 0.1);
+      color: #c8d4e8;
+      border-color: rgba(58, 123, 255, 0.4);
+    }
+
+    .button-contact:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(58, 123, 255, 0.3);
+      border-color: rgba(58, 123, 255, 0.6);
+    }
+
+    .button-contact:active {
+      transform: scale(0.97);
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .button svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .shimmer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+      animation: shimmerEffect 2.5s infinite 3s;
+      pointer-events: none;
+    }
+
+    @keyframes shimmerEffect {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0px rgba(58, 123, 255, 0); }
+      50% { box-shadow: 0 0 18px rgba(58, 123, 255, 0.3); }
+    }
+
+    .footer-line {
+      height: 2px;
+      width: 100%;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.2;
+      margin-top: auto;
+    }
+
+    .version-text {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      opacity: 0.4;
+      animation: fadeInUp 0.6s ease-out 1.2s both;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Download <span>Aria</span></h1>
+    <p>Get the latest version and unlock the full experience.</p>
+  </div>
+
+  <!-- Feature Cards -->
+  <div class="features">
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
+        </svg>
+      </div>
+      <h3>Fast Responses</h3>
+      <p>Get lightning fast responses with the latest model of Aria AI.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+      </div>
+      <h3>Your Safety Matters</h3>
+      <p>No chats are uploaded or saved to any of our databases your data is safe with Aria.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path><polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+      <h3>Access Anywhere</h3>
+      <p>Access the latest model anytime and anywhere.<p>
+  </div>
+
+  <!-- Download Section -->
+  <div class="download-section">
+    <!-- Coming Soon -->
+    <div class="coming-soon">
+      <div class="coming-soon-label">Stable Release</div>
+      <div class="coming-soon-badge">COMING SOON</div>
+    </div>
+
+    <!-- Beta Download -->
+    <button class="button button-beta" onclick="downloadBeta()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      <span>DOWNLOAD BETA</span>
+      <div class="shimmer"></div>
+    </button>
+
+    <!-- Contact Developers -->
+    <button class="button button-contact" onclick="contactDevelopers()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="1"></circle><path d="M20.27 2.27a10.5 10.5 0 0 0-14.84 0l-2.6 2.6a10.5 10.5 0 0 0 14.84 14.84l2.6-2.6"></path><path d="M8.5 8.5a3 3 0 0 0 4.24 4.24"></path>
+      </svg>
+      <span>CONTACT DEVELOPERS</span>
+    </button>
+  </div>
+
+  <div class="version-text">Latest stable release · Windows / macOS / Linux</div>
+</div>
+
+<div class="footer-line"></div>
+
+<script>
+  // Configuration - Add your links here
+  const BETA_GITHUB_URL = ''; // Add your GitHub beta release zip URL here
+  const CONTACT_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSe_OOq0v5BVQWdQwSUn435zFz5dIbloXJ7nGiGxeNh8W0e03w/viewform?usp=publish-editor'; // Add your contact/developer link here
+
+  function downloadBeta() {
+    if (BETA_GITHUB_URL) {
+      window.location.href = BETA_GITHUB_URL;
+    } else {
+      alert('Beta download link not configured yet');
+    }
+  }
+
+  function contactDevelopers() {
+    if (CONTACT_LINK) {
+      window.location.href = CONTACT_LINK;
+    } else {
+      alert('Contact link not configured yet');
+    }
+  }
+</script>
+
+</body>
+</html>
