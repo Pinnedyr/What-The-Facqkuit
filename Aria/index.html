@@ -64,9 +64,7 @@
       color: white;
     }
 
-    .hero h1 span {
-      color: var(--accent);
-    }
+    .hero h1 span { color: var(--accent); }
 
     .hero p {
       font-size: 1.125rem;
@@ -77,7 +75,6 @@
       .hero h1 { font-size: 2rem; }
     }
 
-    /* Feature Cards */
     .features {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -106,10 +103,8 @@
     .card::after {
       content: "";
       position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
+      bottom: 0; left: 0;
+      width: 100%; height: 2px;
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
       opacity: 0.3;
     }
@@ -121,63 +116,38 @@
     }
 
     .card-icon {
-      width: 3.5rem;
-      height: 3.5rem;
+      width: 3.5rem; height: 3.5rem;
       border-radius: 0.75rem;
       background: rgba(58, 123, 255, 0.1);
       border: 1px solid rgba(58, 123, 255, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       margin: 0 auto 1rem;
       animation: pulseGlow 3s ease-in-out infinite;
     }
 
-    .card-icon svg {
-      width: 1.75rem;
-      height: 1.75rem;
-      color: var(--accent);
-    }
-
-    .card-icon:nth-child(1) { animation-delay: 0s; }
+    .card-icon svg { width: 1.75rem; height: 1.75rem; color: var(--accent); }
     .card:nth-child(2) .card-icon { animation-delay: 0.5s; }
     .card:nth-child(3) .card-icon { animation-delay: 1s; }
 
     .card h3 {
       font-family: 'Orbitron', monospace;
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 0.5rem;
+      font-size: 1.125rem; font-weight: 600;
+      color: white; margin-bottom: 0.5rem;
     }
 
-    .card p {
-      font-size: 0.875rem;
-      opacity: 0.6;
-      line-height: 1.6;
-    }
+    .card p { font-size: 0.875rem; opacity: 0.6; line-height: 1.6; }
 
-    /* Download Section */
     .download-section {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      align-items: center;
-      justify-content: center;
+      display: flex; flex-direction: column;
+      gap: 1.5rem; align-items: center; justify-content: center;
       width: 100%;
       animation: fadeInUp 0.6s ease-out 0.9s both;
       margin-top: 4rem;
     }
 
-    .coming-soon {
-      text-align: center;
-    }
+    .coming-soon { text-align: center; }
 
-    .coming-soon-label {
-      font-size: 0.875rem;
-      opacity: 0.5;
-      margin-bottom: 0.5rem;
-    }
+    .coming-soon-label { font-size: 0.875rem; opacity: 0.5; margin-bottom: 0.5rem; }
 
     .coming-soon-badge {
       display: inline-block;
@@ -187,125 +157,271 @@
       background: rgba(58, 123, 255, 0.05);
       color: white;
       font-family: 'Orbitron', monospace;
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 1rem; font-weight: 600;
       letter-spacing: 0.08em;
     }
 
     .button {
       position: relative;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      display: flex; align-items: center; gap: 0.75rem;
       padding: 1rem 2.5rem;
       border-radius: 0.75rem;
       border: 1px solid rgba(58, 123, 255, 0.6);
       font-family: 'Orbitron', monospace;
-      font-size: 1.125rem;
-      font-weight: 600;
+      font-size: 1.125rem; font-weight: 600;
       letter-spacing: 0.08em;
-      cursor: pointer;
-      overflow: hidden;
-      white-space: nowrap;
+      cursor: pointer; overflow: hidden; white-space: nowrap;
       transition: all 0.3s ease;
       margin: 0 auto;
     }
 
-    .button-beta {
-      background: linear-gradient(135deg, #3a7bff, #1a4fd4);
-      color: white;
-    }
-
-    .button-beta:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(58, 123, 255, 0.5);
-    }
-
-    .button-beta:active {
-      transform: scale(0.97);
-    }
+    .button-beta { background: linear-gradient(135deg, #3a7bff, #1a4fd4); color: white; }
+    .button-beta:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(58, 123, 255, 0.5); }
+    .button-beta:active { transform: scale(0.97); }
 
     .button-contact {
       background: rgba(58, 123, 255, 0.1);
       color: #c8d4e8;
       border-color: rgba(58, 123, 255, 0.4);
     }
-
-    .button-contact:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(58, 123, 255, 0.3);
-      border-color: rgba(58, 123, 255, 0.6);
-    }
-
-    .button-contact:active {
-      transform: scale(0.97);
-    }
-
-    .button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .button svg {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
+    .button-contact:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(58, 123, 255, 0.3); border-color: rgba(58, 123, 255, 0.6); }
+    .button-contact:active { transform: scale(0.97); }
+    .button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .button svg { width: 1.25rem; height: 1.25rem; }
 
     .shimmer {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
       animation: shimmerEffect 2.5s infinite 3s;
       pointer-events: none;
     }
 
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(4, 6, 12, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1; pointer-events: all;
+    }
+
+    .modal {
+      background: #0b0f18;
+      border: 1px solid rgba(58, 123, 255, 0.25);
+      border-radius: 1.25rem;
+      padding: 2.5rem 2rem;
+      width: 100%; max-width: 400px;
+      margin: 1.5rem;
+      position: relative;
+      box-shadow: 0 0 60px rgba(58, 123, 255, 0.12), 0 0 0 1px rgba(58,123,255,0.08);
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 60%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.5;
+    }
+
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: none; border: none;
+      color: rgba(200, 212, 232, 0.4);
+      cursor: pointer; font-size: 1.25rem;
+      line-height: 1; padding: 0.25rem;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: white; }
+
+    .modal-icon {
+      width: 3rem; height: 3rem;
+      border-radius: 0.75rem;
+      background: rgba(58, 123, 255, 0.1);
+      border: 1px solid rgba(58, 123, 255, 0.3);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    .modal-icon svg { width: 1.4rem; height: 1.4rem; color: var(--accent); }
+
+    .modal-question {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.95rem; font-weight: 600;
+      color: white;
+      text-align: center;
+      margin-bottom: 1.75rem;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+    }
+
+    .input-wrapper {
+      display: flex; align-items: center;
+      background: #070a10;
+      border: 1px solid rgba(58, 123, 255, 0.25);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: rgba(58, 123, 255, 0.6);
+      box-shadow: 0 0 20px rgba(58, 123, 255, 0.1);
+    }
+
+    .input-prefix {
+      padding: 0.875rem 1rem 0.875rem 0;
+      color: var(--accent);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      white-space: nowrap;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .input-divider {
+      width: 1px; height: 1.2rem;
+      background: rgba(58, 123, 255, 0.3);
+      margin: 0 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .modal-input {
+      flex: 1;
+      background: transparent;
+      border: none; outline: none;
+      color: white;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.95rem;
+      padding: 0.875rem 0 0.875rem 1rem;
+      caret-color: var(--accent);
+    }
+
+    .modal-input::placeholder { color: rgba(200, 212, 232, 0.25); }
+
+    .modal-msg {
+      font-size: 0.8rem;
+      text-align: center;
+      min-height: 1.2rem;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 0.875rem;
+      background: linear-gradient(135deg, #3a7bff, #1a4fd4);
+      color: white;
+      border: none; border-radius: 0.75rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      transition: all 0.3s ease;
+      position: relative; overflow: hidden;
+    }
+
+    .modal-btn:hover { box-shadow: 0 0 30px rgba(58, 123, 255, 0.45); transform: scale(1.02); }
+    .modal-btn:active { transform: scale(0.98); }
+    .modal-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .modal-btn svg { width: 1rem; height: 1rem; }
+
+    /* ── ANIMATIONS ── */
     @keyframes shimmerEffect {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(200%); }
     }
 
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes pulseGlow {
       0%, 100% { box-shadow: 0 0 0px rgba(58, 123, 255, 0); }
-      50% { box-shadow: 0 0 18px rgba(58, 123, 255, 0.3); }
+      50%       { box-shadow: 0 0 18px rgba(58, 123, 255, 0.3); }
     }
 
     .footer-line {
-      height: 2px;
-      width: 100%;
+      height: 2px; width: 100%;
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
       opacity: 0.2;
     }
 
     .version-text {
-      margin-top: 1.5rem;
-      font-size: 0.75rem;
-      opacity: 0.4;
+      margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.4;
       animation: fadeInUp 0.6s ease-out 1.2s both;
     }
   </style>
 </head>
 <body>
 
+<!-- ── PASSWORD MODAL ── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </div>
+
+    <div class="modal-question">Hvilken skole går du på?</div>
+
+    <div class="input-wrapper">
+      <input
+        class="modal-input"
+        id="schoolInput"
+        type="text"
+        placeholder="skriv her..."
+        autocomplete="off"
+        spellcheck="false"
+        oninput="handleInput(this)"
+        onkeydown="if(event.key==='Enter') checkPassword()"
+      />
+      <div class="input-divider"></div>
+      <span class="input-prefix">Skole</span>
+    </div>
+
+    <div class="modal-msg" id="modalMsg"></div>
+
+    <button class="modal-btn" id="downloadBtn" onclick="checkPassword()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      LAST NED
+    </button>
+  </div>
+</div>
+
+<!-- ── MAIN PAGE ── -->
 <div class="container">
   <div class="content-wrapper">
-    <!-- Hero -->
     <div class="hero">
       <h1>Download <span>Aria</span></h1>
       <p>Free access to the Aria Beta version here.</p>
     </div>
 
-    <!-- Feature Cards -->
     <div class="features">
       <div class="card">
         <div class="card-icon">
@@ -330,7 +446,8 @@
       <div class="card">
         <div class="card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path><polyline points="12 6 12 12 16 14"></polyline>
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path>
+            <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
         </div>
         <h3>Access Anywhere</h3>
@@ -339,27 +456,26 @@
     </div>
   </div>
 
-  <!-- Download Section -->
   <div class="download-section">
-    <!-- Coming Soon -->
     <div class="coming-soon">
       <div class="coming-soon-label">Stable Release</div>
       <div class="coming-soon-badge">COMING SOON</div>
     </div>
 
-    <!-- Beta Download -->
-    <button class="button button-beta" onclick="downloadBeta()">
+    <button class="button button-beta" onclick="openModal()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
       </svg>
       <span>DOWNLOAD BETA</span>
       <div class="shimmer"></div>
     </button>
 
-    <!-- Contact Developers -->
     <button class="button button-contact" onclick="contactDevelopers()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
       </svg>
       <span>CONTACT DEVELOPERS</span>
     </button>
@@ -368,26 +484,134 @@
 
 <div class="footer-line"></div>
 
-<script>
-  // Configuration - Add your links here
-  const BETA_GITHUB_URL = ''; // Add your GitHub beta release zip URL here
-  const CONTACT_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSe_OOq0v5BVQWdQwSUn435zFz5dIbloXJ7nGiGxeNh8W0e03w/viewform?usp=publish-editor'; // Add your contact/developer link here
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  function downloadBeta() {
-    if (BETA_GITHUB_URL) {
-      window.location.href = BETA_GITHUB_URL;
-    } else {
-      alert('Beta download link not configured yet');
+  const firebaseConfig = {
+    apiKey: "AIzaSyDUbdcOv8kIrWIXcZwpkx9w1bSy_mhlPr4",
+    authDomain: "aria-b410c.firebaseapp.com",
+    projectId: "aria-b410c",
+    storageBucket: "aria-b410c.firebasestorage.app",
+    messagingSenderId: "514125299765",
+    appId: "1:514125299765:web:b64e741d2c8838763a717c",
+    measurementId: "G-RGLJ7CGRGW"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Expose to global scope
+  window._firebaseDB = db;
+  window._firestoreUtils = { doc, getDoc };
+</script>
+
+<script>
+  const CONTACT_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSe_OOq0v5BVQWdQwSUn435zFz5dIbloXJ7nGiGxeNh8W0e03w/viewform?usp=publish-editor';
+
+  // ── Modal open/close ──
+  function openModal() {
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('schoolInput').focus();
+    setMsg('', '');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('schoolInput').value = '';
+    setMsg('', '');
+  }
+
+  // Close on backdrop click
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ── Input: force first-letter uppercase, rest lowercase ──
+  function handleInput(input) {
+    let val = input.value;
+    if (val.length === 0) return;
+    // lowercase everything, then uppercase first char
+    val = val.toLowerCase();
+    val = val.charAt(0).toUpperCase() + val.slice(1);
+    // preserve cursor position
+    const pos = input.selectionStart;
+    input.value = val;
+    input.setSelectionRange(pos, pos);
+  }
+
+  function setMsg(text, color) {
+    const el = document.getElementById('modalMsg');
+    el.textContent = text;
+    el.style.color = color || 'rgba(200,212,232,0.5)';
+  }
+
+  // ── Password check ──
+  async function checkPassword() {
+    const input = document.getElementById('schoolInput').value.trim();
+    const btn = document.getElementById('downloadBtn');
+
+    if (!input) {
+      setMsg('Skriv inn skolen din.', '#ff6b6b');
+      return;
     }
+
+    if (!window._firebaseDB) {
+      setMsg('Firebase ikke klar ennå, prøv igjen.', '#ff6b6b');
+      return;
+    }
+
+    btn.disabled = true;
+    setMsg('Sjekker...', 'rgba(200,212,232,0.5)');
+
+    try {
+      const { doc, getDoc } = window._firestoreUtils;
+      const db = window._firebaseDB;
+      const docRef = doc(db, 'config', 'auth');
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        setMsg('Konfigurasjon ikke funnet.', '#ff6b6b');
+        btn.disabled = false;
+        return;
+      }
+
+      const data = docSnap.data();
+
+      if (input === data.password) {
+        setMsg('✓ Riktig! Laster ned...', '#4ade80');
+        // Trigger download
+        const a = document.createElement('a');
+        a.href = data.fileURL;
+        a.download = '';
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        setTimeout(closeModal, 1500);
+      } else {
+        setMsg('Du har ikke tilgang til dette innholdet.', '#ff6b6b');
+        document.getElementById('schoolInput').focus();
+      }
+    } catch (e) {
+      setMsg('Feil: ' + e.message, '#ff6b6b');
+    }
+
+    btn.disabled = false;
   }
 
   function contactDevelopers() {
-    if (CONTACT_LINK) {
-      window.location.href = CONTACT_LINK;
-    } else {
-      alert('Contact link not configured yet');
-    }
+    window.location.href = CONTACT_LINK;
   }
+
+  // Expose for inline onclick
+  window.openModal = openModal;
+  window.closeModal = closeModal;
+  window.checkPassword = checkPassword;
+  window.handleInput = handleInput;
+  window.contactDevelopers = contactDevelopers;
 </script>
 
 </body>
