@@ -23,6 +23,11 @@
       bannertekst: "Follow our Tiktok, by clicking here or by seaching @www.wtfq.online!",
       bannerfarge: "#576e50",
       bannerlink: "https://www.tiktok.com/@www.wtfq.online"
+    },
+    {
+      bannertekst: "Try Aria AI here, the best unblocked AI!",
+      bannerfarge: "#0095c7",
+      bannerlink: "https://www.wtfq.online/Aria"
     }
   ];
 
