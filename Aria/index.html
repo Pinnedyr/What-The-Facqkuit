@@ -342,6 +342,30 @@
     .modal-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .modal-btn svg { width: 1rem; height: 1rem; }
 
+    /* ── DOWNLOAD FALLBACK LINK ── */
+    .download-fallback {
+      display: none;
+      text-align: center;
+      margin-top: 0.85rem;
+      animation: fadeInUp 0.4s ease-out both;
+    }
+
+    .download-fallback a {
+      color: #7dc8f5;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.78rem;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      opacity: 0.9;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .download-fallback a:hover {
+      opacity: 1;
+      color: #a8dbff;
+    }
+
     /* ── ANIMATIONS ── */
     @keyframes shimmerEffect {
       0% { transform: translateX(-100%); }
@@ -411,6 +435,12 @@
       </svg>
       LAST NED
     </button>
+
+    <div class="download-fallback" id="downloadFallback">
+      <a href="https://www.wtfq.online/Aria/tutorial/index.html" target="_blank">
+        Startet ikke nedlastningen? Trykk her for å fikse det.
+      </a>
+    </div>
   </div>
 </div>
 
@@ -502,7 +532,6 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Expose to global scope
   window._firebaseDB = db;
   window._firestoreUtils = { doc, getDoc };
 </script>
@@ -510,32 +539,29 @@
 <script>
   const CONTACT_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSe_OOq0v5BVQWdQwSUn435zFz5dIbloXJ7nGiGxeNh8W0e03w/viewform?usp=publish-editor';
 
-  // ── Modal open/close ──
   function openModal() {
     document.getElementById('modalOverlay').classList.add('open');
     document.getElementById('schoolInput').focus();
     setMsg('', '');
+    document.getElementById('downloadFallback').style.display = 'none';
   }
 
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('open');
     document.getElementById('schoolInput').value = '';
     setMsg('', '');
+    document.getElementById('downloadFallback').style.display = 'none';
   }
 
-  // Close on backdrop click
   document.getElementById('modalOverlay').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
 
-  // ── Input: force first-letter uppercase, rest lowercase ──
   function handleInput(input) {
     let val = input.value;
     if (val.length === 0) return;
-    // lowercase everything, then uppercase first char
     val = val.toLowerCase();
     val = val.charAt(0).toUpperCase() + val.slice(1);
-    // preserve cursor position
     const pos = input.selectionStart;
     input.value = val;
     input.setSelectionRange(pos, pos);
@@ -547,7 +573,6 @@
     el.style.color = color || 'rgba(200,212,232,0.5)';
   }
 
-  // ── Password check ──
   async function checkPassword() {
     const input = document.getElementById('schoolInput').value.trim();
     const btn = document.getElementById('downloadBtn');
@@ -581,7 +606,7 @@
 
       if (input === data.password) {
         setMsg('✓ Riktig! Laster ned...', '#4ade80');
-        // Trigger download
+
         const a = document.createElement('a');
         a.href = data.fileURL;
         a.download = '';
@@ -590,7 +615,12 @@
         a.click();
         document.body.removeChild(a);
 
-        setTimeout(closeModal, 1500);
+        // Show the fallback help link after a short delay
+        setTimeout(() => {
+          document.getElementById('downloadFallback').style.display = 'block';
+        }, 1200);
+
+        // Do NOT auto-close so user can click the fallback link if needed
       } else {
         setMsg('Du har ikke tilgang til dette innholdet.', '#ff6b6b');
         document.getElementById('schoolInput').focus();
@@ -606,7 +636,6 @@
     window.location.href = CONTACT_LINK;
   }
 
-  // Expose for inline onclick
   window.openModal = openModal;
   window.closeModal = closeModal;
   window.checkPassword = checkPassword;
