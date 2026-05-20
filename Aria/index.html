@@ -342,32 +342,6 @@
     .modal-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .modal-btn svg { width: 1rem; height: 1rem; }
 
-    .help-link {
-      text-align: center;
-      margin-top: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .help-link.show {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .help-link a {
-      font-size: 0.85rem;
-      color: #5dade2;
-      text-decoration: underline;
-      cursor: pointer;
-      transition: color 0.2s ease;
-      font-family: 'Sora', sans-serif;
-    }
-
-    .help-link a:hover {
-      color: #7fbce5;
-    }
-
     /* ── ANIMATIONS ── */
     @keyframes shimmerEffect {
       0% { transform: translateX(-100%); }
@@ -437,10 +411,6 @@
       </svg>
       LAST NED
     </button>
-
-    <div class="help-link" id="helpLink">
-      <a href="https://www.wtfq.online/Aria/tutorial/" target="_blank">Download didn't start? Click here to find out why.</a>
-    </div>
   </div>
 </div>
 
@@ -545,14 +515,12 @@
     document.getElementById('modalOverlay').classList.add('open');
     document.getElementById('schoolInput').focus();
     setMsg('', '');
-    document.getElementById('helpLink').classList.remove('show');
   }
 
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('open');
     document.getElementById('schoolInput').value = '';
     setMsg('', '');
-    document.getElementById('helpLink').classList.remove('show');
   }
 
   // Close on backdrop click
@@ -613,7 +581,6 @@
 
       if (input === data.password) {
         setMsg('✓ Riktig! Laster ned...', '#4ade80');
-        document.getElementById('helpLink').classList.add('show');
         // Trigger download
         const a = document.createElement('a');
         a.href = data.fileURL;
