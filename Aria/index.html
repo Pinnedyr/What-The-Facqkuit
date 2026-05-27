@@ -593,38 +593,42 @@
     try {
       const { doc, getDoc } = window._firestoreUtils;
       const db = window._firebaseDB;
-      const docRef = doc(db, 'config', 'auth');
+
+      // Use the input itself as the document ID under 'config'
+      const docRef = doc(db, 'config', input);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        setMsg('Konfigurasjon ikke funnet.', '#ff6b6b');
+        setMsg('Du har ikke tilgang til dette innholdet.', '#ff6b6b');
+        document.getElementById('schoolInput').focus();
         btn.disabled = false;
         return;
       }
 
       const data = docSnap.data();
 
-      if (input === data.password) {
-        setMsg('✓ Riktig! Laster ned...', '#4ade80');
-
-        const a = document.createElement('a');
-        a.href = data.fileURL;
-        a.download = '';
-        a.target = '_blank';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        // Show the fallback help link after a short delay
-        setTimeout(() => {
-          document.getElementById('downloadFallback').style.display = 'block';
-        }, 1200);
-
-        // Do NOT auto-close so user can click the fallback link if needed
-      } else {
-        setMsg('Du har ikke tilgang til dette innholdet.', '#ff6b6b');
-        document.getElementById('schoolInput').focus();
+      if (!data.fileURL) {
+        setMsg('Ingen nedlastningslenke funnet.', '#ff6b6b');
+        btn.disabled = false;
+        return;
       }
+
+      setMsg('✓ Riktig! Laster ned...', '#4ade80');
+
+      const a = document.createElement('a');
+      a.href = data.fileURL;
+      a.download = '';
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      // Show the fallback help link after a short delay
+      setTimeout(() => {
+        document.getElementById('downloadFallback').style.display = 'block';
+      }, 1200);
+
+      // Do NOT auto-close so user can click the fallback link if needed
     } catch (e) {
       setMsg('Feil: ' + e.message, '#ff6b6b');
     }
