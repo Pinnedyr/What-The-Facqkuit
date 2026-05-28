@@ -437,7 +437,7 @@
     </button>
 
     <div class="download-fallback" id="downloadFallback">
-      <a href="https://www.wtfq.online/Aria/tutorial/index.html" target="_blank">
+      <a href="https://www.wtfq.online/Aria/tutorial/index.html">
         Startet ikke nedlastningen? Trykk her for å fikse det.
       </a>
     </div>
@@ -618,7 +618,6 @@
       const a = document.createElement('a');
       a.href = data.fileURL;
       a.download = '';
-      a.target = '_blank';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
