@@ -345,25 +345,61 @@
     /* ── DOWNLOAD FALLBACK LINK ── */
     .download-fallback {
       display: none;
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 193, 7, 0.1));
+      border: 2px solid #ffa500;
+      border-radius: 0.75rem;
       text-align: center;
-      margin-top: 0.85rem;
-      animation: fadeInUp 0.4s ease-out both;
+      animation: slideDownWarning 0.4s ease-out both, pulseWarning 2s ease-in-out infinite 0.5s;
+      box-shadow: 0 0 20px rgba(255, 152, 0, 0.2), inset 0 0 10px rgba(255, 152, 0, 0.1);
+    }
+
+    .download-fallback-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffb74d;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .download-fallback-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .download-fallback a {
-      color: #7dc8f5;
-      font-family: 'Sora', sans-serif;
-      font-size: 0.78rem;
-      text-decoration: underline;
-      text-underline-offset: 3px;
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.7rem 1.5rem;
+      background: #ffa500;
+      color: #070a10;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 0.5rem;
       cursor: pointer;
-      opacity: 0.9;
-      transition: opacity 0.2s, color 0.2s;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
     }
 
     .download-fallback a:hover {
-      opacity: 1;
-      color: #a8dbff;
+      background: #ffb84d;
+      transform: scale(1.08);
+      box-shadow: 0 0 25px rgba(255, 152, 0, 0.5);
+    }
+
+    .download-fallback a:active {
+      transform: scale(0.95);
     }
 
     /* ── ANIMATIONS ── */
@@ -375,6 +411,16 @@
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDownWarning {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseWarning {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 152, 0, 0.2), inset 0 0 10px rgba(255, 152, 0, 0.1); }
+      50%       { box-shadow: 0 0 35px rgba(255, 152, 0, 0.4), inset 0 0 15px rgba(255, 152, 0, 0.2); }
     }
 
     @keyframes pulseGlow {
@@ -437,8 +483,12 @@
     </button>
 
     <div class="download-fallback" id="downloadFallback">
+      <div class="download-fallback-title">
+        <span class="download-fallback-icon">⚠️</span>
+        Nedlastningen startet ikke?
+      </div>
       <a href="https://www.wtfq.online/Aria/tutorial/index.html">
-        Startet ikke nedlastningen? Trykk her for å fikse det.
+        Klikk her for å fikse det
       </a>
     </div>
   </div>
