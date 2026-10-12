@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dokumentutfyller</title>
+<script src="https://js.puter.com/v2/"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    --paper: #0F172A;
+    --paper-raised: #1F2937;
+    --ink: #E2E8F0;
+    --ink-soft: #94A3B8;
+    --ink-faint: #64748B;
+    --line: #334155;
+    --accent: #38BDF8;
+    --accent-soft: #0C2636;
+    --accent-ink: #7DD3FC;
+    --gold: #C084FC;
+    --gold-soft: #241A3A;
+    --danger: #F87171;
+    --danger-soft: #2A1414;
+    --radius: 14px;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    line-height: 1.45;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    min-height: 100%;
+  }
+  html, body { height: 100%; }
+
+  .wrap {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 20px 100px;
+  }
+
+  header.top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+  .seal {
+    width: 40px; height: 40px; flex: none;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+  }
+  .seal svg { width: 20px; height: 20px; }
+  h1 {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-weight: 600;
+    font-size: 27px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .tagline {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    margin: 10px 0 34px;
+    max-width: 54ch;
+  }
+
+  section.card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 22px 24px;
+    margin-bottom: 22px;
+  }
+  .step-label {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0 0 12px;
+  }
+  p.hint {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    margin: 4px 0 14px;
+  }
+
+  /* --- Dropzone --- */
+  .dropzone {
+    border: 1.5px dashed var(--line);
+    border-radius: var(--radius);
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .dropzone:hover, .dropzone.drag {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .dropzone input { display: none; }
+  .dropzone .dz-text { font-size: 14px; color: var(--ink-soft); }
+  .dropzone .dz-text b { color: var(--ink); font-weight: 600; }
+
+  .file-chip {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13.5px;
+  }
+  .file-chip button {
+    background: none; border: none; color: var(--ink-faint);
+    font-size: 12.5px; cursor: pointer; text-decoration: underline;
+    font-family: inherit;
+  }
+
+  /* --- Items list --- */
+  .item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .item-head {
+    display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 10.5px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    border: 1px solid currentColor;
+  }
+  .badge.question { color: var(--accent-ink); background: var(--accent-soft); border-color: transparent; }
+  .badge.field { color: var(--gold); background: var(--gold-soft); border-color: transparent; }
+  .badge.cell { color: var(--ink-soft); background: var(--line); border-color: transparent; }
+
+  .item-text {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .item-answer-row { margin-top: 10px; display: flex; gap: 8px; align-items: flex-start; }
+  .item-answer-row textarea {
+    flex: 1;
+    resize: vertical;
+    min-height: 40px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 13.5px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+  .item-answer-row textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .retry-btn {
+    flex: none;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    width: 34px; height: 34px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .retry-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .retry-btn:disabled { opacity: .4; cursor: default; }
+  .retry-btn svg { width: 15px; height: 15px; }
+
+  .stamp {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 10.5px;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateY(2px);
+    transition: opacity .3s ease, transform .3s ease;
+  }
+  .stamp.show { opacity: 1; transform: translateY(0); }
+
+  textarea#context-input {
+    width: 100%;
+    min-height: 56px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 13.5px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+    resize: vertical;
+  }
+  textarea#context-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  /* --- Buttons --- */
+  button.primary {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-weight: 600;
+    font-size: 14px;
+    color: #0F172A;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    cursor: pointer;
+    width: 100%;
+  }
+  button.primary:disabled { opacity: .45; cursor: default; }
+  button.primary:not(:disabled):hover { background: var(--accent-ink); }
+
+  button.secondary {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-weight: 500;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 9px 16px;
+    cursor: pointer;
+  }
+  button.secondary:hover { border-color: var(--accent); color: var(--accent); }
+  button.secondary:disabled { opacity: .4; cursor: default; }
+
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .status-line {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 18px;
+  }
+  .status-line.error { color: var(--danger); }
+  .spinner {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    border-top-color: var(--accent);
+    animation: spin .8s linear infinite;
+    flex: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  details.how {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  details.how summary {
+    cursor: pointer;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  details.how ul { margin: 8px 0 0; padding-left: 18px; }
+  details.how li { margin-bottom: 4px; }
+
+  .empty-note {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    padding: 6px 0 2px;
+  }
+
+  /* --- Style panel --- */
+  .style-panel { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .field-group { margin-bottom: 18px; }
+  .field-group > label, .sub-label {
+    font-size: 13px; font-weight: 500; display: block; margin-bottom: 7px;
+  }
+  .slider-row { display: flex; align-items: center; gap: 10px; }
+  .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .slider-end {
+    font-size: 11px; color: var(--ink-faint);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    white-space: nowrap;
+  }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .chip {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 12.5px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--ink); }
+  .chip.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); font-weight: 500; }
+
+  .style-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .field-sub { flex: 1; min-width: 140px; }
+  .field-sub.narrow { flex: none; width: 110px; }
+  .field-input {
+    width: 100%;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 13.5px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .field-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .swatch-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .swatch {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-style: italic;
+    font-size: 12.5px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0;
+  }
+  .swatch.active { border-color: var(--ink); box-shadow: 0 0 0 2px var(--paper-raised), 0 0 0 3px var(--ink); }
+  .custom-color-wrap { display: flex; align-items: center; gap: 6px; }
+  .custom-color-wrap input[type="color"] {
+    width: 32px; height: 32px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: 2px;
+    background: var(--paper);
+    cursor: pointer;
+  }
+  .custom-color-wrap span { font-size: 11px; color: var(--ink-faint); }
+
+  .toggle-row { display: flex; gap: 18px; margin-bottom: 12px; font-size: 13.5px; }
+  .toggle-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+
+  .preview-box {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-style: italic;
+    font-size: 15px;
+    color: var(--accent-ink);
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .wtfq-kicker {
+    text-align: center;
+    margin-bottom: 26px;
+  }
+  .wtfq-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--accent-ink);
+  }
+  .wtfq-title .l {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(6px);
+    animation: wtfqIn .4s cubic-bezier(.4,0,.2,1) forwards;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+  @keyframes wtfqIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .wtfq-sub {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin: 4px 0 0;
+  }
+
+  .lang-toggle {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .lang-btn {
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 9px 20px;
+    border: none;
+    background: var(--paper);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .lang-btn + .lang-btn { border-left: 1px solid var(--line); }
+  .lang-btn.active { background: var(--accent-soft); color: var(--accent-ink); }
+  .lang-btn:hover:not(.active) { color: var(--ink); }
+
+  .modal { position: fixed; inset: 0; z-index: 50; background: rgba(2,6,23,.72); display: flex; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+  .modal[hidden] { display: none; }
+  .modal-box { background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 480px; max-height: 94vh; overflow-y: auto; }
+  .modal-box.wide { max-width: 760px; }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .modal-head h3 { margin: 0; font-size: 17px; }
+  .modal .x { background: none; border: none; color: var(--ink-soft); font-size: 18px; cursor: pointer; }
+
+  .shell { max-width: 1320px; margin: 0 auto; padding: 28px 20px 80px; }
+  .toolbar { position: sticky; top: 0; z-index: 20; margin: 0 -20px 18px; padding: 12px 20px; background: rgba(15,23,42,.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .tb-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-width: 0; }
+  .tb-left .file-chip { padding: 7px 12px; }
+  .tb-count { font-size: 13px; color: var(--ink-soft); white-space: nowrap; }
+  .tb-actions { display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap; }
+  .tb-status { flex-basis: 100%; }
+  .tb-status .status-line { margin-top: 0; min-height: 0; }
+  .tb-status .status-line:empty { display: none; }
+  .ai-btn { font: 700 14px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #0B1220; background: linear-gradient(135deg, #38BDF8, #A78BFA); border: 0; border-radius: 12px; padding: 11px 18px; cursor: pointer; box-shadow: 0 6px 20px rgba(56,189,248,.25); }
+  .ai-btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .ai-btn:disabled, .dl-btn:disabled { opacity: .5; cursor: default; }
+  .dl-btn { font: 600 14px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 12px; padding: 10px 16px; cursor: pointer; }
+  .dl-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-ink); }
+  .ws-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start; }
+  .side { display: flex; flex-direction: column; gap: 14px; order: -1; }
+  .side-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+  .side-card > summary { cursor: pointer; font-weight: 700; font-size: 14px; }
+  .side-card .style-panel { margin-top: 14px; padding-top: 14px; }
+  .doc-canvas { background: #0B1220; border: 1px solid var(--line); border-radius: 18px; padding: 26px 14px; display: flex; justify-content: center; overflow-x: auto; min-width: 0; }
+  .doc-page { background: #fff; color: #1b1b1f; width: 100%; max-width: var(--page-w, 794px); padding: var(--pm-t, 72px) var(--pm-r, 72px) var(--pm-b, 72px) var(--pm-l, 72px); min-height: 420px; border-radius: 4px; box-shadow: 0 24px 70px rgba(0,0,0,.5); font-size: 11pt; line-height: 1.15; overflow-wrap: anywhere; }
+  .dp { white-space: pre-wrap; }
+  .dp .tab { display: inline-block; width: 2.2em; }
+  .dp .num { display: inline-block; text-indent: 0; }
+  .dp .dlink { color: #0563C1; text-decoration: underline; }
+  .dp .pgbreak { display: block; border-top: 1px dashed #c4c4c4; margin: 12pt 0; }
+  .dp img { max-width: 100%; vertical-align: middle; }
+  .img-missing { display: inline-block; padding: 2px 8px; border: 1px dashed #bbb; color: #888; font-size: 10pt; }
+  .dtable { border-collapse: collapse; table-layout: fixed; width: 100%; margin: 2pt 0 8pt; color: inherit; font-size: inherit; }
+  .dtable td { padding: 3pt 5.4pt; vertical-align: top; overflow-wrap: anywhere; color: inherit; font-size: inherit; }
+  .dtable td > .dp:last-child { padding-bottom: 0; }
+  .field { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 8px; box-sizing: border-box; background: rgba(56,189,248,.14); border: 1.5px solid rgba(14,165,233,.55); border-radius: 10px; padding: 6px 8px; margin: 4px 0; font-family: var(--af, inherit); font-size: var(--as, inherit); color: var(--ac, inherit); font-style: var(--ai, normal); font-weight: var(--aw, 400); line-height: 1.35; white-space: normal; transition: box-shadow .15s ease, background .15s ease, border-color .15s ease; }
+  .field:focus-within { box-shadow: 0 0 0 3px rgba(56,189,248,.35); background: rgba(56,189,248,.22); }
+  .field.ai { border-color: rgba(139,92,246,.65); background: rgba(139,92,246,.11); }
+  .field.err { border-color: rgba(220,38,38,.7); background: rgba(220,38,38,.07); }
+  .field.loading { background-image: linear-gradient(100deg, transparent 20%, rgba(255,255,255,.6) 50%, transparent 80%); background-size: 200% 100%; animation: shimmer 1.1s linear infinite; }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .field .pfx { flex: none; padding-top: 2px; opacity: .85; }
+  .field textarea { flex: 1 1 200px; min-width: 0; width: 100%; box-sizing: border-box; font: inherit; color: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; background: transparent; border: 0; outline: 0; resize: none; overflow: hidden; padding: 2px 0; margin: 0; }
+  .field textarea::placeholder { color: rgba(30,41,59,.5); font-style: normal; font-weight: 400; }
+  .field .fbtn { flex: none; font: 600 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-style: normal; color: #0369A1; background: #fff; border: 1px solid rgba(14,165,233,.6); border-radius: 999px; padding: 5px 11px; cursor: pointer; white-space: nowrap; }
+  .field .fbtn:hover:not(:disabled) { background: #0EA5E9; color: #fff; }
+  .field .fbtn:disabled { opacity: .55; cursor: default; }
+  .field .fmsg { flex-basis: 100%; font: 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-style: normal; font-weight: 400; color: #B91C1C; }
+  .field .fmsg:empty { display: none; }
+  .field-inline { display: inline-flex; vertical-align: top; width: min(100%, 44em); margin: 2px 0 2px 6px; }
+  .field-inline textarea { flex-basis: 150px; }
+  .field-cell { margin: 0; }
+  .field-cell textarea { flex-basis: 90px; }
+  @media (min-width: 1000px) {
+    .ws-grid { grid-template-columns: minmax(0, 1fr) 340px; }
+    .side { order: 0; position: sticky; top: 92px; max-height: calc(100vh - 110px); overflow-y: auto; }
+  }
+  @media (max-width: 600px) { .shell { padding: 20px 12px 60px; } .toolbar { margin: 0 -12px 14px; padding: 10px 12px; } .doc-canvas { padding: 12px 6px; } .tb-actions { margin-left: 0; width: 100%; } .tb-actions button { flex: 1; } }
+
+  footer.credit {
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 12px;
+    margin-top: 30px;
+  }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 28px 14px 90px; }
+    h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="wtfq-kicker">
+    <h2 class="wtfq-title" id="wtfq-title">What The Facqkuit</h2>
+    <p class="wtfq-sub">wtfq.online</p>
+  </div>
+
+  <header class="top">
+    <div class="seal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M12 3v11" stroke-linecap="round"/>
+        <path d="M8 10l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5 15v3.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1>Dokumentutfyller</h1>
+    <button type="button" class="secondary" id="settings-btn" style="margin-left:auto;">⚙ Innstillinger</button>
+  </header>
+  <p class="tagline">Last opp en .docx-fil. Du får se dokumentet slik det er, med feltene markert. La KI fylle ut alt, fyll ut ett og ett felt, eller skriv selv — og last ned en ferdig utfylt .docx.</p>
+
+  <section class="card" id="screen-upload">
+    <h2>Last opp dokument</h2>
+    <div class="dropzone" id="dropzone">
+      <input type="file" id="file-input" accept=".docx">
+      <div class="dz-text"><b>Klikk for å velge fil</b> eller dra en .docx-fil hit</div>
+    </div>
+    <div class="status-line" id="upload-status"></div>
+  </section>
+
+  <div id="workspace" hidden>
+    <div class="toolbar">
+      <div class="tb-left">
+        <div id="file-chip-holder"></div>
+        <span class="tb-count" id="review-count"></span>
+      </div>
+      <div class="tb-actions">
+        <button type="button" class="ai-btn" id="fill-all-btn">✦ Fyll ut alt med KI</button>
+        <button type="button" class="dl-btn" id="download-btn">⬇ Last ned .docx</button>
+      </div>
+      <div class="tb-status">
+        <div class="status-line" id="fill-status"></div>
+        <div class="status-line" id="download-status"></div>
+      </div>
+    </div>
+    <div id="empty-holder"></div>
+    <div class="ws-grid">
+      <main class="doc-canvas"><article class="doc-page" id="doc-page"></article></main>
+      <aside class="side">
+        <details class="side-card" id="settings-panel" open>
+          <summary>KI-innstillinger</summary>
+          <label for="context-input" style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;">Ekstra kontekst til KI-en (valgfritt) — f.eks. hvem som svarer, eller fakta den trenger</label>
+    <textarea id="context-input" placeholder="F.eks: «Jeg heter Kari Hansen og dette gjelder søknad om foreldrepermisjon fra 1. mars.»"></textarea>
+
+    <div class="style-panel">
+      <div class="field-group">
+        <label>Språk KI-en skal skrive på</label>
+        <div class="lang-toggle" id="lang-toggle">
+          <button type="button" class="lang-btn active" data-lang="no">Norsk</button>
+          <button type="button" class="lang-btn" data-lang="en">Engelsk</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="complexity-slider">Hvor avansert skal KI skrive?</label>
+        <div class="slider-row">
+          <span class="slider-end">Enkelt</span>
+          <input type="range" id="complexity-slider" min="1" max="5" step="1" value="3">
+          <span class="slider-end">Avansert</span>
+        </div>
+        <p class="hint" id="complexity-desc" style="margin:6px 0 0;"></p>
+      </div>
+
+      <div class="field-group">
+        <label>Stil på teksten KI setter inn</label>
+        <div class="chip-row" id="style-presets"></div>
+
+        <div class="style-row">
+          <div class="field-sub">
+            <label class="sub-label" for="font-input">Font</label>
+            <input type="text" id="font-input" list="font-list" class="field-input" placeholder="Standard (arves fra dokumentet)">
+            <datalist id="font-list">
+              <option value="Calibri"></option>
+              <option value="Aptos"></option>
+              <option value="Arial"></option>
+              <option value="Times New Roman"></option>
+              <option value="Georgia"></option>
+              <option value="Cambria"></option>
+              <option value="Verdana"></option>
+              <option value="Garamond"></option>
+            </datalist>
+          </div>
+          <div class="field-sub narrow">
+            <label class="sub-label" for="size-input">Størrelse (pt)</label>
+            <input type="number" id="size-input" class="field-input" min="6" max="72" step="0.5" placeholder="Standard">
+          </div>
+        </div>
+
+        <label class="sub-label">Farge</label>
+        <div class="swatch-row">
+          <div id="color-swatches" style="display:flex; gap:8px;"></div>
+          <div class="custom-color-wrap">
+            <input type="color" id="custom-color-input" value="#8C2F39">
+            <span>Egendefinert</span>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <label><input type="checkbox" id="italic-toggle" checked> Kursiv</label>
+          <label><input type="checkbox" id="bold-toggle"> Fet</label>
+        </div>
+
+        <div class="preview-box" id="style-preview">Svar: Slik vil teksten KI setter inn se ut.</div>
+      </div>
+    </div>
+        </details>
+        <div class="side-card"><details class="how">
+      <summary>Hvordan feltene ble funnet</summary>
+      <ul>
+        <li><b>Spørsmål</b> — avsnitt som slutter med «?». Svaret settes inn som et nytt avsnitt rett etter.</li>
+        <li><b>Felt</b> — avsnitt som slutter med «:», f.eks. «Navn:». Svaret føyes til på samme linje.</li>
+        <li><b>Tabellcelle</b> — tomme celler i en tabell hvor andre celler i raden har innhold. Første rad i hver tabell antas å være overskrift.</li>
+      </ul>
+      <p style="margin:8px 0 0;">KI-svar er forslag basert på dokumentets innhold og det du eventuelt skriver over — les alltid gjennom før du bruker dokumentet videre.</p>
+    </details></div>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="credit">Dokumentet behandles i nettleseren din. Kun teksten KI-en trenger (spørsmål, felt og et utdrag) sendes via Puter til KI-modellen.</footer>
+</div>
+
+<div class="modal" id="settings-modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-head"><h3 id="settings-title">Innstillinger</h3><button type="button" class="x" data-close aria-label="Lukk">✕</button></div>
+    <label class="sub-label">Puter-konto</label>
+    <p class="hint" id="puter-account" style="margin:0 0 10px;"></p>
+    <div class="btn-row">
+      <button type="button" class="secondary" id="puter-signin">Logg inn på Puter</button>
+      <button type="button" class="secondary" id="puter-signout" hidden>Logg ut</button>
+    </div>
+    <p class="hint" style="margin:10px 0 14px;">KI-utfyllingen går via Puter. Er du ikke innlogget, åpnes et innloggingsvindu (popup) automatisk første gang du bruker den.</p>
+    <label class="sub-label" for="ai-model">Modell</label>
+    <input type="text" id="ai-model" list="model-list" class="field-input" spellcheck="false" placeholder="La stå tom for Puters standardmodell">
+    <datalist id="model-list"><option value="gpt-5-nano"></option><option value="claude-sonnet-4-6"></option><option value="gemini-2.5-flash-lite"></option><option value="meta-llama/llama-4-maverick"></option></datalist>
+    <div class="btn-row" style="margin-top:16px;">
+      <button type="button" class="primary" id="settings-save" style="width:auto;">Lagre</button>
+      <button type="button" class="secondary" id="settings-test">Test KI</button>
+    </div>
+    <div class="status-line" id="settings-status"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const WNS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+  const XML_NS = "http://www.w3.org/XML/1998/namespace";
+
+  // ---------- state ----------
+  let aiModel = "gpt-5-nano";
+  let insertedNodes = [];
+  let docTheme = null;
+  let styleTable = { map: new Map(), defR: {}, defP: {} };
+  let numbering = { nums: new Map(), abs: new Map() };
+  let docImages = new Map();
+  let itemByNode = new Map();
+  let numCounters = {};
+  let prefixEls = [];
+  let zip = null;
+  let xmlDoc = null;
+  let items = []; // {id, type, kind, label, node, answer, filled}
+  let originalName = "dokument";
+  let stylesDoc = null;
+  let detectedStyles = []; // [{font, size, label}] found in the uploaded document
+  let complexity = 3;
+  let answerLanguage = "no";
+  let styleSettings = { font: "", size: null, color: "8C2F39", italic: true, bold: false };
+
+  const el = (id) => document.getElementById(id);
+
+  (function animateKicker() {
+    const node = el("wtfq-title");
+    if (!node) return;
+    const text = node.textContent;
+    node.textContent = "";
+    Array.from(text).forEach((ch, i) => {
+      const span = document.createElement("span");
+      span.className = "l";
+      span.style.setProperty("--i", i);
+      span.textContent = ch === " " ? "\u00A0" : ch;
+      node.appendChild(span);
+    });
+  })();
+
+  // ---------- Puter AI client ----------
+  const ANSWER_PREFIX = { no: "Svar: ", en: "Answer: " };
+  try { aiModel = localStorage.getItem("wtfq_puter_model") || aiModel; } catch (e) { /* storage unavailable */ }
+
+  function puterReady() {
+    return typeof window.puter !== "undefined" && window.puter && window.puter.ai && window.puter.auth;
+  }
+  function describePuterError(err) {
+    if (!err) return "";
+    const m = (err.error && (err.error.message || err.error)) || err.message || err.msg || err;
+    try { return (typeof m === "string" ? m : JSON.stringify(m)).slice(0, 160); } catch (_) { return ""; }
+  }
+  function classifyPuterError(err) {
+    let s = "";
+    try { s = (typeof err === "string" ? err : JSON.stringify(err) + " " + (err && err.message || "")).toLowerCase(); } catch (_) {}
+    if (/cancel|closed|dismiss|popup/.test(s)) return "signin_failed";
+    if (/insufficient|credit|balance|funds|quota/.test(s)) return "credits";
+    if (/rate|too many|429/.test(s)) return "rate_limited";
+    if (/model/.test(s) && /(not found|unknown|invalid|unsupported|not allowed|no such)/.test(s)) return "model";
+    return "upstream";
+  }
+  function puterText(resp) {
+    if (typeof resp === "string") return resp;
+    if (!resp) return "";
+    const c = resp.message && resp.message.content;
+    if (typeof c === "string") return c;
+    if (Array.isArray(c)) return c.map((p) => (typeof p === "string" ? p : (p && p.text) || "")).join("");
+    if (typeof resp.text === "string") return resp.text;
+    const s = String(resp);
+    return s === "[object Object]" ? "" : s;
+  }
+  // Must be invoked synchronously from a click handler so the sign-in popup is allowed.
+  async function puterChat(prompt) {
+    if (!puterReady()) { const e = new Error("no puter"); e.code = "no_puter"; throw e; }
+    if (!puter.auth.isSignedIn()) {
+      try { await puter.auth.signIn(); }
+      catch (err) { const e = new Error("signin"); e.code = "signin_failed"; throw e; }
+    }
+    let resp;
+    try { resp = await puter.ai.chat(prompt, aiModel ? { model: aiModel } : {}); }
+    catch (err) { const e = new Error("puter"); e.code = classifyPuterError(err); e.detail = describePuterError(err); throw e; }
+    const text = cleanModelText(puterText(resp));
+    if (!text) { const e = new Error("empty"); e.code = "empty_completion"; throw e; }
+    return text;
+  }
+  function cleanModelText(t) {
+    return String(t).replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
+  }
+  function parseJsonArray(text) {
+    const s = text.replace(/```(?:json)?/gi, "").trim();
+    const a = s.indexOf("["), b = s.lastIndexOf("]");
+    if (a === -1 || b <= a) { const e = new Error("no array"); e.code = "invalid_json"; throw e; }
+    try { return JSON.parse(s.slice(a, b + 1)); }
+    catch (err) { const e = new Error("bad json"); e.code = "invalid_json"; throw e; }
+  }
+  function puterErrorMessage(e) {
+    const d = e && e.detail ? " (" + e.detail + ")" : "";
+    switch (e && e.code) {
+      case "no_puter": return "Fikk ikke lastet Puter (js.puter.com). Sjekk nettforbindelsen og last siden på nytt.";
+      case "signin_failed": return "Innloggingen på Puter ble avbrutt eller blokkert. Tillat popup-vinduer for denne siden og prøv igjen.";
+      case "credits": return "Puter-kontoen din har ikke nok saldo/kvote til dette akkurat nå." + d;
+      case "rate_limited": return "For mange forespørsler. Vent litt og prøv igjen." + d;
+      case "model": return "Modellen «" + aiModel + "» ble ikke funnet eller er ikke tillatt. Velg en annen modell i Innstillinger." + d;
+      case "empty_completion": return "Modellen ga et tomt svar. Prøv igjen, fyll ut færre felt om gangen, eller bytt modell.";
+      case "invalid_json": return "Modellen svarte i et format som ikke kunne leses. Prøv igjen, eller velg en annen modell.";
+      default: return "Noe gikk galt med KI-tjenesten. Prøv igjen om litt." + d;
+    }
+  }
+
+  // ---------- error copy ----------
+
+  // ---------- complexity + style settings ----------
+  const LANGUAGE_OPTIONS = {
+    no: { label: "Norsk", instruction: "Skriv alle svarene på norsk (bokmål) — uansett hvilket språk selve dokumentet er skrevet på." },
+    en: { label: "Engelsk", instruction: "Write every answer in English — regardless of what language the document itself is written in." }
+  };
+  const COMPLEXITY_DESCRIPTIONS = {
+    1: { label: "Svært enkelt", hint: "Korte setninger, hverdagsspråk, ingen fagord.", prompt: "svært enkelt, med korte setninger og hverdagslige ord — som om du forklarer det for noen uten forkunnskaper" },
+    2: { label: "Enkelt", hint: "Klart og lettfattelig, uten fagsjargong.", prompt: "enkelt og lett forståelig, uten unødvendig fagsjargong" },
+    3: { label: "Vanlig", hint: "Nøytralt, alminnelig språknivå.", prompt: "på et vanlig, nøytralt språknivå" },
+    4: { label: "Fagpreget", hint: "En del fagbegreper og presisjon.", prompt: "presist og noe fagpreget, med relevante fagbegreper der det er naturlig" },
+    5: { label: "Avansert / faglig", hint: "Akademisk, presist fagspråk.", prompt: "avansert og faglig, med presist fagspråk, på et nivå som passer en akademisk eller profesjonell sammenheng" }
+  };
+  const COLOR_PRESETS = [
+    { hex: null, label: "Standard (arver dokumentet)" },
+    { hex: "000000", label: "Svart" },
+    { hex: "8C2F39", label: "Rødbrun" },
+    { hex: "9C7A24", label: "Gull" },
+    { hex: "1F4E5F", label: "Blå" },
+    { hex: "2F5233", label: "Grønn" }
+  ];
+
+  function styleInstructionText() {
+    const c = COMPLEXITY_DESCRIPTIONS[complexity] || COMPLEXITY_DESCRIPTIONS[3];
+    const lang = LANGUAGE_OPTIONS[answerLanguage] || LANGUAGE_OPTIONS.no;
+    return lang.instruction + " " +
+      "Skriv " + c.prompt + ". " +
+      "Skriv naturlig og personlig, som om et menneske skrev det for hånd — varier setningsoppbygningen, " +
+      "unngå stive eller typiske KI-formuleringer (som «Det er viktig å nevne at», «I dagens samfunn», " +
+      "overdrevne oppsummeringer eller unødvendige høflighetsfraser), og gå rett på sak slik et menneske ville gjort.";
+  }
+
+  function clearChipActive() {
+    document.querySelectorAll("#style-presets .chip").forEach((c) => c.classList.remove("active"));
+  }
+
+  function setColor(hex) {
+    styleSettings.color = hex || null;
+    document.querySelectorAll("#color-swatches .swatch").forEach((s) => {
+      s.classList.toggle("active", (s.dataset.hex || "") === (hex || ""));
+    });
+    el("custom-color-input").value = "#" + (hex || "000000");
+    updatePreview();
+  }
+
+  function updatePreview() {
+    const box = el("style-preview");
+    box.style.fontFamily = styleSettings.font ? ('"' + styleSettings.font + '", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"') : "";
+    box.style.fontSize = styleSettings.size ? (styleSettings.size + "pt") : "";
+    box.style.color = styleSettings.color ? ("#" + styleSettings.color) : "";
+    box.style.fontStyle = styleSettings.italic ? "italic" : "normal";
+    box.style.fontWeight = styleSettings.bold ? "700" : "400";
+    const pg = el("doc-page");
+    const setVar = (k, v) => { if (v) pg.style.setProperty(k, v); else pg.style.removeProperty(k); };
+    setVar("--af", styleSettings.font ? ('"' + styleSettings.font.replace(/["\\]/g, "") + '", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif') : "");
+    setVar("--as", styleSettings.size ? (styleSettings.size + "pt") : "");
+    setVar("--ac", styleSettings.color ? ("#" + styleSettings.color) : "");
+    setVar("--ai", styleSettings.italic ? "italic" : "normal");
+    setVar("--aw", styleSettings.bold ? "700" : "400");
+  }
+
+  function applyStylePreset(preset, chipEl) {
+    styleSettings.font = preset.font || "";
+    styleSettings.size = preset.size || null;
+    styleSettings.italic = !!preset.italic;
+    styleSettings.bold = !!preset.bold;
+    el("font-input").value = styleSettings.font;
+    el("size-input").value = styleSettings.size || "";
+    el("italic-toggle").checked = styleSettings.italic;
+    el("bold-toggle").checked = styleSettings.bold;
+    setColor(preset.color || null);
+    clearChipActive();
+    if (chipEl) chipEl.classList.add("active");
+  }
+
+  function renderColorSwatches() {
+    const row = el("color-swatches");
+    row.innerHTML = "";
+    COLOR_PRESETS.forEach((c) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "swatch";
+      btn.dataset.hex = c.hex || "";
+      btn.title = c.label;
+      btn.textContent = "Aa";
+      btn.style.color = c.hex ? ("#" + c.hex) : "var(--ink)";
+      btn.onclick = () => { setColor(c.hex); clearChipActive(); };
+      row.appendChild(btn);
+    });
+  }
+
+  function renderStylePresets(autoApply) {
+    const row = el("style-presets");
+    row.innerHTML = "";
+    let first = null;
+    detectedStyles.forEach((s) => {
+      const preset = { font: s.font, size: s.size, color: "000000", italic: false, bold: false };
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.textContent = s.label;
+      chip.title = "Samme font/størrelse som dokumentet, svart tekst";
+      chip.onclick = () => applyStylePreset(preset, chip);
+      row.appendChild(chip);
+      if (!first) first = { preset, chip };
+    });
+    const hl = { font: "", size: null, color: "8C2F39", italic: true, bold: false };
+    const defaultChip = document.createElement("button");
+    defaultChip.type = "button";
+    defaultChip.className = "chip";
+    defaultChip.textContent = "Fremhevet";
+    defaultChip.onclick = () => applyStylePreset(hl, defaultChip);
+    row.appendChild(defaultChip);
+    if (autoApply && first) applyStylePreset(first.preset, first.chip);
+    else applyStylePreset(hl, defaultChip);
+  }
+
+  const DML = "http://schemas.openxmlformats.org/drawingml/2006/main";
+  function themeFont(themeDocArg, kind) {
+    if (!themeDocArg) return null;
+    const f = themeDocArg.getElementsByTagNameNS(DML, kind + "Font")[0];
+    const l = f ? f.getElementsByTagNameNS(DML, "latin")[0] : null;
+    return l ? (l.getAttribute("typeface") || null) : null;
+  }
+  function readRPr(rPr, themeDocArg) {
+    let font = null, size = null;
+    for (let k = 0; k < rPr.children.length; k++) {
+      const c = rPr.children[k];
+      if (c.localName === "rFonts") {
+        font = c.getAttributeNS(WNS, "ascii") || c.getAttributeNS(WNS, "hAnsi");
+        if (!font) {
+          const t = c.getAttributeNS(WNS, "asciiTheme") || c.getAttributeNS(WNS, "hAnsiTheme");
+          if (t) font = themeFont(themeDocArg, /^major/i.test(t) ? "major" : "minor");
+        }
+      }
+      if (c.localName === "sz") {
+        const v = parseInt(c.getAttributeNS(WNS, "val"), 10);
+        if (v) size = Math.round(v / 2);
+      }
+    }
+    return { font, size };
+  }
+  function childNamed(parent, name) {
+    for (let i = 0; i < parent.children.length; i++) if (parent.children[i].localName === name) return parent.children[i];
+    return null;
+  }
+  function detectDocumentStyles(doc, stylesDocArg, themeDocArg) {
+    // 1) the document's own default: docDefaults, overridden by the default paragraph style ("Normal")
+    let defFont = null, defSize = null;
+    if (stylesDocArg) {
+      const dd = stylesDocArg.getElementsByTagNameNS(WNS, "docDefaults")[0];
+      const rpd = dd ? dd.getElementsByTagNameNS(WNS, "rPrDefault")[0] : null;
+      const rp = rpd ? childNamed(rpd, "rPr") : null;
+      if (rp) { const r = readRPr(rp, themeDocArg); defFont = r.font; defSize = r.size; }
+      const styles = stylesDocArg.getElementsByTagNameNS(WNS, "style");
+      for (let i = 0; i < styles.length; i++) {
+        const st = styles[i];
+        if (st.getAttributeNS(WNS, "type") === "paragraph" && st.getAttributeNS(WNS, "default") === "1") {
+          const rp2 = childNamed(st, "rPr");
+          if (rp2) { const r = readRPr(rp2, themeDocArg); defFont = r.font || defFont; defSize = r.size || defSize; }
+          break;
+        }
+      }
+    }
+    // 2) formatting set directly on runs in the document body, most common first
+    const found = new Map();
+    const body = doc.getElementsByTagNameNS(WNS, "body")[0];
+    if (body) {
+      const runs = body.getElementsByTagNameNS(WNS, "r");
+      for (let i = 0; i < runs.length; i++) {
+        const rPr = childNamed(runs[i], "rPr");
+        if (!rPr) continue;
+        const r = readRPr(rPr, themeDocArg);
+        if (r.font || r.size) {
+          const key = (r.font || "") + "|" + (r.size || "");
+          found.set(key, (found.get(key) || 0) + 1);
+        }
+      }
+    }
+    const list = [];
+    if (defFont || defSize) {
+      list.push({ font: defFont || "", size: defSize || null,
+        label: "Dokumentets standard (" + [defFont, defSize ? defSize + " pt" : null].filter(Boolean).join(", ") + ")" });
+    }
+    Array.from(found.entries()).sort((a, b) => b[1] - a[1]).forEach(([key]) => {
+      if (list.length >= 4) return;
+      const [font, sizeStr] = key.split("|");
+      const size = sizeStr ? parseInt(sizeStr, 10) : null;
+      if (list.some((l) => l.font === font && l.size === size)) return;
+      list.push({ font, size, label: [font || "Standardfont", size ? size + " pt" : null].filter(Boolean).join(", ") });
+    });
+    return list;
+  }
+
+  el("complexity-slider").addEventListener("input", () => {
+    complexity = parseInt(el("complexity-slider").value, 10);
+    const c = COMPLEXITY_DESCRIPTIONS[complexity];
+    el("complexity-desc").textContent = c.label + " — " + c.hint;
+  });
+  el("font-input").addEventListener("input", () => {
+    styleSettings.font = el("font-input").value.trim();
+    clearChipActive();
+    updatePreview();
+  });
+  el("size-input").addEventListener("input", () => {
+    const v = parseFloat(el("size-input").value);
+    styleSettings.size = isNaN(v) ? null : v;
+    clearChipActive();
+    updatePreview();
+  });
+  el("italic-toggle").addEventListener("change", () => {
+    styleSettings.italic = el("italic-toggle").checked;
+    clearChipActive();
+    updatePreview();
+  });
+  el("bold-toggle").addEventListener("change", () => {
+    styleSettings.bold = el("bold-toggle").checked;
+    clearChipActive();
+    updatePreview();
+  });
+  el("custom-color-input").addEventListener("input", () => {
+    setColor(el("custom-color-input").value.replace("#", "").toUpperCase());
+    clearChipActive();
+  });
+
+  renderColorSwatches();
+  renderStylePresets(false);
+  setColor(styleSettings.color);
+  updatePreview();
+  el("complexity-desc").textContent = COMPLEXITY_DESCRIPTIONS[3].label + " — " + COMPLEXITY_DESCRIPTIONS[3].hint;
+
+  const PREVIEW_TEXT = { no: "Slik vil teksten KI setter inn se ut.", en: "This is how the text the AI inserts will look." };
+  function updatePreviewText() {
+    el("style-preview").textContent = (ANSWER_PREFIX[answerLanguage] || "") + PREVIEW_TEXT[answerLanguage];
+    prefixEls.forEach((p) => { p.textContent = ANSWER_PREFIX[answerLanguage] || ""; });
+  }
+  document.querySelectorAll("#lang-toggle .lang-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      answerLanguage = btn.dataset.lang === "en" ? "en" : "no";
+      document.querySelectorAll("#lang-toggle .lang-btn").forEach((b) => b.classList.toggle("active", b === btn));
+      updatePreviewText();
+    });
+  });
+  updatePreviewText();
+
+  function openModal(id) { el(id).hidden = false; }
+  function closeModals() { document.querySelectorAll(".modal").forEach((m) => { m.hidden = true; }); }
+  function setSettingsStatus(msg, isError, spinning) {
+    const line = el("settings-status");
+    line.className = "status-line" + (isError ? " error" : "");
+    line.innerHTML = (spinning ? '<span class="spinner"></span>' : "") + escapeHtml(msg);
+  }
+  async function refreshAccount() {
+    const line = el("puter-account");
+    if (!puterReady()) { line.textContent = "Puter er ikke lastet (sjekk nettforbindelsen)."; el("puter-signin").hidden = true; el("puter-signout").hidden = true; return; }
+    if (!puter.auth.isSignedIn()) { line.textContent = "Ikke logget inn ennå."; el("puter-signin").hidden = false; el("puter-signout").hidden = true; return; }
+    el("puter-signin").hidden = true; el("puter-signout").hidden = false;
+    line.textContent = "Logget inn på Puter.";
+    try { const u = await puter.auth.getUser(); if (u && u.username) line.textContent = "Logget inn som " + u.username + "."; } catch (e) { /* keep generic text */ }
+  }
+  function openSettings(msg) {
+    el("ai-model").value = aiModel;
+    setSettingsStatus(msg || "", false);
+    refreshAccount();
+    closeModals(); openModal("settings-modal");
+  }
+  el("settings-btn").addEventListener("click", () => openSettings(""));
+  document.querySelectorAll(".modal [data-close]").forEach((b) => b.addEventListener("click", closeModals));
+  document.querySelectorAll(".modal").forEach((m) => m.addEventListener("click", (e) => { if (e.target === m) closeModals(); }));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModals(); });
+  el("puter-signin").addEventListener("click", async () => {
+    if (!puterReady()) { setSettingsStatus(puterErrorMessage({ code: "no_puter" }), true); return; }
+    try { await puter.auth.signIn(); setSettingsStatus("Innlogget.", false); }
+    catch (e) { setSettingsStatus(puterErrorMessage({ code: "signin_failed" }), true); }
+    refreshAccount(); updateFillButton();
+  });
+  el("puter-signout").addEventListener("click", async () => {
+    try { await puter.auth.signOut(); } catch (e) { /* ignore */ }
+    setSettingsStatus("Utlogget fra Puter.", false); refreshAccount(); updateFillButton();
+  });
+  el("settings-save").addEventListener("click", () => {
+    aiModel = el("ai-model").value.trim();
+    let ok = true;
+    try { localStorage.setItem("wtfq_puter_model", aiModel); } catch (e) { ok = false; }
+    setSettingsStatus(ok ? "Lagret." : "Valget gjelder denne økten, men nettleseren lot meg ikke lagre det.", !ok);
+  });
+  el("settings-test").addEventListener("click", async () => {
+    const prev = aiModel;
+    aiModel = el("ai-model").value.trim();
+    setSettingsStatus("Tester KI …", false, true);
+    try { await puterChat("Svar kun med ordet OK."); setSettingsStatus("KI fungerer" + (aiModel ? " med modellen «" + aiModel + "»" : " med Puters standardmodell") + ". Trykk Lagre for å beholde valget.", false); }
+    catch (e) { setSettingsStatus(puterErrorMessage(e), true); }
+    finally { aiModel = prev; refreshAccount(); updateFillButton(); }
+  });
+
+  // ---------- file handling ----------
+  const dropzone = el("dropzone");
+  const fileInput = el("file-input");
+
+  dropzone.addEventListener("click", () => fileInput.click());
+  dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("drag"); });
+  dropzone.addEventListener("dragleave", () => dropzone.classList.remove("drag"));
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("drag");
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
+  });
+
+  function reportUploadError(msg) {
+    if (!el("workspace").hidden) setFillStatus(msg, true);
+    else setUploadStatus(msg, true);
+  }
+
+  async function handleFile(file) {
+    setUploadStatus("", false);
+    if (!/\.docx$/i.test(file.name)) {
+      reportUploadError("Denne filen ser ikke ut som en .docx-fil. Eksporter fra Google Dokumenter som «Microsoft Word (.docx)» og prøv igjen.");
+      return;
+    }
+    setUploadStatus("Leser dokumentet …", false, true);
+    try {
+      const buf = await file.arrayBuffer();
+      const newZip = await JSZip.loadAsync(buf);
+      const entry = newZip.file("word/document.xml");
+      if (!entry) throw new Error("no-document-xml");
+      const parser = new DOMParser();
+      const parseXml = (s) => { const d = parser.parseFromString(s, "application/xml"); return d.getElementsByTagName("parsererror").length ? null : d; };
+      const newDoc = parseXml(await entry.async("string"));
+      if (!newDoc) throw new Error("parse-error");
+      const optDoc = async (path) => { const e = newZip.file(path); if (!e) return null; try { return parseXml(await e.async("string")); } catch (_) { return null; } };
+      const newStyles = await optDoc("word/styles.xml");
+      const newTheme = await optDoc("word/theme/theme1.xml");
+      const numDoc = await optDoc("word/numbering.xml");
+      const relsDoc = await optDoc("word/_rels/document.xml.rels");
+      const newImages = await loadImages(newZip, relsDoc, newDoc);
+
+      zip = newZip; xmlDoc = newDoc; stylesDoc = newStyles; docTheme = newTheme; docImages = newImages;
+      originalName = file.name.replace(/\.docx$/i, "");
+      items = detectItems(xmlDoc);
+      items.forEach((it) => { it.source = null; it.ui = null; it.loading = false; it.answer = ""; });
+      itemByNode = new Map(items.map((it) => [it.node, it]));
+      detectedStyles = detectDocumentStyles(xmlDoc, stylesDoc, docTheme);
+      renderStylePresets(true);
+      buildStyleTable();
+      buildNumbering(numDoc);
+      renderFileChip(file);
+      renderDocument();
+      el("screen-upload").hidden = true;
+      el("workspace").hidden = false;
+      el("settings-panel").open = window.matchMedia ? window.matchMedia("(min-width: 1000px)").matches : true;
+      el("review-count").textContent = items.length ? items.length + " felt funnet" : "";
+      el("empty-holder").innerHTML = items.length ? "" : '<p class="empty-note">Fant ingen spørsmål, felt eller tomme tabellceller i dette dokumentet. Se «Hvordan feltene ble funnet» under for hva verktøyet ser etter.</p>';
+      setUploadStatus("", false);
+      setFillStatus("", false); setDownloadStatus("", false);
+      updateFillButton();
+      updateDownloadButton();
+      growAll();
+    } catch (err) {
+      console.error(err);
+      reportUploadError("Kunne ikke lese denne filen som en .docx-fil. Sjekk at det er en gyldig Word-fil, ikke en gammel .doc-fil.");
+    }
+  }
+
+  function renderFileChip(file) {
+    const holder = el("file-chip-holder");
+    holder.innerHTML = "";
+    const chip = document.createElement("div");
+    chip.className = "file-chip";
+    const sizeKb = Math.max(1, Math.round(file.size / 1024));
+    const label = document.createElement("span");
+    label.textContent = file.name + " · " + sizeKb + " kB";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = "Bytt fil";
+    btn.onclick = () => { fileInput.value = ""; fileInput.click(); };
+    chip.appendChild(label);
+    chip.appendChild(btn);
+    holder.appendChild(chip);
+  }
+
+  function setUploadStatus(msg, isError, spinning) {
+    const line = el("upload-status");
+    line.className = "status-line" + (isError ? " error" : "");
+    line.innerHTML = (spinning ? '<span class="spinner"></span>' : "") + escapeHtml(msg);
+  }
+
+  // ---------- detection ----------
+  function textOf(scopeEl) {
+    if (!scopeEl) return "";
+    const ts = scopeEl.getElementsByTagNameNS(WNS, "t");
+    let s = "";
+    for (let i = 0; i < ts.length; i++) s += ts[i].textContent;
+    return s.replace(/\s+/g, " ").trim();
+  }
+
+  function detectItems(doc) {
+    const body = doc.getElementsByTagNameNS(WNS, "body")[0];
+    if (!body) return [];
+    const found = [];
+    let idx = 0;
+
+    Array.from(body.children).forEach((child) => {
+      const local = child.localName;
+      if (local === "p") {
+        const text = textOf(child);
+        if (!text) return;
+        if (/\?\s*$/.test(text) && text.length < 400) {
+          found.push({ id: idx++, type: "question", kind: "afterPara", label: text, node: child, answer: "", filled: false });
+        } else if (/:\s*$/.test(text) && text.length < 150 && !/\?\s*$/.test(text)) {
+          found.push({ id: idx++, type: "field", kind: "inlinePara", label: text, node: child, answer: "", filled: false });
+        }
+      } else if (local === "tbl") {
+        const rows = Array.from(child.children).filter((c) => c.localName === "tr");
+        const headerCells = rows.length ? Array.from(rows[0].children).filter((c) => c.localName === "tc").map(textOf) : [];
+        rows.forEach((row, rIdx) => {
+          if (rIdx === 0) return; // treat first row as header
+          const cells = Array.from(row.children).filter((c) => c.localName === "tc");
+          const texts = cells.map(textOf);
+          const hasContent = texts.some((t) => t.length > 0);
+          if (!hasContent) return;
+          cells.forEach((cell, cIdx) => {
+            if (texts[cIdx] === "") {
+              const header = headerCells[cIdx] || ("kolonne " + (cIdx + 1));
+              const rowLabel = texts.filter((t) => t).join(" · ") || ("rad " + (rIdx + 1));
+              found.push({
+                id: idx++, type: "cell", kind: "cell",
+                label: header + " — " + rowLabel,
+                node: cell, answer: "", filled: false
+              });
+            }
+          });
+        });
+      }
+    });
+    return found;
+  }
+
+  // ---------- document viewer ----------
+  const RNS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+  const WPD = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
+  const HL = { yellow: "#ffff00", green: "#00ff00", cyan: "#00ffff", magenta: "#ff00ff", blue: "#0000ff", red: "#ff0000", darkBlue: "#000080", darkCyan: "#008080", darkGreen: "#008000", darkMagenta: "#800080", darkRed: "#800000", darkYellow: "#808000", darkGray: "#808080", lightGray: "#c0c0c0", black: "#000000", white: "#ffffff" };
+  const FONT_FALLBACK = 'system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+  const IMG_MIME = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp", bmp: "image/bmp", svg: "image/svg+xml" };
+
+  function kids(e, name) { const out = []; if (!e) return out; for (let i = 0; i < e.children.length; i++) { const c = e.children[i]; if (!name || c.localName === name) out.push(c); } return out; }
+  function kid(e, name) { if (!e) return null; for (let i = 0; i < e.children.length; i++) if (e.children[i].localName === name) return e.children[i]; return null; }
+  function wattr(e, n) { return e ? e.getAttributeNS(WNS, n) : null; }
+  function onOff(e) { const v = wattr(e, "val"); return !(v === "0" || v === "false" || v === "off"); }
+  function fontStack(name) {
+    const n = String(name).replace(/["\\]/g, "");
+    if (/times|georgia|cambria|garamond|palatino|book antiqua/i.test(n) && !/sans/i.test(n)) return '"' + n + '", Georgia, "Times New Roman", serif';
+    if (/courier|consolas|mono|menlo/i.test(n)) return '"' + n + '", "Courier New", monospace';
+    return '"' + n + '", ' + FONT_FALLBACK;
+  }
+
+  function readRunProps(rPr) {
+    const o = {};
+    if (!rPr) return o;
+    kids(rPr).forEach((c) => {
+      switch (c.localName) {
+        case "b": o.b = onOff(c); break;
+        case "i": o.i = onOff(c); break;
+        case "strike": case "dstrike": o.strike = onOff(c); break;
+        case "caps": o.caps = onOff(c); break;
+        case "smallCaps": o.smallCaps = onOff(c); break;
+        case "u": { const v = wattr(c, "val"); o.u = v ? v !== "none" : true; break; }
+        case "color": { const v = wattr(c, "val"); o.color = (v && v !== "auto") ? "#" + v : null; break; }
+        case "sz": { const v = parseInt(wattr(c, "val"), 10); if (v) o.sz = v / 2; break; }
+        case "highlight": o.highlight = HL[wattr(c, "val")] || null; break;
+        case "shd": { const f = wattr(c, "fill"); if (f && f !== "auto") o.shd = "#" + f; break; }
+        case "vertAlign": o.vert = wattr(c, "val"); break;
+        case "rStyle": o.rStyle = wattr(c, "val"); break;
+        case "rFonts": {
+          let f = wattr(c, "ascii") || wattr(c, "hAnsi");
+          if (!f) { const t = wattr(c, "asciiTheme") || wattr(c, "hAnsiTheme"); if (t) f = themeFont(docTheme, /^major/i.test(t) ? "major" : "minor"); }
+          if (f) o.font = f;
+          break;
+        }
+      }
+    });
+    return o;
+  }
+  function readParaProps(pPr) {
+    const o = {};
+    if (!pPr) return o;
+    kids(pPr).forEach((c) => {
+      switch (c.localName) {
+        case "jc": o.jc = wattr(c, "val"); break;
+        case "pStyle": o.pStyle = wattr(c, "val"); break;
+        case "shd": { const f = wattr(c, "fill"); if (f && f !== "auto") o.shd = "#" + f; break; }
+        case "ind": {
+          o.ind = {};
+          ["left", "start", "right", "end", "firstLine", "hanging"].forEach((k) => { const v = wattr(c, k); if (v !== null && v !== "" && !isNaN(parseInt(v, 10))) o.ind[k] = parseInt(v, 10) / 20; });
+          break;
+        }
+        case "spacing": {
+          o.sp = {};
+          const b = wattr(c, "before"), a = wattr(c, "after"), l = wattr(c, "line");
+          if (b !== null && b !== "" && !isNaN(parseInt(b, 10))) o.sp.before = parseInt(b, 10) / 20;
+          if (a !== null && a !== "" && !isNaN(parseInt(a, 10))) o.sp.after = parseInt(a, 10) / 20;
+          if (l && !isNaN(parseInt(l, 10))) { o.sp.line = parseInt(l, 10); o.sp.rule = wattr(c, "lineRule") || "auto"; }
+          break;
+        }
+        case "numPr": {
+          const il = kid(c, "ilvl"), ni = kid(c, "numId");
+          o.num = { ilvl: il ? (parseInt(wattr(il, "val"), 10) || 0) : 0, numId: ni ? wattr(ni, "val") : null };
+          break;
+        }
+      }
+    });
+    return o;
+  }
+  function mergeP(a, b) {
+    const o = Object.assign({}, a, b);
+    o.ind = Object.assign({}, a && a.ind, b && b.ind);
+    o.sp = Object.assign({}, a && a.sp, b && b.sp);
+    return o;
+  }
+
+  function buildStyleTable() {
+    const st = { map: new Map(), defR: {}, defP: {} };
+    if (stylesDoc) {
+      const dd = stylesDoc.getElementsByTagNameNS(WNS, "docDefaults")[0];
+      if (dd) {
+        const rp = kid(kid(dd, "rPrDefault"), "rPr"); if (rp) st.defR = readRunProps(rp);
+        const pp = kid(kid(dd, "pPrDefault"), "pPr"); if (pp) st.defP = readParaProps(pp);
+      }
+      const all = stylesDoc.getElementsByTagNameNS(WNS, "style");
+      for (let i = 0; i < all.length; i++) {
+        const s = all[i]; const id = wattr(s, "styleId"); if (!id) continue;
+        const bo = kid(s, "basedOn");
+        st.map.set(id, { id, type: wattr(s, "type"), def: wattr(s, "default") === "1", basedOn: bo ? wattr(bo, "val") : null,
+          r: readRunProps(kid(s, "rPr")), p: readParaProps(kid(s, "pPr")), tbl: kid(s, "tblPr"), cond: kids(s, "tblStylePr") });
+      }
+    }
+    styleTable = st;
+  }
+  function styleChain(id) {
+    const chain = []; let cur = id, g = 0;
+    while (cur && styleTable.map.has(cur) && g++ < 25) { const s = styleTable.map.get(cur); chain.unshift(s); cur = s.basedOn; }
+    return chain;
+  }
+  function defaultStyleId(type) {
+    for (const s of styleTable.map.values()) if (s.type === type && s.def) return s.id;
+    return null;
+  }
+  function resolveParaBase(pStyleId, tblR) {
+    let r = Object.assign({}, styleTable.defR, tblR || {});
+    let p = mergeP({}, styleTable.defP);
+    styleChain(pStyleId || defaultStyleId("paragraph")).forEach((s) => { r = Object.assign(r, s.r); p = mergeP(p, s.p); });
+    return { r, p };
+  }
+  function resolveCharStyle(id) {
+    let r = {};
+    styleChain(id).forEach((s) => { r = Object.assign(r, s.r); });
+    return r;
+  }
+
+  function buildNumbering(numDoc) {
+    const nb = { nums: new Map(), abs: new Map() };
+    if (numDoc && numDoc.documentElement) {
+      kids(numDoc.documentElement, "abstractNum").forEach((a) => {
+        const lv = new Map();
+        kids(a, "lvl").forEach((l) => {
+          const il = parseInt(wattr(l, "ilvl"), 10) || 0;
+          const st = kid(l, "start"), nf = kid(l, "numFmt"), lt = kid(l, "lvlText");
+          const sv = st ? parseInt(wattr(st, "val"), 10) : 1;
+          lv.set(il, { start: isNaN(sv) ? 1 : sv, fmt: nf ? wattr(nf, "val") : "decimal", text: lt ? wattr(lt, "val") : null, p: readParaProps(kid(l, "pPr")) });
+        });
+        nb.abs.set(wattr(a, "abstractNumId"), { lvls: lv });
+      });
+      kids(numDoc.documentElement, "num").forEach((n) => { const an = kid(n, "abstractNumId"); nb.nums.set(wattr(n, "numId"), an ? wattr(an, "val") : null); });
+    }
+    numbering = nb;
+  }
+  function fmtNum(n, fmt) {
+    const letters = (v, up) => { let s = ""; v = Math.max(1, v); while (v > 0) { v--; s = String.fromCharCode(97 + (v % 26)) + s; v = Math.floor(v / 26); } return up ? s.toUpperCase() : s; };
+    const roman = (v, up) => { const m = [[1000, "m"], [900, "cm"], [500, "d"], [400, "cd"], [100, "c"], [90, "xc"], [50, "l"], [40, "xl"], [10, "x"], [9, "ix"], [5, "v"], [4, "iv"], [1, "i"]]; let s = ""; let x = Math.max(1, Math.min(v, 3999)); m.forEach(([val, sym]) => { while (x >= val) { s += sym; x -= val; } }); return up ? s.toUpperCase() : s; };
+    switch (fmt) {
+      case "lowerLetter": return letters(n, false);
+      case "upperLetter": return letters(n, true);
+      case "lowerRoman": return roman(n, false);
+      case "upperRoman": return roman(n, true);
+      case "decimalZero": return (n < 10 ? "0" : "") + n;
+      default: return String(n);
+    }
+  }
+  function numberLabel(numId, ilvl) {
+    const abs = numbering.abs.get(numbering.nums.get(numId));
+    if (!abs) return null;
+    const lvl = abs.lvls.get(ilvl);
+    if (!lvl) return null;
+    const cs = numCounters[numId] || (numCounters[numId] = []);
+    cs[ilvl] = cs[ilvl] === undefined ? lvl.start : cs[ilvl] + 1;
+    for (let l = ilvl + 1; l < 10; l++) cs[l] = undefined;
+    let text;
+    if (lvl.fmt === "bullet") {
+      const ch = lvl.text || "";
+      text = (ch && ch.charCodeAt(0) < 0xF000 && ch.trim()) ? ch : ["•", "◦", "▪"][ilvl % 3];
+    } else if (lvl.fmt === "none") {
+      text = "";
+    } else {
+      text = (lvl.text || ("%" + (ilvl + 1) + ".")).replace(/%(\d)/g, (m, d) => {
+        const li = parseInt(d, 10) - 1; const lv = abs.lvls.get(li);
+        const v = cs[li] === undefined ? (lv ? lv.start : 1) : cs[li];
+        return fmtNum(v, lv ? lv.fmt : "decimal");
+      });
+    }
+    return { text, lvl };
+  }
+
+  function resolveZipPath(target) {
+    if (!target || /^[a-z][a-z0-9+.-]*:/i.test(target)) return null;
+    const parts = (target.charAt(0) === "/" ? target.slice(1) : "word/" + target).split("/");
+    const out = [];
+    parts.forEach((p) => { if (p === "..") out.pop(); else if (p && p !== ".") out.push(p); });
+    return out.join("/");
+  }
+  async function loadImages(zipObj, relsDoc, doc) {
+    const map = new Map();
+    if (!relsDoc) return map;
+    const rels = new Map();
+    const rs = relsDoc.getElementsByTagName("Relationship");
+    for (let i = 0; i < rs.length; i++) rels.set(rs[i].getAttribute("Id"), rs[i]);
+    const blips = doc.getElementsByTagNameNS(DML, "blip");
+    for (let i = 0; i < blips.length; i++) {
+      const id = blips[i].getAttributeNS(RNS, "embed");
+      if (!id || map.has(id)) continue;
+      const rel = rels.get(id); if (!rel) continue;
+      const path = resolveZipPath(rel.getAttribute("Target"));
+      const ext = path ? path.split(".").pop().toLowerCase() : "";
+      const f = path ? zipObj.file(path) : null;
+      if (!f || !IMG_MIME[ext]) continue;
+      try { map.set(id, "data:" + IMG_MIME[ext] + ";base64," + await f.async("base64")); } catch (e) { /* skip image */ }
+    }
+    return map;
+  }
+
+  function applyRunCss(node, pr, base) {
+    const diff = (k) => !base || pr[k] !== base[k];
+    if (diff("font") && pr.font) node.style.fontFamily = fontStack(pr.font);
+    if (diff("sz") && pr.sz) node.style.fontSize = pr.sz + "pt";
+    if (diff("color") && pr.color) node.style.color = pr.color;
+    if (diff("b") && pr.b !== undefined) node.style.fontWeight = pr.b ? "700" : "400";
+    if (diff("i") && pr.i !== undefined) node.style.fontStyle = pr.i ? "italic" : "normal";
+    if (diff("u") || diff("strike")) {
+      const d = [pr.u ? "underline" : "", pr.strike ? "line-through" : ""].join(" ").trim();
+      if (d || base) node.style.textDecoration = d || "none";
+    }
+    if (diff("caps") && pr.caps !== undefined) node.style.textTransform = pr.caps ? "uppercase" : "none";
+    if (diff("smallCaps") && pr.smallCaps !== undefined) node.style.fontVariant = pr.smallCaps ? "small-caps" : "normal";
+    const bg = pr.highlight || pr.shd;
+    if (bg && (!base || bg !== (base.highlight || base.shd))) node.style.backgroundColor = bg;
+    if (pr.vert === "superscript" || pr.vert === "subscript") {
+      node.style.verticalAlign = pr.vert === "superscript" ? "super" : "sub";
+      if (!pr.sz) node.style.fontSize = "0.75em";
+    }
+  }
+
+  function renderDrawing(dr) {
+    const blip = dr.getElementsByTagNameNS(DML, "blip")[0];
+    if (!blip) return null;
+    const ext = dr.getElementsByTagNameNS(WPD, "extent")[0];
+    const src = docImages.get(blip.getAttributeNS(RNS, "embed"));
+    if (!src) { const ph = document.createElement("span"); ph.className = "img-missing"; ph.textContent = "[bilde]"; return ph; }
+    const img = document.createElement("img");
+    img.src = src; img.alt = "";
+    const w = ext ? Math.round(parseInt(ext.getAttribute("cx"), 10) / 9525) : 0;
+    if (w > 0) img.style.width = w + "px";
+    img.style.height = "auto";
+    return img;
+  }
+
+  function renderRunInto(parent, r, base) {
+    const direct = readRunProps(kid(r, "rPr"));
+    const pr = Object.assign({}, base, resolveCharStyle(direct.rStyle), direct);
+    const span = document.createElement("span");
+    applyRunCss(span, pr, base);
+    let has = false;
+    kids(r).forEach((c) => {
+      switch (c.localName) {
+        case "t": span.appendChild(document.createTextNode(c.textContent)); has = true; break;
+        case "tab": { const t = document.createElement("span"); t.className = "tab"; t.textContent = "\u00A0"; span.appendChild(t); has = true; break; }
+        case "br": case "cr": {
+          if (wattr(c, "type") === "page") { const b = document.createElement("span"); b.className = "pgbreak"; span.appendChild(b); }
+          else span.appendChild(document.createElement("br"));
+          has = true; break;
+        }
+        case "noBreakHyphen": span.appendChild(document.createTextNode("\u2011")); has = true; break;
+        case "drawing": { const im = renderDrawing(c); if (im) { span.appendChild(im); has = true; } break; }
+      }
+    });
+    if (has) parent.appendChild(span);
+  }
+  function renderInline(parent, node, base) {
+    kids(node).forEach((c) => {
+      switch (c.localName) {
+        case "r": renderRunInto(parent, c, base); break;
+        case "hyperlink": { const a = document.createElement("span"); a.className = "dlink"; renderInline(a, c, base); parent.appendChild(a); break; }
+        case "ins": case "smartTag": case "fldSimple": case "sdt": case "sdtContent": case "customXml": case "dir": case "bdo": renderInline(parent, c, base); break;
+      }
+    });
+  }
+
+  function renderParagraph(p, tblR) {
+    const direct = readParaProps(kid(p, "pPr"));
+    const base = resolveParaBase(direct.pStyle, tblR);
+    const numSrc = direct.num || base.p.num;
+    let numInfo = null;
+    if (numSrc && numSrc.numId && numSrc.numId !== "0") numInfo = numberLabel(numSrc.numId, numSrc.ilvl || 0);
+    let pp = base.p;
+    if (numInfo) pp = mergeP(pp, numInfo.lvl.p);
+    pp = mergeP(pp, direct);
+
+    const div = document.createElement("div");
+    div.className = "dp";
+    applyRunCss(div, base.r, null);
+    const jcMap = { center: "center", right: "right", end: "right", both: "justify", distribute: "justify", left: "left", start: "left" };
+    if (pp.jc && jcMap[pp.jc]) div.style.textAlign = jcMap[pp.jc];
+    const ind = pp.ind || {}, sp = pp.sp || {};
+    const left = ind.left !== undefined ? ind.left : ind.start;
+    const right = ind.right !== undefined ? ind.right : ind.end;
+    if (left) div.style.marginLeft = left + "pt";
+    if (right) div.style.marginRight = right + "pt";
+    if (ind.hanging) div.style.textIndent = (-ind.hanging) + "pt";
+    else if (ind.firstLine) div.style.textIndent = ind.firstLine + "pt";
+    if (sp.before) div.style.paddingTop = sp.before + "pt";
+    if (sp.after) div.style.paddingBottom = sp.after + "pt";
+    if (sp.line) div.style.lineHeight = (sp.rule === "exact" || sp.rule === "atLeast") ? (sp.line / 20) + "pt" : String(Math.max(1, (sp.line / 240) * 1.15));
+    if (pp.shd) div.style.backgroundColor = pp.shd;
+    if (numInfo && numInfo.text) {
+      const lab = document.createElement("span");
+      lab.className = "num";
+      lab.textContent = numInfo.text;
+      lab.style.minWidth = (ind.hanging || 18) + "pt";
+      div.appendChild(lab);
+    }
+    renderInline(div, p, base.r);
+    if (!div.childNodes.length) div.style.minHeight = "1.15em";
+    return div;
+  }
+
+  function readBorder(e) {
+    if (!e) return null;
+    const val = wattr(e, "val");
+    if (!val) return null;
+    if (val === "nil" || val === "none") return "none";
+    const sz = parseInt(wattr(e, "sz"), 10) || 4;
+    const col = wattr(e, "color");
+    const style = val === "double" ? "double" : (val === "dashed" || val === "dashSmallGap") ? "dashed" : val === "dotted" ? "dotted" : "solid";
+    return Math.max(0.5, sz / 8) + "pt " + style + " " + ((col && col !== "auto") ? "#" + col : "#000");
+  }
+  function readBorders(el2) {
+    const o = {};
+    if (!el2) return o;
+    ["top", "left", "bottom", "right", "start", "end", "insideH", "insideV"].forEach((k) => { const b = readBorder(kid(el2, k)); if (b !== null) o[k] = b; });
+    if (o.start !== undefined && o.left === undefined) o.left = o.start;
+    if (o.end !== undefined && o.right === undefined) o.right = o.end;
+    return o;
+  }
+  function tableStyleInfo(styleId) {
+    const info = { borders: {}, r: {}, first: null };
+    styleChain(styleId).forEach((s) => {
+      if (s.tbl) Object.assign(info.borders, readBorders(kid(s.tbl, "tblBorders")));
+      Object.assign(info.r, s.r);
+      s.cond.forEach((c) => {
+        if (wattr(c, "type") === "firstRow") {
+          const shd = kid(kid(c, "tcPr"), "shd"); const f = shd ? wattr(shd, "fill") : null;
+          info.first = { r: readRunProps(kid(c, "rPr")), shd: (f && f !== "auto") ? "#" + f : null };
+        }
+      });
+    });
+    return info;
+  }
+
+  function renderTable(tbl, outerR) {
+    const tblPr = kid(tbl, "tblPr");
+    const sty = kid(tblPr, "tblStyle");
+    const info = tableStyleInfo(sty ? wattr(sty, "val") : defaultStyleId("table"));
+    const borders = Object.assign({}, info.borders, readBorders(kid(tblPr, "tblBorders")));
+    const look = kid(tblPr, "tblLook");
+    const firstRowOn = !!look && (wattr(look, "firstRow") === "1" || ((parseInt(wattr(look, "val") || "0", 16) || 0) & 0x20) !== 0);
+    const table = document.createElement("table");
+    table.className = "dtable";
+    const grid = kids(kid(tbl, "tblGrid"), "gridCol").map((g) => parseInt(wattr(g, "w"), 10) || 0);
+    const total = grid.reduce((a, b) => a + b, 0);
+    if (total) {
+      const cg = document.createElement("colgroup");
+      grid.forEach((w) => { const c = document.createElement("col"); c.style.width = (w / total * 100).toFixed(2) + "%"; cg.appendChild(c); });
+      table.appendChild(cg);
+    }
+    const tw = kid(tblPr, "tblW");
+    const twType = tw ? wattr(tw, "type") : null, twVal = tw ? parseInt(wattr(tw, "w"), 10) : 0;
+    if (twType === "pct" && twVal) table.style.width = Math.min(100, twVal / 50) + "%";
+    else if (twType === "dxa" && twVal) table.style.width = "min(100%, " + (twVal / 20 * 1.3333) + "px)";
+    else if (total) table.style.width = "min(100%, " + (total / 20 * 1.3333) + "px)";
+    const jc = kid(tblPr, "jc") ? wattr(kid(tblPr, "jc"), "val") : null;
+    if (jc === "center") { table.style.marginLeft = "auto"; table.style.marginRight = "auto"; }
+    else if (jc === "right" || jc === "end") table.style.marginLeft = "auto";
+
+    const rows = kids(tbl, "tr");
+    const placed = rows.map((tr) => {
+      const gb = kid(kid(tr, "trPr"), "gridBefore");
+      let col = gb ? (parseInt(wattr(gb, "val"), 10) || 0) : 0;
+      const start = col;
+      const cells = kids(tr, "tc").map((tc) => {
+        const tcPr = kid(tc, "tcPr");
+        const gs = kid(tcPr, "gridSpan");
+        const span = gs ? (parseInt(wattr(gs, "val"), 10) || 1) : 1;
+        const vm = kid(tcPr, "vMerge");
+        const o = { tc, tcPr, col, span, vmerge: vm ? (wattr(vm, "val") === "restart" ? "restart" : "continue") : null, rowspan: 1 };
+        col += span;
+        return o;
+      });
+      return { cells, start };
+    });
+    placed.forEach((row, r) => row.cells.forEach((cell) => {
+      if (cell.vmerge !== "restart") return;
+      let n = 1;
+      for (let rr = r + 1; rr < placed.length; rr++) {
+        if (placed[rr].cells.find((x) => x.col === cell.col && x.vmerge === "continue")) n++; else break;
+      }
+      cell.rowspan = n;
+    }));
+
+    const tbody = document.createElement("tbody");
+    rows.forEach((tr, r) => {
+      const trEl = document.createElement("tr");
+      if (placed[r].start > 0) { const sp = document.createElement("td"); sp.colSpan = placed[r].start; trEl.appendChild(sp); }
+      const isFirstRow = r === 0 && firstRowOn && info.first;
+      const cellR = Object.assign({}, outerR, info.r, isFirstRow ? info.first.r : {});
+      placed[r].cells.forEach((cell) => {
+        if (cell.vmerge === "continue") return;
+        const td = document.createElement("td");
+        if (cell.span > 1) td.colSpan = cell.span;
+        if (cell.rowspan > 1) td.rowSpan = cell.rowspan;
+        const own = readBorders(kid(cell.tcPr, "tcBorders"));
+        const firstRow = r === 0, lastRow = (r + cell.rowspan) >= rows.length;
+        const firstCol = cell.col === 0, lastCol = (cell.col + cell.span) >= grid.length;
+        const pick = (k, outer, inner, isOuter) => own[k] !== undefined ? own[k] : (isOuter ? borders[outer] : borders[inner]);
+        const b = { Top: pick("top", "top", "insideH", firstRow), Bottom: pick("bottom", "bottom", "insideH", lastRow), Left: pick("left", "left", "insideV", firstCol), Right: pick("right", "right", "insideV", lastCol) };
+        Object.keys(b).forEach((side) => { if (b[side]) td.style["border" + side] = b[side]; });
+        const shd = kid(cell.tcPr, "shd"); const f = shd ? wattr(shd, "fill") : null;
+        if (f && f !== "auto") td.style.backgroundColor = "#" + f;
+        else if (isFirstRow && info.first.shd) td.style.backgroundColor = info.first.shd;
+        const va = kid(cell.tcPr, "vAlign") ? wattr(kid(cell.tcPr, "vAlign"), "val") : null;
+        if (va === "center") td.style.verticalAlign = "middle"; else if (va === "bottom") td.style.verticalAlign = "bottom";
+        const fieldItem = itemByNode.get(cell.tc);
+        if (fieldItem) td.appendChild(makeField(fieldItem, "cell"));
+        else kids(cell.tc).forEach((c) => appendBlock(td, c, cellR));
+        trEl.appendChild(td);
+      });
+      tbody.appendChild(trEl);
+    });
+    table.appendChild(tbody);
+    return table;
+  }
+
+  function appendBlock(container, node, tblR) {
+    try {
+      switch (node.localName) {
+        case "p": {
+          const div = renderParagraph(node, tblR);
+          const it = itemByNode.get(node);
+          if (it && it.kind === "inlinePara") div.appendChild(makeField(it, "inline"));
+          container.appendChild(div);
+          if (it && it.kind === "afterPara") container.appendChild(makeField(it, "block"));
+          break;
+        }
+        case "tbl": container.appendChild(renderTable(node, tblR)); break;
+        case "sdt": { const sc = kid(node, "sdtContent"); if (sc) kids(sc).forEach((c) => appendBlock(container, c, tblR)); break; }
+      }
+    } catch (e) {
+      console.error("render fallback", e);
+      const f = document.createElement("div");
+      f.className = "dp";
+      f.textContent = textOf(node);
+      container.appendChild(f);
+      const it = itemByNode.get(node);
+      if (it && !it.ui) container.appendChild(makeField(it, "block"));
+    }
+  }
+
+  function renderDocument() {
+    const page = el("doc-page");
+    page.innerHTML = "";
+    numCounters = {};
+    prefixEls = [];
+    const body = xmlDoc.getElementsByTagNameNS(WNS, "body")[0];
+    const sect = kid(body, "sectPr");
+    const pgSz = kid(sect, "pgSz"), pgMar = kid(sect, "pgMar");
+    const pxOf = (n, d) => { const v = parseInt(n, 10); return (isNaN(v) ? d : v / 20 * 1.3333); };
+    page.style.setProperty("--page-w", pxOf(pgSz ? wattr(pgSz, "w") : null, 595 * 1.3333).toFixed(0) + "px");
+    const mar = (k, d) => "min(" + pxOf(pgMar ? wattr(pgMar, k) : null, d).toFixed(0) + "px, 7vw)";
+    page.style.setProperty("--pm-t", mar("top", 96)); page.style.setProperty("--pm-b", mar("bottom", 96));
+    page.style.setProperty("--pm-l", mar("left", 96)); page.style.setProperty("--pm-r", mar("right", 96));
+    page.style.fontFamily = ""; page.style.fontSize = ""; page.style.color = ""; page.style.fontWeight = ""; page.style.fontStyle = "";
+    applyRunCss(page, resolveParaBase(null).r, null);
+    kids(body).forEach((n) => appendBlock(page, n));
+    updatePreview();
+    updatePreviewText();
+  }
+
+  // ---------- answer fields shown inside the document ----------
+  function growTa(ta) {
+    ta.style.height = "auto";
+    const hgt = ta.scrollHeight;
+    ta.style.height = hgt ? (hgt + 2) + "px" : "";
+  }
+  function growAll() { items.forEach((it) => { if (it.ui) growTa(it.ui.ta); }); }
+  window.addEventListener("resize", () => { clearTimeout(growAll._t); growAll._t = setTimeout(growAll, 120); });
+
+  function updateFieldBtn(item) {
+    if (!item.ui) return;
+    item.ui.btn.textContent = "✦ " + ((item.answer || "").trim() ? "Fyll ut på nytt" : "Fyll ut denne");
+  }
+  function setFieldLoading(item, on) {
+    item.loading = on;
+    if (!item.ui) return;
+    item.ui.wrap.classList.toggle("loading", on);
+    item.ui.ta.disabled = on;
+    item.ui.btn.disabled = on;
+    if (on) { item.ui.msg.textContent = ""; item.ui.wrap.classList.remove("err"); }
+  }
+  function setAnswer(item, text, source) {
+    item.answer = text; item.source = source; item.filled = source === "ai";
+    if (!item.ui) return;
+    item.ui.ta.value = text;
+    item.ui.wrap.classList.toggle("ai", source === "ai");
+    growTa(item.ui.ta);
+    updateFieldBtn(item);
+  }
+  function makeField(item, mode) {
+    const wrap = document.createElement("div");
+    wrap.className = "field field-" + (mode === "block" ? "block" : mode);
+    if (mode === "block") {
+      const pfx = document.createElement("span");
+      pfx.className = "pfx";
+      pfx.textContent = ANSWER_PREFIX[answerLanguage] || "";
+      prefixEls.push(pfx);
+      wrap.appendChild(pfx);
+    }
+    const ta = document.createElement("textarea");
+    ta.rows = 1;
+    ta.placeholder = mode === "cell" ? "Skriv her …" : "Skriv svar her, eller la KI fylle ut …";
+    ta.value = item.answer || "";
+    ta.setAttribute("aria-label", item.label);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "fbtn";
+    const msg = document.createElement("div");
+    msg.className = "fmsg";
+    ta.addEventListener("input", () => {
+      item.answer = ta.value;
+      item.source = ta.value.trim() ? "user" : null;
+      item.filled = false;
+      wrap.classList.remove("ai");
+      growTa(ta);
+      updateFieldBtn(item);
+    });
+    btn.addEventListener("click", () => fillSingle(item));
+    wrap.appendChild(ta);
+    wrap.appendChild(btn);
+    wrap.appendChild(msg);
+    item.ui = { wrap, ta, btn, msg };
+    updateFieldBtn(item);
+    return wrap;
+  }
+
+  // ---------- AI filling ----------
+  function updateFillButton() {
+    if (!puterReady()) setFillStatus("Fikk ikke lastet Puter (js.puter.com). Sjekk nettforbindelsen og last siden på nytt.", true);
+    else if (!puter.auth.isSignedIn()) setFillStatus("Første gang du bruker KI-utfylling åpnes et innloggingsvindu fra Puter (popup).", false);
+  }
+  updateFillButton();
+
+  el("fill-all-btn").addEventListener("click", fillAll);
+
+  function buildContextText() {
+    if (!xmlDoc) return "";
+    const body = xmlDoc.getElementsByTagNameNS(WNS, "body")[0];
+    if (!body) return "";
+    let parts = [];
+    Array.from(body.children).forEach((c) => {
+      if (c.localName === "p") {
+        const t = textOf(c);
+        if (t) parts.push(t);
+      }
+    });
+    return parts.join("\n").slice(0, 4000);
+  }
+
+  function describeItem(it, i) {
+    if (it.type === "question") return (i + 1) + ". Spørsmål: \"" + it.label + "\"";
+    if (it.type === "field") return (i + 1) + ". Felt som skal fylles ut: \"" + it.label + "\"";
+    return (i + 1) + ". Tabellcelle å fylle ut. " + it.label;
+  }
+
+  async function fillAll() {
+    if (!items.length) return;
+    const targets = items.filter((it) => it.source !== "user" && !it.loading);
+    const skipped = items.filter((it) => it.source === "user").length;
+    if (!targets.length) {
+      setFillStatus("Alle feltene har tekst du har skrevet selv. Tøm et felt, eller trykk «Fyll ut denne» i feltet, hvis KI skal skrive det.", false);
+      return;
+    }
+    const btn = el("fill-all-btn");
+    btn.disabled = true;
+    targets.forEach((it) => setFieldLoading(it, true));
+    setFillStatus("KI fyller ut " + targets.length + " felt (kan ta opptil ett minutt) …", false, true);
+
+    const contextText = buildContextText();
+    const extra = el("context-input").value.trim();
+    const lines = targets.map(describeItem).join("\n");
+    const prompt = "Du fyller ut et dokument automatisk, som om du var personen som besvarer det.\n\n" +
+      styleInstructionText() + "\n\n" +
+      (extra ? "Ekstra kontekst/instruksjoner fra brukeren:\n" + extra + "\n\n" : "") +
+      "Utdrag fra dokumentet (for sammenheng):\n\"\"\"\n" + contextText + "\n\"\"\"\n\n" +
+      "Felt som skal besvares, i rekkefølge:\n" + lines + "\n\n" +
+      "Svar KUN med en gyldig JSON-liste av strenger, nøyaktig " + targets.length + " strenger, i samme rekkefølge som feltene over. " +
+      "Hver streng er selve svaret/verdien for det feltet — kort, presist og naturlig. " +
+      "Ikke ta med feltnummer, anførselstegn rundt hele svaret, eller noen forklaring.";
+
+    try {
+      const result = parseJsonArray(await puterChat(prompt));
+      if (!Array.isArray(result)) { const e = new Error("not array"); e.code = "invalid_json"; throw e; }
+      let n = 0;
+      targets.forEach((it, i) => {
+        const v = result[i];
+        if ((typeof v === "string" || typeof v === "number") && String(v).trim()) { setAnswer(it, String(v).trim(), "ai"); n++; }
+      });
+      const tail = skipped ? " (" + skipped + " felt du har skrevet selv er urørt)" : "";
+      if (n === targets.length) setFillStatus("Ferdig — " + n + " felt fylt ut" + tail + ". Les gjennom før du laster ned.", false);
+      else setFillStatus("KI svarte på " + n + " av " + targets.length + " felt" + tail + ". Trykk «Fyll ut alt» igjen for resten.", true);
+    } catch (e) {
+      console.error(e);
+      setFillStatus(puterErrorMessage(e), true);
+    } finally {
+      targets.forEach((it) => setFieldLoading(it, false));
+      btn.disabled = false;
+    }
+  }
+
+  async function fillSingle(item) {
+    if (item.loading) return;
+    setFieldLoading(item, true);
+    const contextText = buildContextText();
+    const extra = el("context-input").value.trim();
+    const desc = describeItem(item, 0).replace(/^1\.\s*/, "");
+    const prompt = "Du fyller ut ett felt i et dokument, som om du var personen som besvarer det.\n\n" +
+      styleInstructionText() + "\n\n" +
+      (extra ? "Ekstra kontekst/instruksjoner fra brukeren:\n" + extra + "\n\n" : "") +
+      "Utdrag fra dokumentet (for sammenheng):\n\"\"\"\n" + contextText + "\n\"\"\"\n\n" +
+      desc + "\n\n" +
+      "Svar KUN med selve svarteksten — kort, presist og naturlig. Ikke ta med anførselstegn eller forklaring.";
+    try {
+      const text = await puterChat(prompt);
+      setAnswer(item, text.trim().replace(/^["“«]+|["”»]+$/g, "").trim(), "ai");
+      setFillStatus("", false);
+    } catch (e) {
+      console.error(e);
+      const m = puterErrorMessage(e);
+      if (item.ui) { item.ui.msg.textContent = m; item.ui.wrap.classList.add("err"); }
+      setFillStatus(m, true);
+    } finally {
+      setFieldLoading(item, false);
+    }
+  }
+
+  function setFillStatus(msg, isError, spinning) {
+    const line = el("fill-status");
+    line.className = "status-line" + (isError ? " error" : "");
+    line.innerHTML = (spinning ? '<span class="spinner"></span>' : "") + escapeHtml(msg);
+  }
+
+  // ---------- writing answers back into the XML ----------
+  function styledRun(doc, text) {
+    const r = doc.createElementNS(WNS, "w:r");
+    const rPr = doc.createElementNS(WNS, "w:rPr");
+    let hasProps = false;
+
+    // Element order below follows the required CT_RPr sequence
+    // (rFonts, b, i, color, sz, szCs, ...) — Word rejects an out-of-order
+    // rPr as corrupt, so this order must not be changed casually.
+    if (styleSettings.font) {
+      const rFonts = doc.createElementNS(WNS, "w:rFonts");
+      rFonts.setAttributeNS(WNS, "w:ascii", styleSettings.font);
+      rFonts.setAttributeNS(WNS, "w:hAnsi", styleSettings.font);
+      rFonts.setAttributeNS(WNS, "w:cs", styleSettings.font);
+      rPr.appendChild(rFonts);
+      hasProps = true;
+    }
+    if (styleSettings.bold) {
+      rPr.appendChild(doc.createElementNS(WNS, "w:b"));
+      hasProps = true;
+    }
+    if (styleSettings.italic) {
+      rPr.appendChild(doc.createElementNS(WNS, "w:i"));
+      hasProps = true;
+    }
+    if (styleSettings.color) {
+      const color = doc.createElementNS(WNS, "w:color");
+      color.setAttributeNS(WNS, "w:val", styleSettings.color);
+      rPr.appendChild(color);
+      hasProps = true;
+    }
+    if (styleSettings.size) {
+      const halfPoints = String(Math.round(styleSettings.size * 2));
+      const sz = doc.createElementNS(WNS, "w:sz");
+      sz.setAttributeNS(WNS, "w:val", halfPoints);
+      const szCs = doc.createElementNS(WNS, "w:szCs");
+      szCs.setAttributeNS(WNS, "w:val", halfPoints);
+      rPr.appendChild(sz);
+      rPr.appendChild(szCs);
+      hasProps = true;
+    }
+    if (hasProps) r.appendChild(rPr);
+
+    // Strip characters XML 1.0 forbids (they would corrupt the file), keep line breaks as <w:br/>.
+    const safe = String(text).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, "");
+    safe.split(/\r\n|\r|\n/).forEach((part, i) => {
+      if (i > 0) r.appendChild(doc.createElementNS(WNS, "w:br"));
+      const t = doc.createElementNS(WNS, "w:t");
+      t.setAttributeNS(XML_NS, "xml:space", "preserve");
+      t.textContent = part;
+      r.appendChild(t);
+    });
+    return r;
+  }
+
+  function applyAnswer(doc, item) {
+    const answer = (item.answer || "").trim();
+    if (!answer) return;
+    if (item.kind === "afterPara") {
+      const p = doc.createElementNS(WNS, "w:p");
+      p.appendChild(styledRun(doc, (ANSWER_PREFIX[answerLanguage] || "Svar: ") + answer));
+      if (item.node.parentNode) { item.node.parentNode.insertBefore(p, item.node.nextSibling); insertedNodes.push(p); }
+    } else if (item.kind === "inlinePara") {
+      { const run = styledRun(doc, " " + answer); item.node.appendChild(run); insertedNodes.push(run); }
+    } else if (item.kind === "cell") {
+      let p = null;
+      for (let i = 0; i < item.node.children.length; i++) {
+        if (item.node.children[i].localName === "p") { p = item.node.children[i]; break; }
+      }
+      if (!p) {
+        p = doc.createElementNS(WNS, "w:p");
+        item.node.appendChild(p);
+      }
+      { const run = styledRun(doc, answer); p.appendChild(run); insertedNodes.push(run); }
+    }
+  }
+
+  // ---------- download ----------
+  function updateDownloadButton() { el("download-btn").disabled = !zip; }
+
+  el("download-btn").addEventListener("click", async () => {
+    if (!zip || !xmlDoc) return;
+    const btn = el("download-btn");
+    btn.disabled = true;
+    setDownloadStatus("Setter sammen dokumentet …", false, true);
+    insertedNodes = [];
+    try {
+      items.forEach((item) => applyAnswer(xmlDoc, item));
+      let serialized = new XMLSerializer().serializeToString(xmlDoc);
+      // Browsers may emit their own XML declaration; keep exactly one (two = corrupt in Word).
+      serialized = serialized.replace(/^\s*<\?xml[^>]*\?>\s*/i, "");
+      serialized = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n' + serialized;
+      // createFolders:false: no stray "word/" entry in the archive (also corrupt in Word).
+      zip.file("word/document.xml", serialized, { createFolders: false });
+      if (zip.files["word/"]) delete zip.files["word/"];
+      const blob = await zip.generateAsync({
+        type: "blob",
+        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        compression: "DEFLATE"
+      });
+      const filename = (originalName || "dokument") + "-utfylt.docx";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      const answered = items.filter((it) => (it.answer || "").trim()).length;
+      setDownloadStatus("Dokumentet er lastet ned som " + filename + (answered ? " (" + answered + " svar satt inn)." : " — men ingen felt er fylt ut ennå, så filen er lik originalen."), false);
+    } catch (e) {
+      console.error(e);
+      setDownloadStatus("Kunne ikke lage filen. Prøv å laste opp dokumentet på nytt.", true);
+    } finally {
+      // Undo the insertions so a second download never duplicates the answers.
+      insertedNodes.forEach((n) => { if (n.parentNode) n.parentNode.removeChild(n); });
+      insertedNodes = [];
+      btn.disabled = !zip;
+    }
+  });
+
+  function setDownloadStatus(msg, isError, spinning) {
+    const line = el("download-status");
+    line.className = "status-line" + (isError ? " error" : "");
+    line.innerHTML = (spinning ? '<span class="spinner"></span>' : "") + escapeHtml(msg);
+  }
+
+  // ---------- utils ----------
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+})();
+</script>
+</body>
+</html>
