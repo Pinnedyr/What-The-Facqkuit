@@ -1,14 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aria Download</title>
+  <title>Aria is broken</title>
   <link rel="icon" href="images/logo.png">
+
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     :root {
       --bg: #070a10;
@@ -18,14 +25,14 @@
     }
 
     html, body {
+      min-height: 100%;
       width: 100%;
-      height: 100%;
     }
 
     body {
       background: var(--bg);
-      font-family: 'Sora', sans-serif;
       color: var(--text);
+      font-family: 'Sora', sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -40,661 +47,521 @@
       justify-content: center;
       padding: 3rem 1.5rem;
       max-width: 1024px;
-      margin: 0 auto;
+      margin: auto;
       width: 100%;
     }
 
-    .content-wrapper {
+    .content {
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3.5rem;
+      gap: 2rem;
+      animation: fadeInUp .7s ease-out;
     }
 
     .hero {
       text-align: center;
-      animation: fadeInUp 0.8s ease-out;
     }
 
     .hero h1 {
       font-family: 'Orbitron', monospace;
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
+      font-size: clamp(2rem, 6vw, 3.5rem);
       color: white;
+      margin-bottom: 1rem;
     }
 
-    .hero h1 span { color: var(--accent); }
+    .hero h1 span {
+      color: var(--accent);
+    }
 
     .hero p {
-      font-size: 1.125rem;
-      opacity: 0.7;
+      font-size: 1rem;
+      line-height: 1.8;
+      opacity: .7;
     }
 
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 2rem; }
+    .status-card {
+      width: 100%;
+      max-width: 720px;
+      padding: clamp(1.5rem, 5vw, 3rem);
+      text-align: center;
+      background: linear-gradient(145deg, #0b1221, #0b0f18);
+      border: 1px solid rgba(58, 123, 255, .35);
+      border-radius: 1rem;
+      box-shadow: 0 0 45px rgba(58, 123, 255, .1);
+      animation: fadeInUp .8s ease-out;
+    }
+
+    .status {
+      display: inline-block;
+      padding: .5rem 1rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 107, 107, .35);
+      border-radius: 999px;
+      background: rgba(255, 107, 107, .08);
+      color: #ff8b8b;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+    }
+
+    .status-card h2 {
+      color: white;
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      margin-bottom: 1rem;
+    }
+
+    .status-card p {
+      line-height: 1.8;
+      opacity: .8;
+      margin-top: .75rem;
+    }
+
+    .development-date {
+      color: #8db4ff !important;
+      font-weight: 600;
+      opacity: 1 !important;
+      margin-top: 1.25rem !important;
+    }
+
+    .footer {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--accent),
+        transparent
+      );
+      opacity: .3;
+    }
+
+    /* Original download page is hidden while paused. */
+    body.aria-paused .download-section,
+    body.aria-paused .features,
+    body.aria-paused .modal-overlay {
+      display: none !important;
+    }
+
+    /* Original page is restored when ARIA_PAUSED = false. */
+    body:not(.aria-paused) .status-card {
+      display: none;
     }
 
     .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
       width: 100%;
-      max-width: 900px;
     }
 
-    .card {
+    .feature {
       background: #0b0f18;
       border: 1px solid var(--border);
-      border-radius: 0.75rem;
+      border-radius: .75rem;
       padding: 1.5rem;
       text-align: center;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      animation: fadeInUp 0.7s ease-out;
-      animation-fill-mode: both;
     }
 
-    .card:nth-child(1) { animation-delay: 0.2s; }
-    .card:nth-child(2) { animation-delay: 0.35s; }
-    .card:nth-child(3) { animation-delay: 0.5s; }
-
-    .card::after {
-      content: "";
-      position: absolute;
-      bottom: 0; left: 0;
-      width: 100%; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.3;
-    }
-
-    .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 0 30px rgba(58, 123, 255, 0.25);
-      border-color: rgba(58, 123, 255, 0.4);
-    }
-
-    .card-icon {
-      width: 3.5rem; height: 3.5rem;
-      border-radius: 0.75rem;
-      background: rgba(58, 123, 255, 0.1);
-      border: 1px solid rgba(58, 123, 255, 0.3);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1rem;
-      animation: pulseGlow 3s ease-in-out infinite;
-    }
-
-    .card-icon svg { width: 1.75rem; height: 1.75rem; color: var(--accent); }
-    .card:nth-child(2) .card-icon { animation-delay: 0.5s; }
-    .card:nth-child(3) .card-icon { animation-delay: 1s; }
-
-    .card h3 {
+    .feature h3 {
       font-family: 'Orbitron', monospace;
-      font-size: 1.125rem; font-weight: 600;
-      color: white; margin-bottom: 0.5rem;
+      color: white;
+      margin-bottom: .75rem;
+      font-size: 1rem;
     }
 
-    .card p { font-size: 0.875rem; opacity: 0.6; line-height: 1.6; }
+    .feature p {
+      font-size: .875rem;
+      line-height: 1.7;
+      opacity: .65;
+    }
 
     .download-section {
-      display: flex; flex-direction: column;
-      gap: 1.5rem; align-items: center; justify-content: center;
-      width: 100%;
-      animation: fadeInUp 0.6s ease-out 0.9s both;
-      margin-top: 4rem;
-    }
-
-    .coming-soon { text-align: center; }
-
-    .coming-soon-label { font-size: 0.875rem; opacity: 0.5; margin-bottom: 0.5rem; }
-
-    .coming-soon-badge {
-      display: inline-block;
-      padding: 0.75rem 2rem;
-      border-radius: 0.75rem;
-      border: 1px solid rgba(58, 123, 255, 0.3);
-      background: rgba(58, 123, 255, 0.05);
-      color: white;
-      font-family: 'Orbitron', monospace;
-      font-size: 1rem; font-weight: 600;
-      letter-spacing: 0.08em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 3rem;
     }
 
     .button {
-      position: relative;
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 1rem 2.5rem;
-      border-radius: 0.75rem;
-      border: 1px solid rgba(58, 123, 255, 0.6);
+      padding: 1rem 2rem;
+      border-radius: .75rem;
+      border: 1px solid rgba(58, 123, 255, .6);
+      background: linear-gradient(135deg, #3a7bff, #1a4fd4);
+      color: white;
       font-family: 'Orbitron', monospace;
-      font-size: 1.125rem; font-weight: 600;
-      letter-spacing: 0.08em;
-      cursor: pointer; overflow: hidden; white-space: nowrap;
-      transition: all 0.3s ease;
-      margin: 0 auto;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .3s;
     }
 
-    .button-beta { background: linear-gradient(135deg, #3a7bff, #1a4fd4); color: white; }
-    .button-beta:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(58, 123, 255, 0.5); }
-    .button-beta:active { transform: scale(0.97); }
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(58, 123, 255, .3);
+    }
 
     .button-contact {
-      background: rgba(58, 123, 255, 0.1);
-      color: #c8d4e8;
-      border-color: rgba(58, 123, 255, 0.4);
-    }
-    .button-contact:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(58, 123, 255, 0.3); border-color: rgba(58, 123, 255, 0.6); }
-    .button-contact:active { transform: scale(0.97); }
-    .button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .button svg { width: 1.25rem; height: 1.25rem; }
-
-    .shimmer {
-      position: absolute; inset: 0;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
-      animation: shimmerEffect 2.5s infinite 3s;
-      pointer-events: none;
+      background: rgba(58, 123, 255, .1);
+      color: var(--text);
     }
 
-    /* ── MODAL ── */
     .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(4, 6, 12, 0.85);
-      backdrop-filter: blur(8px);
-      display: flex; align-items: center; justify-content: center;
+      position: fixed;
+      inset: 0;
       z-index: 1000;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s ease;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(4, 6, 12, .9);
+      padding: 1rem;
     }
 
     .modal-overlay.open {
-      opacity: 1; pointer-events: all;
+      display: flex;
     }
 
     .modal {
+      width: 100%;
+      max-width: 400px;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
       background: #0b0f18;
-      border: 1px solid rgba(58, 123, 255, 0.25);
-      border-radius: 1.25rem;
-      padding: 2.5rem 2rem;
-      width: 100%; max-width: 400px;
-      margin: 1.5rem;
-      position: relative;
-      box-shadow: 0 0 60px rgba(58, 123, 255, 0.12), 0 0 0 1px rgba(58,123,255,0.08);
-      transform: translateY(20px) scale(0.97);
-      transition: transform 0.3s ease;
+      text-align: center;
     }
 
-    .modal-overlay.open .modal {
-      transform: translateY(0) scale(1);
+    .modal h2 {
+      color: white;
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    .modal::before {
-      content: "";
-      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-      width: 60%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.5;
+    .modal input {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      background: var(--bg);
+      color: white;
+      font: inherit;
+    }
+
+    .modal-message {
+      font-size: .85rem;
+      margin-bottom: 1rem;
     }
 
     .modal-close {
-      position: absolute; top: 1rem; right: 1rem;
-      background: none; border: none;
-      color: rgba(200, 212, 232, 0.4);
-      cursor: pointer; font-size: 1.25rem;
-      line-height: 1; padding: 0.25rem;
-      transition: color 0.2s;
-    }
-    .modal-close:hover { color: white; }
-
-    .modal-icon {
-      width: 3rem; height: 3rem;
-      border-radius: 0.75rem;
-      background: rgba(58, 123, 255, 0.1);
-      border: 1px solid rgba(58, 123, 255, 0.3);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1.5rem;
-      animation: pulseGlow 3s ease-in-out infinite;
-    }
-
-    .modal-icon svg { width: 1.4rem; height: 1.4rem; color: var(--accent); }
-
-    .modal-question {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.95rem; font-weight: 600;
+      float: right;
       color: white;
-      text-align: center;
-      margin-bottom: 1.75rem;
-      line-height: 1.5;
-      letter-spacing: 0.02em;
-    }
-
-    .input-wrapper {
-      display: flex; align-items: center;
-      background: #070a10;
-      border: 1px solid rgba(58, 123, 255, 0.25);
-      border-radius: 0.75rem;
-      overflow: hidden;
-      margin-bottom: 1.25rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .input-wrapper:focus-within {
-      border-color: rgba(58, 123, 255, 0.6);
-      box-shadow: 0 0 20px rgba(58, 123, 255, 0.1);
-    }
-
-    .input-prefix {
-      padding: 0.875rem 1rem 0.875rem 0;
-      color: var(--accent);
-      font-family: 'Sora', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      white-space: nowrap;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    .input-divider {
-      width: 1px; height: 1.2rem;
-      background: rgba(58, 123, 255, 0.3);
-      margin: 0 0.5rem;
-      flex-shrink: 0;
-    }
-
-    .modal-input {
-      flex: 1;
       background: transparent;
-      border: none; outline: none;
-      color: white;
-      font-family: 'Sora', sans-serif;
-      font-size: 0.95rem;
-      padding: 0.875rem 0 0.875rem 1rem;
-      caret-color: var(--accent);
-    }
-
-    .modal-input::placeholder { color: rgba(200, 212, 232, 0.25); }
-
-    .modal-msg {
-      font-size: 0.8rem;
-      text-align: center;
-      min-height: 1.2rem;
-      margin-bottom: 1rem;
-      transition: color 0.2s;
-    }
-
-    .modal-btn {
-      width: 100%;
-      padding: 0.875rem;
-      background: linear-gradient(135deg, #3a7bff, #1a4fd4);
-      color: white;
-      border: none; border-radius: 0.75rem;
-      font-family: 'Orbitron', monospace;
-      font-size: 0.95rem; font-weight: 600;
-      letter-spacing: 0.08em;
+      border: none;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-      transition: all 0.3s ease;
-      position: relative; overflow: hidden;
+      font-size: 1.3rem;
     }
 
-    .modal-btn:hover { box-shadow: 0 0 30px rgba(58, 123, 255, 0.45); transform: scale(1.02); }
-    .modal-btn:active { transform: scale(0.98); }
-    .modal-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .modal-btn svg { width: 1rem; height: 1rem; }
-
-    /* ── DOWNLOAD FALLBACK LINK ── */
-    .download-fallback {
-      display: none;
-      width: 100%;
-      margin-top: 1.5rem;
-      padding: 1.25rem 1.5rem;
-      background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 193, 7, 0.1));
-      border: 2px solid #ffa500;
-      border-radius: 0.75rem;
-      text-align: center;
-      animation: slideDownWarning 0.4s ease-out both, pulseWarning 2s ease-in-out infinite 0.5s;
-      box-shadow: 0 0 20px rgba(255, 152, 0, 0.2), inset 0 0 10px rgba(255, 152, 0, 0.1);
-    }
-
-    .download-fallback-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #ffb74d;
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .download-fallback-icon {
-      width: 1.25rem;
-      height: 1.25rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .download-fallback a {
-      display: inline-block;
-      margin-top: 0.75rem;
-      padding: 0.7rem 1.5rem;
-      background: #ffa500;
-      color: #070a10;
-      font-family: 'Orbitron', monospace;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-decoration: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
-    }
-
-    .download-fallback a:hover {
-      background: #ffb84d;
-      transform: scale(1.08);
-      box-shadow: 0 0 25px rgba(255, 152, 0, 0.5);
-    }
-
-    .download-fallback a:active {
-      transform: scale(0.95);
-    }
-
-    /* ── ANIMATIONS ── */
-    @keyframes shimmerEffect {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(200%); }
+    [hidden] {
+      display: none !important;
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    @keyframes slideDownWarning {
-      from { opacity: 0; transform: translateY(-20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 2rem 1rem;
+      }
 
-    @keyframes pulseWarning {
-      0%, 100% { box-shadow: 0 0 20px rgba(255, 152, 0, 0.2), inset 0 0 10px rgba(255, 152, 0, 0.1); }
-      50%       { box-shadow: 0 0 35px rgba(255, 152, 0, 0.4), inset 0 0 15px rgba(255, 152, 0, 0.2); }
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 0px rgba(58, 123, 255, 0); }
-      50%       { box-shadow: 0 0 18px rgba(58, 123, 255, 0.3); }
-    }
-
-    .footer-line {
-      height: 2px; width: 100%;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.2;
-    }
-
-    .version-text {
-      margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.4;
-      animation: fadeInUp 0.6s ease-out 1.2s both;
+      .hero p {
+        font-size: .9rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<!-- ── PASSWORD MODAL ── -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+  <main class="container">
+    <div class="content">
 
-    <div class="modal-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-      </svg>
+      <header class="hero">
+        <h1 id="heroTitle">Aria is <span>broken</span></h1>
+        <p id="heroSubtitle">
+          Development is currently on hold.
+        </p>
+      </header>
+
+      <!-- PAUSED MODE MESSAGE -->
+      <section class="status-card" id="pausedNotice" hidden>
+        <div class="status">SERVICE STATUS: PAUSED</div>
+
+        <h2>Aria is broken.</h2>
+
+        <p>
+          Aria is currently unavailable while development
+          is on hold.
+        </p>
+
+        <p class="development-date">
+          Don't expect development within 2027.
+        </p>
+
+        <p>
+          Downloads have been temporarily disabled.
+          If Aria opens again, this page can be re-enabled.
+        </p>
+      </section>
+
+      <!-- ORIGINAL FEATURE CARDS -->
+      <section class="features" id="features">
+        <article class="feature">
+          <h3>Fast Responses</h3>
+          <p>
+            Get lightning fast responses with the latest
+            model of Aria AI.
+          </p>
+        </article>
+
+        <article class="feature">
+          <h3>Your Safety Matters</h3>
+          <p>
+            No chats are uploaded or saved to our databases.
+          </p>
+        </article>
+
+        <article class="feature">
+          <h3>Access Anytime</h3>
+          <p>
+            Access the latest version by opening index.html.
+          </p>
+        </article>
+      </section>
+
+      <!-- DOWNLOAD INTERFACE -->
+      <section class="download-section" id="downloadSection">
+        <p>Stable Release — COMING SOON</p>
+
+        <button class="button" onclick="openModal()">
+          DOWNLOAD BETA
+        </button>
+
+        <button class="button button-contact"
+                onclick="contactDevelopers()">
+          CONTACT DEVELOPERS
+        </button>
+      </section>
+
     </div>
+  </main>
 
-    <div class="modal-question">Hvilken skole går du på?</div>
+  <div class="footer"></div>
 
-    <div class="input-wrapper">
+  <!-- DOWNLOAD MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close"
+              onclick="closeModal()"
+              aria-label="Close">✕</button>
+
+      <h2>Which school do you attend?</h2>
+
       <input
-        class="modal-input"
         id="schoolInput"
         type="text"
-        placeholder="skriv her..."
+        placeholder="Enter your school..."
         autocomplete="off"
-        spellcheck="false"
-        oninput="handleInput(this)"
-        onkeydown="if(event.key==='Enter') checkPassword()"
-      />
-      <div class="input-divider"></div>
-      <span class="input-prefix">Skole</span>
-    </div>
+      >
 
-    <div class="modal-msg" id="modalMsg"></div>
+      <p class="modal-message" id="modalMessage"></p>
 
-    <button class="modal-btn" id="downloadBtn" onclick="checkPassword()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      LAST NED
-    </button>
-
-    <div class="download-fallback" id="downloadFallback">
-      <div class="download-fallback-title">
-        <span class="download-fallback-icon">⚠️</span>
-        Nedlastningen startet ikke?
-      </div>
-      <a href="https://www.wtfq.online/Aria/tutorial/index.html">
-        Klikk her for å fikse det
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- ── MAIN PAGE ── -->
-<div class="container">
-  <div class="content-wrapper">
-    <div class="hero">
-      <h1>Download <span>Aria</span></h1>
-      <p>Free access to the Aria Beta version here.</p>
-    </div>
-
-    <div class="features">
-      <div class="card">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
-          </svg>
-        </div>
-        <h3>Fast Responses</h3>
-        <p>Get lightning fast responses with the latest model of Aria AI.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
-        </div>
-        <h3>Your Safety Matters</h3>
-        <p>No chats are uploaded or saved to any of our databases your data is safe with Aria.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-        </div>
-        <h3>Access Anytime</h3>
-        <p>Access the latest version by opening <u>index.html</u>.</p>
-      </div>
+      <button class="button" onclick="checkPassword()">
+        DOWNLOAD
+      </button>
     </div>
   </div>
 
-  <div class="download-section">
-    <div class="coming-soon">
-      <div class="coming-soon-label">Stable Release</div>
-      <div class="coming-soon-badge">COMING SOON</div>
-    </div>
+  <!-- FIREBASE: ORIGINAL PROJECT CONFIGURATION -->
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-    <button class="button button-beta" onclick="openModal()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      <span>DOWNLOAD BETA</span>
-      <div class="shimmer"></div>
-    </button>
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    <button class="button button-contact" onclick="contactDevelopers()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-      </svg>
-      <span>CONTACT DEVELOPERS</span>
-    </button>
-  </div>
-</div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDUbdcOv8kIrWIXcZwpkx9w1bSy_mhlPr4",
+      authDomain: "aria-b410c.firebaseapp.com",
+      projectId: "aria-b410c",
+      storageBucket: "aria-b410c.firebasestorage.app",
+      messagingSenderId: "514125299765",
+      appId: "1:514125299765:web:b64e741d2c8838763a717c",
+      measurementId: "G-RGLJ7CGRGW"
+    };
 
-<div class="footer-line"></div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-<!-- Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    window._firebaseDB = db;
+    window._firestoreUtils = { doc, getDoc };
+  </script>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDUbdcOv8kIrWIXcZwpkx9w1bSy_mhlPr4",
-    authDomain: "aria-b410c.firebaseapp.com",
-    projectId: "aria-b410c",
-    storageBucket: "aria-b410c.firebasestorage.app",
-    messagingSenderId: "514125299765",
-    appId: "1:514125299765:web:b64e741d2c8838763a717c",
-    measurementId: "G-RGLJ7CGRGW"
-  };
+  <script>
+    /*
+     * ARIA MAINTENANCE SWITCH
+     *
+     * true  = maintenance page; downloads disabled
+     * false = original download interface restored
+     *
+     * Change this one value when Aria opens again.
+     */
+    const ARIA_PAUSED = true;
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    const CONTACT_LINK =
+      'https://docs.google.com/forms/d/e/1FAIpQLSe_OOq0v5BVQWdQwSUn435zFz5dIbloXJ7nGiGxeNh8W0e03w/viewform?usp=publish-editor';
 
-  window._firebaseDB = db;
-  window._firestoreUtils = { doc, getDoc };
-</script>
+    function applyAriaMode() {
+      document.body.classList.toggle(
+        'aria-paused',
+        ARIA_PAUSED
+      );
 
-<script>
-  const CONTACT_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSe_OOq0v5BVQWdQwSUn435zFz5dIbloXJ7nGiGxeNh8W0e03w/viewform?usp=publish-editor';
+      const title = document.getElementById('heroTitle');
+      const subtitle = document.getElementById('heroSubtitle');
+      const notice = document.getElementById('pausedNotice');
 
-  function openModal() {
-    document.getElementById('modalOverlay').classList.add('open');
-    document.getElementById('schoolInput').focus();
-    setMsg('', '');
-    document.getElementById('downloadFallback').style.display = 'none';
-  }
+      if (ARIA_PAUSED) {
+        document.title = 'Aria is broken';
 
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
-    document.getElementById('schoolInput').value = '';
-    setMsg('', '');
-    document.getElementById('downloadFallback').style.display = 'none';
-  }
+        title.innerHTML = 'Aria is <span>broken</span>';
 
-  document.getElementById('modalOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
+        subtitle.textContent =
+          'Development is currently on hold.';
 
-  function handleInput(input) {
-    let val = input.value;
-    if (val.length === 0) return;
-    val = val.toLowerCase();
-    val = val.charAt(0).toUpperCase() + val.slice(1);
-    const pos = input.selectionStart;
-    input.value = val;
-    input.setSelectionRange(pos, pos);
-  }
+        notice.hidden = false;
+      } else {
+        document.title = 'Aria Download';
 
-  function setMsg(text, color) {
-    const el = document.getElementById('modalMsg');
-    el.textContent = text;
-    el.style.color = color || 'rgba(200,212,232,0.5)';
-  }
+        title.innerHTML = 'Download <span>Aria</span>';
 
-  async function checkPassword() {
-    const input = document.getElementById('schoolInput').value.trim();
-    const btn = document.getElementById('downloadBtn');
+        subtitle.textContent =
+          'Free access to the Aria Beta version here.';
 
-    if (!input) {
-      setMsg('Skriv inn skolen din.', '#ff6b6b');
-      return;
+        notice.hidden = true;
+      }
     }
 
-    if (!window._firebaseDB) {
-      setMsg('Firebase ikke klar ennå, prøv igjen.', '#ff6b6b');
-      return;
+    function openModal() {
+      if (ARIA_PAUSED) return;
+
+      document.getElementById('modalOverlay')
+        .classList.add('open');
+
+      document.getElementById('schoolInput').focus();
     }
 
-    btn.disabled = true;
-    setMsg('Sjekker...', 'rgba(200,212,232,0.5)');
+    function closeModal() {
+      document.getElementById('modalOverlay')
+        .classList.remove('open');
+    }
 
-    try {
-      const { doc, getDoc } = window._firestoreUtils;
-      const db = window._firebaseDB;
+    async function checkPassword() {
+      // Safety guard: no downloads while paused.
+      if (ARIA_PAUSED) return;
 
-      // Use the input itself as the document ID under 'config'
-      const docRef = doc(db, 'config', input);
-      const docSnap = await getDoc(docRef);
+      const input = document.getElementById('schoolInput')
+        .value.trim();
 
-      if (!docSnap.exists()) {
-        setMsg('Du har ikke tilgang til dette innholdet.', '#ff6b6b');
-        document.getElementById('schoolInput').focus();
-        btn.disabled = false;
+      const message = document.getElementById('modalMessage');
+
+      if (!input) {
+        message.textContent = 'Please enter your school.';
         return;
       }
 
-      const data = docSnap.data();
-
-      if (!data.fileURL) {
-        setMsg('Ingen nedlastningslenke funnet.', '#ff6b6b');
-        btn.disabled = false;
+      if (!window._firebaseDB) {
+        message.textContent = 'Firebase is not ready. Try again.';
         return;
       }
 
-      setMsg('✓ Riktig! Laster ned...', '#4ade80');
+      message.textContent = 'Checking...';
 
-      const a = document.createElement('a');
-      a.href = data.fileURL;
-      a.download = '';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      try {
+        const { doc, getDoc } = window._firestoreUtils;
 
-      // Show the fallback help link after a short delay
-      setTimeout(() => {
-        document.getElementById('downloadFallback').style.display = 'block';
-      }, 1200);
+        const docRef = doc(
+          window._firebaseDB,
+          'config',
+          input
+        );
 
-      // Do NOT auto-close so user can click the fallback link if needed
-    } catch (e) {
-      setMsg('Feil: ' + e.message, '#ff6b6b');
+        const snapshot = await getDoc(docRef);
+
+        if (!snapshot.exists()) {
+          message.textContent = 'You do not have access.';
+          return;
+        }
+
+        const data = snapshot.data();
+
+        if (!data.fileURL) {
+          message.textContent = 'No download link was found.';
+          return;
+        }
+
+        const link = document.createElement('a');
+        link.href = data.fileURL;
+        link.download = '';
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        message.textContent = 'Download started.';
+      } catch (error) {
+        message.textContent = 'Error: ' + error.message;
+      }
     }
 
-    btn.disabled = false;
-  }
+    function contactDevelopers() {
+      if (ARIA_PAUSED) return;
 
-  function contactDevelopers() {
-    window.location.href = CONTACT_LINK;
-  }
+      window.location.href = CONTACT_LINK;
+    }
 
-  window.openModal = openModal;
-  window.closeModal = closeModal;
-  window.checkPassword = checkPassword;
-  window.handleInput = handleInput;
-  window.contactDevelopers = contactDevelopers;
-</script>
+    // Close the modal when clicking its backdrop.
+    document.getElementById('modalOverlay')
+      .addEventListener('click', function (event) {
+        if (event.target === this) {
+          closeModal();
+        }
+      });
+
+    // Apply the mode immediately.
+    applyAriaMode();
+
+    // Keep functions available to the HTML buttons.
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.checkPassword = checkPassword;
+    window.contactDevelopers = contactDevelopers;
+  </script>
 
 </body>
 </html>
