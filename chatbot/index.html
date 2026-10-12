@@ -185,11 +185,14 @@
   /* Show the real file size when the page is served over http(s). */
   try{
     if(location.protocol === 'http:' || location.protocol === 'https:'){
-      fetch('Ai%20chatbot.html', { method:'HEAD' }).then(function(r){
-        var n = parseInt(r.headers.get('content-length'), 10);
-        if(r.ok && n){
-          document.getElementById('size').textContent = n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB';
-        }
+      /* A HEAD request reports the compressed (gzip) transfer size, which is smaller than the
+         real file. Reading the body gives the true size; the browser cache reuses it for the download. */
+      fetch('Ai%20chatbot.html', { cache:'force-cache' }).then(function(r){
+        if(!r.ok) throw new Error('missing');
+        return r.arrayBuffer();
+      }).then(function(buf){
+        var n = buf.byteLength;
+        document.getElementById('size').textContent = n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
       }).catch(function(){});
     }
   }catch(e){}
