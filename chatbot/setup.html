@@ -1,13 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WTFQ AI Chatbot</title>
+  <title>Puter AI Chatbot</title>
 </head>
 <body>
-  <p id="status">Loading chatbot...</p>
-  <main id="chatbot"></main>
+  <div id="status">Loading chatbot...</div>
+  <div id="app"></div>
 
   <script>
     async function loadChatbot() {
@@ -15,54 +16,22 @@
 
       try {
         const response = await fetch(
-          "https://wtfq.online/chatbot/chat.html"
+          "https://chatbot.andrio-hoyset.workers.dev/chat.html"
         );
 
         if (!response.ok) {
-          throw new Error("HTTP " + response.status);
+          throw new Error(`HTTP ${response.status}`);
         }
 
         const html = await response.text();
 
-        const doc = new DOMParser().parseFromString(
-          html,
-          "text/html"
-        );
+        // Display the fetched page as a separate document.
+        const blob = new Blob([html], {
+          type: "text/html"
+        });
 
-        const container = document.getElementById("chatbot");
-
-        // Copy the page's HTML into this document.
-        container.innerHTML = doc.body.innerHTML;
-
-        // Copy its stylesheets.
-        doc.querySelectorAll('link[rel="stylesheet"], style')
-          .forEach(element => {
-            document.head.appendChild(element.cloneNode(true));
-          });
-
-        // Load its external scripts.
-        const scripts = Array.from(doc.querySelectorAll("script"));
-
-        for (const oldScript of scripts) {
-          const newScript = document.createElement("script");
-
-          for (const attr of oldScript.attributes) {
-            newScript.setAttribute(attr.name, attr.value);
-          }
-
-          if (oldScript.src) {
-            newScript.src = new URL(
-              oldScript.getAttribute("src"),
-              "https://wtfq.online/chatbot/chat.html"
-            ).href;
-          } else {
-            newScript.textContent = oldScript.textContent;
-          }
-
-          container.appendChild(newScript);
-        }
-
-        status.remove();
+        const localPage = URL.createObjectURL(blob);
+        location.replace(localPage);
       } catch (error) {
         status.textContent =
           "Could not load chatbot: " + error.message;
