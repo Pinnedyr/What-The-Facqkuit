@@ -53,6 +53,6 @@
   { "key": "musiclab",                  "label": "Chrome Musiclab",            "url": "https://musiclab.chromeexperiments.com/Song-Maker/" },
   { "key": "crazy-cattle",              "label": "Crazy Cattle",               "url": "https://crazy-cattle.co/" },
   { "key": "orbit-kick",               "label": "Orbit kick",                 "url": "https://orbitkick.hotglue.me"  },
-  { "key": "ragebait-sim",               "label": "Ragebait sim",                 "url": "https://r74n.com/mini/ragebait"  }
-  { "key": "cork7",               "label": "cork7",                 "url": "https://cork7.com/", "badge": "new" },
+  { "key": "ragebait-sim",               "label": "Ragebait sim",                 "url": "https://r74n.com/mini/ragebait"  },
+  { "key": "cork7",               "label": "cork7",                 "url": "https://cork7.com/", "badge": "new" }
 ]
