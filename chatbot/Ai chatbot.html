@@ -6,23 +6,146 @@
   <title>WTFQ AI Chatbot</title>
   <link id="dynamic-favicon" rel="icon" href="https://wtfq.online/favicon.ico">
   <link rel="shortcut icon" href="https://wtfq.online/favicon.ico">
+
   <style>
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
-    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #070a10; color: #c8d4e8; font: 14px system-ui, sans-serif; }
-    #app { height: 100%; display: flex; flex-direction: column; }
-    #bar { height: 42px; flex: 0 0 42px; display: flex; align-items: center; gap: 10px; padding: 0 12px; background: #0b1220; border-bottom: 1px solid #1a2035; }
-    #dot { width: 8px; height: 8px; border-radius: 50%; background: #2ed573; box-shadow: 0 0 10px #2ed57388; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #070a10;
+      color: #c8d4e8;
+      font: 14px system-ui, sans-serif;
+    }
+
+    #app {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #bar {
+      height: 42px;
+      flex: 0 0 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      background: #0b1220;
+      border-bottom: 1px solid #1a2035;
+    }
+
+    #dot {
+      width: 8px;
+      height: 8px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: #2ed573;
+      box-shadow: 0 0 10px #2ed57388;
+    }
+
     #title { font-weight: 650; }
-    #origin { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #7f9bc5; font: 11px ui-monospace, monospace; }
-    #reload { border: 1px solid #29436b; border-radius: 6px; background: #13233c; color: #a9ceff; padding: 5px 9px; cursor: pointer; }
-    #frame-wrap { flex: 1; min-height: 0; position: relative; }
-    iframe { display: block; width: 100%; height: 100%; border: 0; background: #070a10; }
-    #message { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; padding: 24px; background: #070a10; color: #9fb3d1; line-height: 1.6; }
-    #message strong { display: block; color: #e2e8f0; font-size: 16px; margin-bottom: 6px; }
+
+    #origin {
+      margin-left: auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #7f9bc5;
+      font: 11px ui-monospace, monospace;
+    }
+
+    #reload, #toggle-bar, #show-bar {
+      border: 1px solid #29436b;
+      border-radius: 6px;
+      background: #13233c;
+      color: #a9ceff;
+      padding: 5px 9px;
+      cursor: pointer;
+      font: inherit;
+      white-space: nowrap;
+    }
+
+    #reload:hover, #toggle-bar:hover, #show-bar:hover {
+      background: #1b3457;
+      border-color: #4b83c7;
+    }
+
+    #frame-wrap {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #070a10;
+    }
+
+    #message {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      text-align: center;
+      padding: 24px;
+      background: #070a10;
+      color: #9fb3d1;
+      line-height: 1.6;
+    }
+
+    #message strong {
+      display: block;
+      color: #e2e8f0;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
     #message[hidden] { display: none; }
+
+    /* Floating button visible when the top bar is hidden */
+    #show-bar {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 10px;
+      left: 10px;
+      opacity: 0.35;
+      transition: opacity 0.2s, background 0.2s;
+      background: #0b1220;
+      box-shadow: 0 2px 12px #0008;
+    }
+
+    #show-bar:hover,
+    #show-bar:focus-visible {
+      opacity: 1;
+    }
+
+    /* Full-page mode */
+    body.hide-bar #bar {
+      display: none;
+    }
+
+    body.hide-bar #frame-wrap {
+      flex: 1;
+      height: 100%;
+      width: 100%;
+    }
+
+    body.hide-bar #show-bar {
+      display: block;
+    }
   </style>
 </head>
+
 <body>
   <div id="app">
     <header id="bar">
@@ -30,15 +153,35 @@
       <span id="title">WTFQ AI Chatbot</span>
       <span id="origin">Loading from Cloudflare Worker…</span>
       <button id="reload" type="button">Reload</button>
+      <button id="toggle-bar" type="button">Hide top bar</button>
     </header>
+
     <main id="frame-wrap">
-      <div id="message"><div><strong>Loading chatbot…</strong>The chatbot is opening from your Cloudflare Worker.</div></div>
-      <iframe id="chat" title="WTFQ AI Chatbot" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <div id="message">
+        <div>
+          <strong>Loading chatbot…</strong>
+          The chatbot is opening from your Cloudflare Worker.
+        </div>
+      </div>
+
+      <iframe
+        id="chat"
+        title="WTFQ AI Chatbot"
+        allow="clipboard-read; clipboard-write"
+        referrerpolicy="strict-origin-when-cross-origin">
+      </iframe>
     </main>
   </div>
+
+  <button id="show-bar" type="button" title="Show top bar">
+    Show top bar
+  </button>
+
   <script>
     (() => {
-      const workerUrl = 'https://chatbot.andrio-hoyset.workers.dev/chat.html';
+      const workerUrl =
+        'https://chatbot.andrio-hoyset.workers.dev/chat.html';
+
       const frame = document.getElementById('chat');
       const message = document.getElementById('message');
       const originLabel = document.getElementById('origin');
@@ -46,23 +189,68 @@
       const favicon = document.getElementById('dynamic-favicon');
       const sourceHtmlUrl = 'https://wtfq.online/chatbot/chat.html';
 
+      const toggleBar = document.getElementById('toggle-bar');
+      const showBar = document.getElementById('show-bar');
+
       let lastTitle = 'WTFQ AI Chatbot';
       let lastFavicon = 'https://wtfq.online/favicon.ico';
-      document.title = lastTitle;
       let metadataRequestInFlight = false;
+      let loadFallbackTimer;
+
+      document.title = lastTitle;
+
+      // Hide and show the top bar.
+      function setBarHidden(hidden) {
+        document.body.classList.toggle('hide-bar', hidden);
+
+        toggleBar.textContent = hidden
+          ? 'Show top bar'
+          : 'Hide top bar';
+
+        showBar.setAttribute(
+          'aria-label',
+          hidden ? 'Show top bar' : 'Top bar is visible'
+        );
+      }
+
+      toggleBar.addEventListener('click', () => {
+        setBarHidden(!document.body.classList.contains('hide-bar'));
+      });
+
+      showBar.addEventListener('click', () => {
+        setBarHidden(false);
+      });
+
+      // Optional keyboard shortcut: Ctrl + Shift + B.
+      document.addEventListener('keydown', (event) => {
+        if (
+          event.ctrlKey &&
+          event.shiftKey &&
+          event.key.toLowerCase() === 'b'
+        ) {
+          event.preventDefault();
+          setBarHidden(!document.body.classList.contains('hide-bar'));
+        }
+      });
 
       function applyMetadata(pageTitle, iconHref) {
         if (typeof pageTitle === 'string' && pageTitle.trim()) {
           pageTitle = pageTitle.trim();
+
           if (pageTitle !== lastTitle) {
             lastTitle = pageTitle;
             document.title = pageTitle;
             document.getElementById('title').textContent = pageTitle;
           }
         }
+
         if (typeof iconHref === 'string' && iconHref.trim()) {
           let iconUrl = iconHref.trim();
-          try { iconUrl = new URL(iconUrl, workerUrl).href; } catch (_) {}
+
+          try {
+            iconUrl = new URL(iconUrl, workerUrl).href;
+          } catch (_) {}
+
           if (iconUrl !== lastFavicon) {
             favicon.href = iconUrl;
             lastFavicon = iconUrl;
@@ -70,52 +258,78 @@
         }
       }
 
-      // The Worker-injected script sends live metadata when chat.html changes it.
-      // Only accept messages from the expected HTTPS Worker origin.
+      // Accept live metadata from the expected Worker origin.
       window.addEventListener('message', (event) => {
         if (event.origin !== new URL(workerUrl).origin) return;
+
         const data = event.data;
+
         if (!data || data.type !== 'chatbot-metadata') return;
+
         applyMetadata(data.title, data.favicon);
       });
 
       async function syncMetadata() {
         if (metadataRequestInFlight) return;
+
         metadataRequestInFlight = true;
+
         try {
-          const response = await fetch(workerUrl + '?metadata_sync=' + Date.now(), {
-            cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' }
-          });
+          const response = await fetch(
+            workerUrl + '?metadata_sync=' + Date.now(),
+            {
+              cache: 'no-store',
+              headers: { 'Cache-Control': 'no-cache' }
+            }
+          );
+
           if (!response.ok) return;
+
           const html = await response.text();
           const doc = new DOMParser().parseFromString(html, 'text/html');
-          const pageTitle = (doc.querySelector('title')?.textContent || '').trim();
-          const icon = doc.querySelector('link[rel~="icon"], link[rel="shortcut icon"]');
+
+          const pageTitle =
+            (doc.querySelector('title')?.textContent || '').trim();
+
+          const icon = doc.querySelector(
+            'link[rel~="icon"], link[rel="shortcut icon"]'
+          );
+
           const href = icon?.getAttribute('href')?.trim();
-          const iconUrl = href ? new URL(href, sourceHtmlUrl).href : new URL('/favicon.ico', sourceHtmlUrl).href;
+
+          const iconUrl = href
+            ? new URL(href, sourceHtmlUrl).href
+            : new URL('/favicon.ico', sourceHtmlUrl).href;
+
           applyMetadata(pageTitle, iconUrl);
         } catch (_) {
-          // Keep the last working title/icon during temporary network errors.
+          // Keep the last working title and favicon.
         } finally {
           metadataRequestInFlight = false;
         }
       }
 
-      let loadFallbackTimer;
-
       function loadChat() {
         clearTimeout(loadFallbackTimer);
+
         message.hidden = false;
-        message.innerHTML = '<div><strong>Loading chatbot…</strong>The chatbot is opening from your Cloudflare Worker.</div>';
+        message.innerHTML =
+          '<div><strong>Loading chatbot…</strong>' +
+          'The chatbot is opening from your Cloudflare Worker.</div>';
+
         document.title = lastTitle || 'WTFQ AI Chatbot';
         originLabel.textContent = workerUrl;
         dot.style.background = '#ffa502';
+
         syncMetadata();
         frame.src = workerUrl;
-        // Never leave the loading overlay stuck forever if the iframe cannot finish loading.
+
         loadFallbackTimer = setTimeout(() => {
-          message.innerHTML = '<div><strong>Chatbot is taking longer than expected.</strong>If it is still blank, check that the Worker URL opens directly, then press Reload.</div>';
+          message.innerHTML =
+            '<div><strong>Chatbot is taking longer than expected.</strong>' +
+            'If it is still blank, check that the Worker URL opens ' +
+            'directly, then press Reload.</div>';
+
           message.hidden = false;
           dot.style.background = '#ff4757';
         }, 10000);
@@ -126,14 +340,22 @@
         message.hidden = true;
         dot.style.background = '#2ed573';
       });
+
       frame.addEventListener('error', () => {
-        message.innerHTML = '<div><strong>Could not load the chatbot.</strong>Check that the Worker URL opens correctly in your browser, then press Reload.</div>';
+        message.innerHTML =
+          '<div><strong>Could not load the chatbot.</strong>' +
+          'Check that the Worker URL opens correctly in your browser, ' +
+          'then press Reload.</div>';
+
         message.hidden = false;
         dot.style.background = '#ff4757';
       });
+
       document.getElementById('reload').addEventListener('click', loadChat);
+
       loadChat();
-      // Keep watching for title/favicon changes made dynamically by chatbot.html.
+
+      // Keep watching for title and favicon changes.
       window.setInterval(syncMetadata, 1500);
     })();
   </script>
