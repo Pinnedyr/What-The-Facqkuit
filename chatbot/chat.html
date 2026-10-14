@@ -371,6 +371,53 @@
     padding:3px 7px; border-radius:6px;
   }
 
+  /* Help center (the ? panel) */
+  .panel.help-panel{ max-width:640px; height:min(660px, 88vh); display:flex; flex-direction:column; overflow:hidden; }
+  .help-panel > *{ flex:none; }
+  .help-panel > .help-body{ flex:1 1 auto; min-height:0; overflow-y:auto; padding:2px 4px 2px 0; }
+  .help-panel .sub{ margin-bottom:14px; }
+  .help-tabs{ display:flex; flex-wrap:wrap; gap:6px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid var(--border); }
+  .help-tab{
+    font-family:inherit; font-size:12.5px; font-weight:600; padding:6px 11px; border-radius:99px;
+    border:1px solid var(--border); background:var(--surface); color:var(--text-dim); cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .help-tab:hover{ color:var(--text); border-color:var(--accent); }
+  .help-tab:active{ transform:scale(.96); }
+  .help-tab.active{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .help-pane{ display:none; }
+  .help-pane.active{ display:block; animation:obIn .25s cubic-bezier(.2,.8,.3,1) both; }
+  .help-intro{ margin:0 0 12px; font-size:12.5px; line-height:1.55; color:var(--text-dim); }
+  .help-item{ padding:12px 14px; border:1px solid var(--border); border-radius:12px; background:var(--surface); margin-bottom:9px; }
+  .help-item h4{ margin:0 0 4px; font-size:13.5px; font-weight:600; color:var(--text); }
+  .help-item p{ margin:0; font-size:12.5px; line-height:1.6; color:var(--text-dim); }
+  .help-item p + p{ margin-top:6px; }
+  .help-item ol{ margin:6px 0 0; padding-left:20px; font-size:12.5px; line-height:1.65; color:var(--text-dim); }
+  .help-item b, .help-item strong{ color:var(--text); font-weight:600; }
+  .help-cmd{ display:flex; gap:12px; align-items:baseline; padding:9px 0; border-bottom:1px solid var(--border); font-size:12.5px; line-height:1.5; color:var(--text-dim); }
+  .help-cmd:last-child{ border-bottom:none; }
+  .help-cmd .kbd{ flex:none; }
+  .help-alert{ display:flex; gap:12px; align-items:flex-start; text-align:left; margin:0 0 12px; padding:12px 14px;
+    border-radius:14px; border:1.5px solid #f0b429; background:rgba(240,180,41,.14); color:var(--text); }
+  .help-alert-ic{ flex:none; width:30px; height:30px; border-radius:50%; display:grid; place-items:center; background:#f0b429; color:#4a3500; }
+  .help-alert-ic svg{ width:18px; height:18px; }
+  .help-alert-tx{ font-size:13px; line-height:1.55; }
+  .help-alert-tx b{ display:block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#b27a00; margin-bottom:2px; }
+  :root[data-theme="dark"] .help-alert-tx b{ color:#f5c451; }
+
+  /* Gentle glow on the ? button after onboarding, until the help panel is opened */
+  .icon-btn.help-glow{
+    color:var(--accent-2); background:var(--accent-soft);
+    box-shadow:0 0 0 2px var(--accent-soft), 0 0 8px 0 var(--accent);
+    animation:helpGlow 2.2s ease-in-out infinite;
+  }
+  .icon-btn.help-glow:hover{ background:var(--accent-soft); color:var(--accent-2); }
+  @keyframes helpGlow{
+    0%,100%{ box-shadow:0 0 0 2px var(--accent-soft), 0 0 6px 0 var(--accent); }
+    50%{ box-shadow:0 0 0 4px var(--accent-soft), 0 0 14px 3px var(--accent); }
+  }
+  html[data-anim="off"] .icon-btn.help-glow, html[data-anim="subtle"] .icon-btn.help-glow{ animation:none; }
+
   .row.user .msg-link{ color:#fff; text-decoration:underline; }
   .msg-link{ color:var(--accent-2); text-decoration:underline; word-break:break-all; }
 
@@ -1230,7 +1277,7 @@
         <button class="icon-btn" id="fakeScreenBtn" title="Fake screen" aria-label="Fake screen">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
         </button>
-        <button class="icon-btn" id="shortcutsBtn" title="Keyboard shortcuts" aria-label="Keyboard shortcuts">
+        <button class="icon-btn" id="shortcutsBtn" title="Help" aria-label="Help">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
         </button>
         <button class="icon-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Toggle theme"></button>
@@ -1577,19 +1624,145 @@
 </div>
 
 <div class="overlay" id="shortcutsOverlay">
-  <div class="panel">
-    <h3>Keyboard shortcuts</h3>
-    <p class="sub">Quick ways to get around.</p>
-    <div class="shortcuts-list">
+  <div class="panel help-panel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <h3 id="helpTitle">Help</h3>
+    <p class="sub">Pick a category to see what each feature does and how to use it.</p>
+    <div class="help-tabs" id="helpTabs" role="tablist">
+      <button type="button" class="help-tab active" role="tab" data-help="helpStart" aria-selected="true">Getting started</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpLogin" aria-selected="false">Signing in</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpChat" aria-selected="false">Chatting</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpFiles" aria-selected="false">Files &amp; voice</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpStudy" aria-selected="false">Quiz &amp; flashcards</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpChats" aria-selected="false">Chats &amp; sidebar</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpCode" aria-selected="false">Code</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpCmds" aria-selected="false">Commands</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpSettings" aria-selected="false">Settings</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpBeta" aria-selected="false">Images (beta)</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpTab" aria-selected="false">Tab icon &amp; screens</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpKeys" aria-selected="false">Shortcuts</button>
+      <button type="button" class="help-tab" role="tab" data-help="helpFix" aria-selected="false">Troubleshooting</button>
+    </div>
+    <div class="help-body" id="helpBody">
+    <div class="help-pane active" id="helpStart">
+      <p class="help-intro">Welcome! This is a quick tour. Use the categories above to learn what each feature does and how to use it.</p>
+      <div class="help-item"><h4>1. Sign in to Puter</h4><p>The AI runs through a free Puter account. Press <b>Sign in to Puter</b> on the welcome screen, or later in <b>Settings &rarr; Connection</b>. Use a <b>personal Microsoft or Apple</b> account &mdash; open the <b>Signing in</b> category to see why.</p></div>
+      <div class="help-item"><h4>2. Send your first message</h4><p>Click the box at the bottom that says <b>Message&hellip;</b>, type something and press <b>Enter</b> (or click the arrow button). <b>Shift + Enter</b> starts a new line.</p></div>
+      <div class="help-item"><h4>3. Add your name (optional)</h4><p>Type it in <b>Settings &rarr; Behavior &rarr; Personalization</b> so the AI can greet you by name.</p></div>
+      <div class="help-item"><h4>Know the buttons</h4><p>The <b>three-line button</b> (top left) shows or hides your chat list. Top right: the <b>monitor</b> changes the tab icon, the <b>?</b> opens this help, the <b>theme button</b> switches light and dark, and the <b>gear</b> opens Settings.</p></div>
+      <div class="help-item"><h4>Your data stays on this device</h4><p>Chats and settings are stored only in this browser. AI requests go through Puter.</p></div>
+    </div>
+    <div class="help-pane" id="helpLogin">
+      <div class="help-alert" role="note">
+        <span class="help-alert-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg></span>
+        <span class="help-alert-tx"><b>Important</b>Use a <strong>personal Apple</strong> or <strong>personal Microsoft</strong> account to log in to Puter. Google and email sign-in are not available on the Chromebooks used here.</span>
+      </div>
+      <div class="help-item"><h4>Why can&rsquo;t I use Google or email with Puter?</h4><p>Logging in to Puter with <b>Google</b> or with an <b>email address</b> isn&rsquo;t available on the Chromebooks used here, so those options can&rsquo;t be used to sign in. That includes your school Google account.</p><p>The only options that work are a <b>personal Apple</b> account or a <b>personal Microsoft</b> account &mdash; not a school or work account.</p></div>
+      <div class="help-item"><h4>How to sign in</h4><ol><li>Press <b>Sign in to Puter</b>: on the welcome screen, in <b>Settings &rarr; Connection</b>, or with the <b>sign in</b> link under the message box when you aren&rsquo;t signed in.</li><li>A Puter pop-up opens. Choose <b>Microsoft</b> or <b>Apple</b>.</li><li>Log in with your <b>personal</b> account.</li><li>The pop-up closes and you&rsquo;re signed in. If you pressed Send first, your message is sent automatically.</li></ol></div>
+      <div class="help-item"><h4>I don&rsquo;t have a personal Apple or Microsoft account</h4><p>You&rsquo;ll need to create one first (they&rsquo;re free), then use it here. A free Puter account is created for you automatically the first time you sign in.</p></div>
+      <div class="help-item"><h4>The pop-up didn&rsquo;t open</h4><p>Sign-in uses a pop-up window. Allow pop-ups for this page in your browser, then press the sign-in button again.</p></div>
+      <div class="help-item"><h4>Signing out</h4><p>Open <b>Settings &rarr; Connection</b> and press <b>Sign out</b>.</p></div>
+      <div class="help-item"><h4>Skipping sign-in</h4><p>You can skip it on the welcome screen, but the AI can&rsquo;t reply to your messages until you sign in.</p></div>
+    </div>
+    <div class="help-pane" id="helpChat">
+      <div class="help-item"><h4>Send a message</h4><p>Type in the message box and press <b>Enter</b>. If you prefer <b>Ctrl/&#8984; + Enter</b>, change it in <b>Settings &rarr; Behavior &rarr; Sending messages</b>. <b>Shift + Enter</b> always adds a new line.</p></div>
+      <div class="help-item"><h4>Stop a reply</h4><p>While the AI is writing, the send button turns into a stop button. Click it or press <b>Esc</b>.</p></div>
+      <div class="help-item"><h4>Edit and resend</h4><p>Hover over one of your messages and click the <b>pencil</b>. Shortcut: press <b>&uarr;</b> in an empty message box to pull your last message back for editing.</p></div>
+      <div class="help-item"><h4>Regenerate a reply</h4><p>Hover over the latest AI reply and click the <b>circular arrow</b> to get a fresh answer.</p></div>
+      <div class="help-item"><h4>Copy a message</h4><p>Hover over any message and click the <b>copy</b> icon.</p></div>
+      <div class="help-item"><h4>Read aloud</h4><p>Hover over an AI reply and click the <b>speaker</b>. Click it again to stop. Choose the voice in <b>Settings &rarr; Connection &rarr; Read-aloud voice</b>.</p></div>
+      <div class="help-item"><h4>Math mode (&Sigma;)</h4><p>Click <b>&Sigma;</b> in the message box to turn math mode on &mdash; it lights up. The AI then acts as a calculator, shows brief working and ends with a clear final answer. Click <b>&Sigma;</b> again to turn it off.</p></div>
+      <div class="help-item"><h4>Jump to the newest message</h4><p>If you scroll up, a <b>down-arrow</b> button appears at the bottom of the chat. Click it to jump back down.</p></div>
+    </div>
+    <div class="help-pane" id="helpFiles">
+      <div class="help-item"><h4>Attach files or photos</h4><p>Click the <b>+</b> button next to the message box, pick one or more files, then send. You can attach images, text files (.txt, .md, .csv, .json, code), PDF, Word, Excel and PowerPoint.</p></div>
+      <div class="help-item"><h4>Drag and drop</h4><p>Drag a file onto the chat. <b>Drop to attach</b> appears &mdash; let go to add it.</p></div>
+      <div class="help-item"><h4>Paste an image or file</h4><p>Copy it, click the message box and press <b>Ctrl/&#8984; + V</b>.</p></div>
+      <div class="help-item"><h4>What the AI can read</h4><p>Text files are included as text. Images are read by a vision model &mdash; turn on <b>Enable beta features</b> in <b>Settings &rarr; Connection</b> first. PDF, Word, Excel and similar files are attached by name only, so the AI can&rsquo;t read inside them.</p></div>
+      <div class="help-item"><h4>Remove an attachment</h4><p>Use the <b>remove</b> button on the attachment before you send.</p></div>
+      <div class="help-item"><h4>View an image bigger</h4><p>Click an image in the chat to open it full size. Press <b>Esc</b> to close it.</p></div>
+      <div class="help-item"><h4>Long pasted text</h4><p>If you paste more than 200 words, it turns into a <b>PASTED</b> chip instead of filling the box. Click the chip to edit the text or <b>Remove</b> it. It is sent as part of your message.</p></div>
+      <div class="help-item"><h4>Voice input (microphone)</h4><p>Click the <b>microphone</b>, allow microphone access if the browser asks, and speak. Your words appear in the message box. Click the microphone again to stop. Pick the language in <b>Settings &rarr; Connection &rarr; Voice input language</b>.</p></div>
+    </div>
+    <div class="help-pane" id="helpStudy">
+      <p class="help-intro">Turn notes or any topic into practice. Just ask in the chat &mdash; no special button needed.</p>
+      <div class="help-item"><h4>Get a quiz</h4><p>Ask for one, for example <b>&ldquo;Quiz me on photosynthesis&rdquo;</b> or <b>&ldquo;Test me on these notes&rdquo;</b>. Paste or attach your notes first, or say <b>&ldquo;quiz me on that&rdquo;</b> to use the earlier chat. It works in many languages.</p></div>
+      <div class="help-item"><h4>Answer a quiz</h4><p>Click an answer. Use <b>Show hint</b> if it&rsquo;s offered, read the feedback, then press <b>Next</b>. At the end you get a score, a list of missed questions, and buttons to <b>retry the missed ones</b> or start over.</p></div>
+      <div class="help-item"><h4>Get flashcards</h4><p>Ask for them, for example <b>&ldquo;Make flashcards from these notes&rdquo;</b>. Click a card to flip it.</p></div>
+      <div class="help-item"><h4>Use flashcards</h4><p>Mark each card <b>Again</b> or <b>Known</b>, or move with the arrow buttons. <b>Shuffle</b> and <b>Copy</b> are under the card. At the end you can review the cards you didn&rsquo;t know.</p></div>
+    </div>
+    <div class="help-pane" id="helpChats">
+      <div class="help-item"><h4>New chat</h4><p>Click <b>New chat</b> at the top of the sidebar or press <b>Ctrl/&#8984; + K</b>.</p></div>
+      <div class="help-item"><h4>Switch, show or hide chats</h4><p>Click a chat in the list to open it. Show or hide the list with the <b>three-line button</b> (top left) or <b>Ctrl/&#8984; + B</b>.</p></div>
+      <div class="help-item"><h4>Search chats</h4><p>Type in <b>Search chats&hellip;</b> or press <b>Ctrl/&#8984; + F</b>.</p></div>
+      <div class="help-item"><h4>Rename a chat</h4><p>Double-click its title, type a new name and press <b>Enter</b>. You can also type <b>/rename New name</b> in the message box.</p></div>
+      <div class="help-item"><h4>Pin a chat</h4><p>Hover over a chat and click the <b>pin</b> icon to keep it at the top. Click it again to unpin.</p></div>
+      <div class="help-item"><h4>Let the AI rename a chat</h4><p>Hover over a chat and click the <b>circular arrow</b> to have the AI write a new title.</p></div>
+      <div class="help-item"><h4>Delete a chat</h4><p>Hover over a chat and click the <b>delete</b> button. To remove every chat at once, use <b>Settings &rarr; Behavior &rarr; Delete all</b>.</p></div>
+      <div class="help-item"><h4>Duplicate, copy or export</h4><p><b>Ctrl/&#8984; + D</b> (or <b>/duplicate</b>) makes a copy of the chat. <b>Ctrl/&#8984; + Shift + C</b> (or <b>/copy</b>) copies it as markdown. <b>/export</b> downloads it as a file.</p></div>
+      <div class="help-item"><h4>Drafts are kept</h4><p>Text you haven&rsquo;t sent yet is remembered separately for each chat.</p></div>
+    </div>
+    <div class="help-pane" id="helpCode">
+      <div class="help-item"><h4>Copy code</h4><p>Every code block has a <b>Copy</b> button in its header.</p></div>
+      <div class="help-item"><h4>Run HTML</h4><p>Code blocks labelled <b>html</b> also have a blue <b>Run</b> button. It opens the page full screen. Close it with the <b>&times;</b> button or <b>Esc</b>.</p></div>
+      <div class="help-item"><h4>Keyword hints</h4><p>Inside code blocks, hover over keywords such as <b>function</b> or <b>return</b> to see a short explanation.</p></div>
+    </div>
+    <div class="help-pane" id="helpCmds">
+      <p class="help-intro">Type a command in the message box and press Enter. Commands are not sent to the AI.</p>
+      <div class="help-item">
+      <div class="help-cmd"><span class="kbd">/clear</span><span>Delete all messages in the current chat (asks you to confirm first).</span></div>
+      <div class="help-cmd"><span class="kbd">/rename &lt;title&gt;</span><span>Rename the current chat.</span></div>
+      <div class="help-cmd"><span class="kbd">/system &lt;prompt&gt;</span><span>Set instructions that are sent with every message. Leave the prompt empty to clear it.</span></div>
+      <div class="help-cmd"><span class="kbd">/model &lt;name&gt;</span><span>Switch to another AI model.</span></div>
+      <div class="help-cmd"><span class="kbd">/temp &lt;0&ndash;1.5&gt;</span><span>Set the temperature. Lower is more focused, higher is more creative.</span></div>
+      <div class="help-cmd"><span class="kbd">/export</span><span>Download the current chat as a file.</span></div>
+      <div class="help-cmd"><span class="kbd">/copy</span><span>Copy the current chat as markdown.</span></div>
+      <div class="help-cmd"><span class="kbd">/duplicate</span><span>Make a copy of the current chat.</span></div>
+      <div class="help-cmd"><span class="kbd">/help</span><span>Show a quick reminder of these commands.</span></div>
+      </div>
+    </div>
+    <div class="help-pane" id="helpSettings">
+      <p class="help-intro">Open Settings with the <b>gear</b> (top right). It has three tabs. Press <b>Save</b> to keep your changes.</p>
+      <div class="help-item"><h4>Connection tab</h4><p>Sign in or out of Puter, turn on beta features, and choose the <b>Model</b>, <b>Image model</b> and <b>System prompt</b>. <b>Temperature</b> sets focused vs creative replies and <b>Max output tokens</b> caps how long a reply can be. Also set the <b>Voice input language</b> and the <b>Read-aloud voice</b>.</p></div>
+      <div class="help-item"><h4>Appearance tab</h4><p>Theme (light, dark or system), accent colour, text size, compact layout, bubble style, font, message width, animations, tab icon and <b>Reply language</b> (make the AI always answer in one language).</p></div>
+      <div class="help-item"><h4>Behavior tab</h4><p>Your name, whether Enter or Ctrl/&#8984; + Enter sends, streaming replies, a sound or desktop notification when a reply finishes, and <b>Delete all</b> chats (this can&rsquo;t be undone).</p></div>
+      <div class="help-item"><h4>Quick light/dark switch</h4><p>The <b>theme button</b> in the top right toggles light and dark without opening Settings.</p></div>
+    </div>
+    <div class="help-pane" id="helpBeta">
+      <p class="help-intro">Image viewing and image creation are experimental. They can be slow or misunderstand you, and they use more of your Puter usage.</p>
+      <div class="help-item"><h4>Turn them on</h4><p>Go to <b>Settings &rarr; Connection</b>, switch on <b>Enable beta features</b> and confirm the warning.</p></div>
+      <div class="help-item"><h4>Ask about a photo</h4><p>Attach or paste an image, then ask a question about it. If needed, choose an <b>Image model</b> in <b>Settings &rarr; Connection</b>.</p></div>
+      <div class="help-item"><h4>Create an image</h4><p>Ask for a picture in any language, for example <b>&ldquo;Draw a cat in space&rdquo;</b>. It appears in the chat.</p></div>
+      <div class="help-item"><h4>Change an image</h4><p>After an image is made, say things like <b>&ldquo;make it bigger&rdquo;</b> or <b>&ldquo;add a hat&rdquo;</b> to resize or edit it.</p></div>
+    </div>
+    <div class="help-pane" id="helpTab">
+      <div class="help-item"><h4>Change the tab icon</h4><p>Click the <b>monitor</b> icon (top right). <b>Classroom</b> and <b>Udir</b> change the browser tab&rsquo;s icon and text right away. <b>Reset icon</b> goes back to Classroom.</p></div>
+      <div class="help-item"><h4>Forms screen</h4><p>Pick <b>Forms</b> to set up the &ldquo;already answered&rdquo; screen: type a <b>headline</b>, <b>tab text</b> and an optional <b>hotkey</b>, then press <b>Open screen</b>. <b>Reset all</b> clears those three.</p></div>
+      <div class="help-item"><h4>Vigilo screen</h4><p>Pick <b>Vigilo</b> to open the Vigilo login screen straight away.</p></div>
+      <div class="help-item"><h4>Leave a screen</h4><p>Press <b>Esc</b>, double-click an empty part of the background, or press your hotkey again.</p></div>
+      <div class="help-item"><h4>Set a hotkey</h4><p>In the Forms settings, click the <b>Hotkey</b> box and press a key combination (<b>Esc</b> cancels). It opens and closes the last screen you used, and works from anywhere in the app. <b>Clear</b> removes it.</p></div>
+    </div>
+    <div class="help-pane" id="helpKeys">
+      <div class="help-item"><div class="shortcuts-list">
       <div class="shortcut-row"><span>Send message</span><span class="kbd">Enter</span></div>
       <div class="shortcut-row"><span>New line</span><span class="kbd">Shift + Enter</span></div>
-      <div class="shortcut-row"><span>New chat</span><span class="kbd">Ctrl/⌘ + K</span></div>
-      <div class="shortcut-row"><span>Search chats</span><span class="kbd">Ctrl/⌘ + F</span></div>
+      <div class="shortcut-row"><span>Edit your last message (empty box)</span><span class="kbd">&uarr;</span></div>
+      <div class="shortcut-row"><span>New chat</span><span class="kbd">Ctrl/&#8984; + K</span></div>
+      <div class="shortcut-row"><span>Search chats</span><span class="kbd">Ctrl/&#8984; + F</span></div>
       <div class="shortcut-row"><span>Stop generating / close dialog</span><span class="kbd">Esc</span></div>
-      <div class="shortcut-row"><span>Toggle sidebar</span><span class="kbd">Ctrl/⌘ + B</span></div>
-      <div class="shortcut-row"><span>Duplicate chat</span><span class="kbd">Ctrl/⌘ + D</span></div>
-      <div class="shortcut-row"><span>Copy chat as markdown</span><span class="kbd">Ctrl/⌘ + Shift + C</span></div>
+      <div class="shortcut-row"><span>Toggle sidebar</span><span class="kbd">Ctrl/&#8984; + B</span></div>
+      <div class="shortcut-row"><span>Duplicate chat</span><span class="kbd">Ctrl/&#8984; + D</span></div>
+      <div class="shortcut-row"><span>Copy chat as markdown</span><span class="kbd">Ctrl/&#8984; + Shift + C</span></div>
       <div class="shortcut-row"><span>Show this panel</span><span class="kbd">Shift + ?</span></div>
+      </div></div>
+    </div>
+    <div class="help-pane" id="helpFix">
+      <div class="help-item"><h4>The AI doesn&rsquo;t reply</h4><p>You&rsquo;re most likely not signed in. Press <b>Sign in to Puter</b> (Settings &rarr; Connection) and use a <b>personal Apple or Microsoft</b> account.</p></div>
+      <div class="help-item"><h4>Sign-in didn&rsquo;t finish</h4><p>Press the sign-in button and try again. Make sure pop-ups are allowed for this page, and don&rsquo;t use Google or email &mdash; see the <b>Signing in</b> category.</p></div>
+      <div class="help-item"><h4>The microphone doesn&rsquo;t work</h4><p>Allow microphone access for this page in the browser and check that a microphone is connected.</p></div>
+      <div class="help-item"><h4>Replies stop too early</h4><p>Raise <b>Max output tokens</b> in <b>Settings &rarr; Connection</b>.</p></div>
+      <div class="help-item"><h4>The AI ignores my image</h4><p>Image viewing is a beta feature. Turn on <b>Enable beta features</b> in <b>Settings &rarr; Connection</b>.</p></div>
+      <div class="help-item"><h4>My chats are gone</h4><p>Chats are stored only in this browser. They won&rsquo;t appear in another browser or profile, or after the site data is cleared.</p></div>
+    </div>
     </div>
     <div class="panel-actions">
       <button class="btn btn-primary" id="closeShortcuts">Got it</button>
@@ -2985,7 +3158,41 @@
   });
 
   /* ---------- keyboard shortcuts panel ---------- */
-  function openShortcuts(){ shortcutsOverlay.classList.add('open'); }
+  /* Help panel: category tabs + the glow on the ? button */
+  var HELP_GLOW_KEY = 'puter_chat_help_glow_v1';
+  var helpTabsEl = document.getElementById('helpTabs');
+  var helpBodyEl = document.getElementById('helpBody');
+  function showHelpPane(id){
+    helpTabsEl.querySelectorAll('.help-tab').forEach(function(t){
+      var on = t.dataset.help === id;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    helpBodyEl.querySelectorAll('.help-pane').forEach(function(p){ p.classList.toggle('active', p.id === id); });
+    helpBodyEl.scrollTop = 0;
+  }
+  helpTabsEl.addEventListener('click', function(e){
+    var t = e.target.closest('.help-tab');
+    if(t) showHelpPane(t.dataset.help);
+  });
+  function startHelpGlow(){
+    try{ localStorage.setItem(HELP_GLOW_KEY, '1'); }catch(e){}
+    shortcutsBtn.classList.add('help-glow');
+  }
+  function stopHelpGlow(){
+    try{ localStorage.removeItem(HELP_GLOW_KEY); }catch(e){}
+    shortcutsBtn.classList.remove('help-glow');
+  }
+  function restoreHelpGlow(){
+    var pending = false;
+    try{ pending = localStorage.getItem(HELP_GLOW_KEY) === '1'; }catch(e){}
+    if(pending) shortcutsBtn.classList.add('help-glow');
+  }
+  function openShortcuts(){
+    stopHelpGlow();
+    showHelpPane('helpStart');
+    shortcutsOverlay.classList.add('open');
+  }
   function closeShortcutsPanel(){ shortcutsOverlay.classList.remove('open'); }
   shortcutsBtn.addEventListener('click', openShortcuts);
   closeShortcuts.addEventListener('click', closeShortcutsPanel);
@@ -6905,6 +7112,7 @@
     obEl.setAttribute('aria-hidden', 'false');
   }
   function closeOnboarding(){
+    startHelpGlow();
     obEl.classList.remove('open');
     obEl.setAttribute('aria-hidden', 'true');
     obWarn.classList.remove('open');
@@ -6958,6 +7166,7 @@
   refreshPuterUi();
   updateHint();
   loadPuterModelLists();
+  restoreHelpGlow();
   if(!puterSignedIn()) openOnboarding();
 })();
 </script>
