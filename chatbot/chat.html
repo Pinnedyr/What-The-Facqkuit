@@ -1102,6 +1102,102 @@
     font-family:inherit; font-size:14.5px; outline:none; margin-bottom:16px; text-align:center; transition:border-color .15s ease; }
   .ob-input:focus{ border-color:var(--accent); }
   .ob-warn{ z-index:320; }
+
+  /* ---------- quizzes & flashcards ---------- */
+  .study{
+    --ok:#2fa866; --ok-bg:rgba(47,168,102,.13); --ok-border:rgba(47,168,102,.45);
+    width:100%; max-width:560px; background:var(--panel-bg); border:1px solid var(--border);
+    border-radius:14px; padding:14px 14px 12px; color:var(--text); outline:none; line-height:1.5;
+  }
+  .msg-attachments .study{ flex:1 1 100%; }
+  .bubble.has-study{ width:100%; max-width:min(600px,100%); }
+  .study:focus-visible{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  .study-head{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-dim); }
+  .study-ic{ display:inline-flex; color:var(--accent); flex:none; }
+  .study-title{ flex:1; min-width:0; font-weight:600; font-size:13.5px; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .study-count{ white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .study-bar{ height:4px; border-radius:99px; background:var(--accent-soft); margin:8px 0 12px; overflow:hidden; }
+  .study-bar i{ display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .3s ease; }
+  .study-q{ font-size:15.5px; font-weight:600; line-height:1.45; margin:2px 0 12px; }
+  .study-opts{ display:flex; flex-direction:column; gap:8px; }
+  .study-opt{
+    display:flex; align-items:flex-start; gap:10px; width:100%; text-align:start; padding:10px 12px;
+    border:1px solid var(--border); background:var(--bg); color:var(--text); border-radius:11px;
+    font:inherit; font-size:14px; line-height:1.45; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .study-opt:hover:not(:disabled){ border-color:var(--accent); background:var(--accent-soft); }
+  .study-opt:active:not(:disabled){ transform:scale(.99); }
+  .study-opt:disabled{ cursor:default; color:var(--text); }
+  .study-opt:disabled:not(.correct):not(.wrong){ opacity:.55; }
+  .study-letter{
+    flex:0 0 22px; height:22px; margin-top:1px; border-radius:50%; display:grid; place-items:center;
+    background:var(--accent-soft); color:var(--accent-2); font-size:11.5px; font-weight:700;
+  }
+  .study-opt.correct{ border-color:var(--ok-border); background:var(--ok-bg); }
+  .study-opt.correct .study-letter{ background:var(--ok); color:#fff; }
+  .study-opt.wrong{ border-color:var(--danger-border); background:var(--danger-bg); }
+  .study-opt.wrong .study-letter{ background:var(--danger); color:#fff; }
+  .study-fb{ margin-top:12px; padding:10px 12px; border-radius:11px; font-size:13.5px; background:var(--surface); border:1px solid var(--border); }
+  .study-fb b{ display:block; margin-bottom:2px; }
+  .study-fb.ok b{ color:var(--ok); }
+  .study-fb.bad b{ color:var(--danger); }
+  .study-hint{ margin-top:12px; padding:9px 12px; border-radius:11px; font-size:13.5px; background:var(--accent-soft); border:1px solid var(--border); }
+  .study-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; justify-content:flex-end; align-items:center; }
+  .study-actions.left{ justify-content:flex-start; }
+  .study-btn{
+    border:1px solid var(--border); background:var(--bg); color:var(--text); border-radius:10px;
+    padding:7px 13px; font:inherit; font-size:13px; font-weight:500; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, color .15s ease;
+  }
+  .study-btn:hover:not(:disabled){ border-color:var(--accent); background:var(--accent-soft); }
+  .study-btn:disabled{ opacity:.4; cursor:default; }
+  .study-btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .study-btn.primary:hover:not(:disabled){ background:var(--accent-hover); border-color:var(--accent-hover); }
+  .study-btn.ghost{ border-color:transparent; background:transparent; color:var(--text-dim); padding:6px 9px; }
+  .study-btn.ghost:hover:not(:disabled){ color:var(--text); border-color:transparent; }
+  .study-btn.ok{ color:var(--ok); border-color:var(--ok-border); }
+  .study-btn.ok:hover:not(:disabled){ background:var(--ok-bg); border-color:var(--ok); }
+  .study-btn.bad{ color:var(--danger); border-color:var(--danger-border); }
+  .study-btn.bad:hover:not(:disabled){ background:var(--danger-bg); border-color:var(--danger); }
+  .study-btn.grow{ flex:1; }
+  .study-score{ text-align:center; padding:8px 0 2px; }
+  .study-score b{ display:block; font-size:34px; font-weight:700; line-height:1.2; font-variant-numeric:tabular-nums; }
+  .study-score span{ color:var(--text-dim); font-size:13.5px; }
+  .study-missed{ margin-top:12px; border:1px solid var(--border); border-radius:11px; background:var(--bg); font-size:13.5px; }
+  .study-missed summary{ cursor:pointer; padding:9px 12px; font-weight:600; }
+  .study-missed-item{ padding:9px 12px; border-top:1px solid var(--border); }
+  .study-missed-item .mq{ font-weight:600; }
+  .study-missed-item .ma{ color:var(--ok); margin-top:2px; }
+  .study-missed-item .me{ color:var(--text-dim); margin-top:2px; }
+
+  .fc-scene{ perspective:1000px; cursor:pointer; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
+  .fc-inner{ display:grid; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.3,.7,.2,1); }
+  .fc-inner.flipped{ transform:rotateY(180deg); }
+  .fc-face{
+    grid-area:1 / 1; min-height:190px; padding:22px 18px; border-radius:14px; border:1px solid var(--border);
+    background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; gap:10px; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  }
+  .fc-back{ transform:rotateY(180deg); background:var(--accent-soft); border-color:var(--accent); }
+  .fc-label{ font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); font-weight:600; }
+  .fc-text{ font-size:17px; font-weight:600; line-height:1.45; max-height:260px; overflow:auto; max-width:100%; }
+  .fc-back .fc-text{ font-weight:500; font-size:15.5px; }
+  .fc-tip{ text-align:center; font-size:12px; color:var(--text-dim); margin:8px 0 2px; }
+  .fc-actions{ display:flex; gap:8px; margin-top:10px; }
+  @media (prefers-reduced-motion:reduce){ .fc-inner{ transition:none; } }
+
+  .ob-alert{ display:flex; gap:12px; align-items:flex-start; text-align:left; margin:14px 0 4px; padding:12px 14px;
+    border-radius:14px; border:1.5px solid #f0b429; background:rgba(240,180,41,.14); color:var(--text);
+    box-shadow:0 0 0 4px rgba(240,180,41,.12); animation:obAlertPulse 2.4s ease-in-out 3; }
+  .ob-alert-ic{ flex:none; width:30px; height:30px; border-radius:50%; display:grid; place-items:center; background:#f0b429; color:#4a3500; }
+  .ob-alert-ic svg{ width:18px; height:18px; }
+  .ob-alert-tx{ font-size:13.5px; line-height:1.5; }
+  .ob-alert-tx b{ display:block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#b27a00; margin-bottom:1px; }
+  :root[data-theme="dark"] .ob-alert-tx b{ color:#f5c451; }
+  @keyframes obAlertPulse{ 0%,100%{ box-shadow:0 0 0 4px rgba(240,180,41,.12); } 50%{ box-shadow:0 0 0 8px rgba(240,180,41,.22); } }
+  @media (prefers-reduced-motion:reduce){ .ob-alert{ animation:none; } }
+  html[data-anim="off"] .ob-alert, html[data-anim="subtle"] .ob-alert{ animation:none; }
 </style>
 </head>
 <body>
@@ -1787,7 +1883,10 @@
       <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
       <h2>Sign in with Puter</h2>
       <p>Puter provides the AI for free. If you don&rsquo;t have an account yet, one is created for you during sign-in.</p>
-      <p>Important: Use your personal Microsoft or Apple account when logging in!</p>
+      <div class="ob-alert" role="note">
+        <span class="ob-alert-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg></span>
+        <span class="ob-alert-tx"><b>Important</b>Sign in with your <strong>personal Microsoft</strong> or <strong>Apple</strong> account &mdash; not a school or work account.</span>
+      </div>
       <div class="ob-status" id="obStatus" role="status" aria-live="polite"></div>
       <div class="ob-actions">
         <button type="button" class="btn btn-primary" id="obSignIn">Sign in to Puter</button>
@@ -3512,7 +3611,8 @@
     row.className = 'row ' + role + (animate === false ? '' : ' row-in');
     var bubble = document.createElement('div');
     bubble.className = 'bubble';
-    if(attachments && attachments.length){
+    var hasStudy = !!(attachments && attachments.some(function(a){ return a.kind === 'study'; }));
+    if(attachments && attachments.length && !hasStudy){
       bubble.appendChild(buildAttachmentsEl(attachments));
     }
     if(betaLocked){
@@ -3521,6 +3621,13 @@
       bubble.appendChild(document.createTextNode(content));
     }else{
       renderMessageContent(bubble, content);
+    }
+    if(hasStudy){
+      bubble.classList.add('has-study');
+      var studyWrap = buildAttachmentsEl(attachments);
+      studyWrap.style.marginTop = '10px';
+      studyWrap.style.marginBottom = '0';
+      bubble.appendChild(studyWrap);
     }
     row.appendChild(bubble);
     if(role !== 'error' && typeof index === 'number'){
@@ -3889,7 +3996,10 @@
       var who = m.role === 'user' ? 'You' : 'Assistant';
       lines.push('**' + who + ':**', '');
       if(m.attachments && m.attachments.length){
-        m.attachments.forEach(function(a){ lines.push('*[Attached: ' + a.name + ']*'); });
+        m.attachments.forEach(function(a){
+          if(a.kind === 'study'){ lines.push(studyAsText(a)); }
+          else lines.push('*[Attached: ' + a.name + ']*');
+        });
         lines.push('');
       }
       if(m.content) lines.push(m.content, '');
@@ -4302,6 +4412,8 @@
         if(a.generated){ img.classList.add('gen-img'); if(a.w && a.h) img.style.aspectRatio = a.w + ' / ' + a.h; if(a.dw) img.style.width = a.dw + 'px'; if(a._fresh) img.classList.add('reveal'); }
         img.addEventListener('click', function(){ openImageViewer(a.dataUrl); });
         wrap.appendChild(img);
+      }else if(a.kind === 'study' && a.study && a.study.items && a.study.items.length){
+        wrap.appendChild(buildStudyEl(a));
       }else if(a.kind === 'melody' && a.m){
         wrap.appendChild(melUI(a, false));
       }else{
@@ -4326,6 +4438,7 @@
     var fileNotes = [];
     var images = [];
     (m.attachments || []).forEach(function(a){
+      if(a.kind === 'study'){ fileNotes.push('[Interactive card shown to the user]\n' + studyAsText(a).slice(0, 4000)); return; }
       if(a.generated){ return; }
       if(a.kind === 'image'){ if(a.dataUrl) images.push(a); }
       else if(a.text != null){
@@ -5797,6 +5910,569 @@
   var activeController = null;
 
   /* ---------- thinking indicator that reacts to what was asked ---------- */
+  /* =====================================================================
+     QUIZZES & FLASHCARDS
+     Interactive cards built from a topic or pasted material. Intent is
+     detected in any language, typos included: a cheap local prefilter
+     decides whether a message might be a study request, then a tiny LLM
+     router confirms it and extracts topic / count / language.
+     ===================================================================== */
+  var STUDY_UI_EN = {
+    question:'Question', of:'of', hint:'Hint', showHint:'Show hint', next:'Next', finish:'See results',
+    correct:'Correct!', wrong:'Not quite', correctAnswer:'Correct answer', score:'Score',
+    retry:'Try again', retryMissed:'Retry missed', missed:'Missed questions',
+    flip:'Tap the card to flip', front:'Question', back:'Answer', card:'Card',
+    known:'Got it', again:'Review again', shuffle:'Shuffle', prev:'Previous',
+    restart:'Start over', reviewLeft:'Review remaining', copy:'Copy deck', knownCount:'known',
+    done:'All done!', perfect:'Perfect score!', good:'Nice work!', keep:'Keep practising!'
+  };
+
+  LEX.sQuiz  = mkList('quiz quizz quizze quizzes quizzen quizen kviss kvissen kwiz quis cuestionario questionario questionnaire kysely tentamen toets toetsen overhor overhore overhoring abfrage abfragen');
+  LEX.sCards = mkList('flashcard flashcards flashcrad flashkort flashkortene flashkarten flashkarte glosekort glosekortene gloser karteikarten karteikarte lernkarten lernkarte lernkarteien tarjetas tarjeta fichas ficha fiches cartoes cartao cartes cartas schede flitskaarten flitskaart leerkaarten fiszki fiszka kortit muistikortit minnekort studiekort');
+  LEX.sTest  = mkList('test teste testa tester testen testar prove exam examen exame examine eksamen prufe pruefen prufen probar abfragen overhor repasar repetir repeter drill');
+  LEX.sQ     = mkList('questions question sporsmal fragen frage preguntas pregunta domande domanda perguntas pergunta questoes vragen vraag pytania');
+  LEX.sMe    = mkList('me meg mig mich mir mi moi mij mnie');
+  ['sQuiz', 'sCards', 'sTest', 'sQ', 'sMe'].forEach(function(k){ LEX[k + 'Set'] = mkSet(LEX[k]); });
+
+  /* quiz / flashcard words in non-Latin scripts (and a few accented ones) */
+  var STUDY_NL = /クイズ|フラッシュカード|単語カード|暗記カード|テスト|퀴즈|플래시\s*카드|단어\s*카드|암기\s*카드|测验|測驗|小测|考考我|考我|闪卡|閃卡|单词卡|單詞卡|抽认卡|викторин|квиз|тест|карточк|флеш|اختبار|اختبرني|بطاقات|فلاش|שאלון|בחן אותי|כרטיסיות|क्विज|फ्लैशकार्ड|ควิซ|แฟลชการ์ด|κουίζ|κουιζ|τεστ|κάρτες|kartičk|kvíz|sınav|bilgi yarışması|kart(?:lar)?ı?\s*(?:hazırla|yap)/i;
+
+  function studyPrefilter(raw, afterStudy){
+    var s = String(raw || ''), seg = s.length > 900 ? s.slice(0, 450) + ' ' + s.slice(-450) : s;
+    var low = seg.toLowerCase();
+    if(STUDY_NL.test(low) || /flash\s*-?\s*car/.test(low) || /(study|memory|revision|vocab\w*|lern|studie)\s*-?\s*(cards?|kort|karten)/.test(low)) return true;
+    var toks = tokenize(seg);
+    if(bestMatch(toks, 'sQuiz', true) || bestMatch(toks, 'sQuiz', false) || bestMatch(toks, 'sCards', true) || bestMatch(toks, 'sCards', false)) return true;
+    var hasNum = /\d/.test(seg);
+    var me = toks.some(function(t){ return LEX.sMeSet[t]; });
+    if(bestMatch(toks, 'sTest', false) && (me || hasNum)) return true;
+    if(bestMatch(toks, 'sQ', false) && hasNum && toks.length <= 40) return true;
+    if(afterStudy && toks.length <= 10) return true;
+    return false;
+  }
+
+  var STUDY_ROUTER_PROMPT = [
+    'You are the intent router of a chat app that can build INTERACTIVE multiple-choice QUIZZES and FLASHCARD decks.',
+    'The user may write in ANY language and may make typos. Classify the user LAST message and reply with ONLY one JSON object, nothing else:',
+    '{"intent":"quiz"|"flashcards"|"chat","topic":"","count":0,"material":"message"|"previous"|"none","language":"","difficulty":"","status":""}',
+    '- quiz: the user wants to be quizzed, tested or examined, or asks for quiz / test / practice / multiple-choice questions to answer (e.g. "quiz me on photosynthesis", "test me on these notes", "give me 10 practice questions about WW2", "kviss meg om norsk historie", "teste-me sobre historia").',
+    '- flashcards: the user wants flashcards, study cards, memory cards, vocabulary cards (e.g. "glosekort", "Karteikarten", "fichas de estudio", "cartes de revision").',
+    '- chat: anything else, including questions ABOUT quizzes or flashcards, asking to explain a topic, asking to grade or discuss a text answer, or writing a quiz as a plain document / script / code.',
+    '- topic: short topic label in the language of the user (empty if the user supplied material instead, or only says "this" or "that").',
+    '- count: the number of questions or cards the user asked for, else 0.',
+    '- material: "message" if the user message itself contains the text to study (pasted notes, article, attachment); "previous" if the user refers to earlier chat content ("quiz me on that", "make flashcards from your answer") and gives no new topic; otherwise "none".',
+    '- language: the language the questions or cards must be written in, as an English name. Normally the language of the user message, even when the topic is vocabulary of another language. If the user explicitly asks for a language ("in Spanish"), use that.',
+    '- difficulty: "easy", "medium" or "hard" if requested, else "".',
+    '- status: a 3 to 4 word progress message in that language, like "Writing your quiz...".',
+    'If previous_study is given and the user asks for more / another / harder / longer / again, or just gives a number, keep that mode and use its topic.'
+  ].join('\n');
+
+  async function classifyStudy(raw, ctx, signal){
+    var shown = raw.length > 1200 ? raw.slice(0, 700) + ' [...] ' + raw.slice(-400) : raw;
+    var payload = JSON.stringify({ message: shown, message_chars: raw.length, has_attached_text: !!ctx.hasAttachedText, has_previous_content: !!ctx.hasPrevious, previous_study: ctx.prevStudy || null });
+    var out = await helperChat([{ role: 'system', content: STUDY_ROUTER_PROMPT }, { role: 'user', content: payload }], signal, 260, 0);
+    var m = out && out.match(/\{[\s\S]*\}/);
+    if(!m) return null;
+    var j; try{ j = JSON.parse(m[0]); }catch(e){ return null; }
+    var it = String(j.intent || '').toLowerCase();
+    if(it === 'flashcard' || it === 'cards') it = 'flashcards';
+    if(it !== 'quiz' && it !== 'flashcards') return { mode: null };
+    var cnt = parseInt(j.count, 10);
+    var diff = String(j.difficulty || '').toLowerCase();
+    return {
+      mode: it,
+      topic: String(j.topic || '').trim().slice(0, 200),
+      count: cnt > 0 ? cnt : 0,
+      material: String(j.material || 'none').toLowerCase(),
+      language: String(j.language || '').trim().slice(0, 40),
+      difficulty: (diff === 'easy' || diff === 'medium' || diff === 'hard') ? diff : '',
+      status: String(j.status || '').trim().slice(0, 60)
+    };
+  }
+
+  function studyTextOfMessage(m){
+    var c = buildApiContent(m);
+    if(typeof c === 'string') return c.trim();
+    return c.filter(function(p){ return p && p.type === 'text'; }).map(function(p){ return p.text; }).join('\n').trim();
+  }
+  function previousStudyMaterial(conv){
+    var msgs = conv.messages.slice(0, -1), out = [];
+    for(var i = msgs.length - 1; i >= 0 && out.length < 4; i--){
+      var m = msgs[i];
+      if(!m || !m.content || !String(m.content).trim()) continue;
+      if((m.attachments || []).some(function(a){ return a.kind === 'study'; })) continue;
+      out.unshift(studyTextOfMessage(m));
+    }
+    return out.join('\n\n').slice(-12000);
+  }
+
+  /* ---------- generation ---------- */
+  function studySystemPrompt(spec){
+    var lang = spec.language || 'the same language as the user message';
+    var common = 'Reply with ONE valid JSON object and nothing else: no markdown fences, no commentary. Write EVERY text value (title, intro, ui, ' + (spec.mode === 'quiz' ? 'questions, options, hints, explanations' : 'fronts and backs') + ') in ' + lang + '. ';
+    var uiRule = '"ui" must be this object with every VALUE translated into ' + lang + ' (keep the keys, keep short): ' + JSON.stringify(STUDY_UI_EN) + '. ';
+    var src = spec.material
+      ? 'Base everything ONLY on the MATERIAL the user provides; do not add outside facts. Cover its most important points evenly. '
+      : 'Use accurate, well-established knowledge about the topic. ';
+    var diff = spec.difficulty ? 'Difficulty: ' + spec.difficulty + '. ' : 'Mix of easy and medium difficulty unless the topic implies otherwise. ';
+    if(spec.mode === 'quiz'){
+      return common + uiRule + src + diff +
+        'Schema: {"title":"short title","intro":"one friendly sentence announcing the quiz","ui":{...},"questions":[{"q":"question","options":["option","option","option","option"],"answer":0,"hint":"a nudge that does not reveal the answer","explanation":"1-2 sentences on why the answer is right"}]}. ' +
+        'Write exactly ' + spec.count + ' questions. Each has 4 options without letter prefixes, exactly one correct; "answer" is the 0-based index of the correct option. Distractors must be plausible. No duplicate questions. Questions must be self-contained.';
+    }
+    return common + uiRule + src + diff +
+      'Schema: {"title":"short title","intro":"one friendly sentence announcing the deck","ui":{...},"cards":[{"front":"term, question or prompt","back":"concise answer or definition (max 2 short sentences)"}]}. ' +
+      'Write exactly ' + spec.count + ' cards. Each card tests one idea. No duplicates. For language-learning topics put the word or phrase on the front and the translation on the back.';
+  }
+
+  function studyStr(v){ return typeof v === 'string' ? v.trim() : (typeof v === 'number' ? String(v) : ''); }
+  function studyShuffle(arr){
+    var a = arr.slice();
+    for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function studyRange(n){ var a = []; for(var i = 0; i < n; i++) a.push(i); return a; }
+
+  function studyJsonSlice(text){
+    var t = String(text || '').replace(/```(?:json)?/gi, '').trim();
+    var a = t.indexOf('{'), b = t.lastIndexOf('}');
+    return a >= 0 ? t.slice(a, b > a ? b + 1 : t.length) : '';
+  }
+  /* If the JSON was cut off (token limit), still recover every complete item. */
+  function salvageObjects(text, key){
+    var k = text.indexOf('"' + key + '"');
+    if(k < 0) return [];
+    var s = text.indexOf('[', k);
+    if(s < 0) return [];
+    var out = [], depth = 0, inStr = false, esc = false, start = -1;
+    for(var i = s + 1; i < text.length; i++){
+      var c = text.charAt(i);
+      if(inStr){ if(esc) esc = false; else if(c === '\\') esc = true; else if(c === '"') inStr = false; continue; }
+      if(c === '"'){ inStr = true; continue; }
+      if(c === '{'){ if(depth === 0) start = i; depth++; }
+      else if(c === '}'){
+        depth--;
+        if(depth === 0 && start >= 0){ try{ out.push(JSON.parse(text.slice(start, i + 1))); }catch(e){} start = -1; }
+      }else if(c === ']' && depth === 0) break;
+    }
+    return out;
+  }
+  function grabJsonString(text, key){
+    var m = String(text).match(new RegExp('"' + key + '"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"'));
+    if(!m) return '';
+    try{ return JSON.parse('"' + m[1] + '"'); }catch(e){ return m[1]; }
+  }
+
+  function parseStudy(text, mode){
+    var key = mode === 'quiz' ? 'questions' : 'cards';
+    var raw = studyJsonSlice(text), obj = null;
+    if(raw){
+      try{ obj = JSON.parse(raw); }
+      catch(e){ try{ obj = JSON.parse(raw.replace(/,\s*([}\]])/g, '$1')); }catch(e2){ obj = null; } }
+    }
+    var list = (obj && Array.isArray(obj[key])) ? obj[key] : salvageObjects(String(text), key);
+    var meta = obj || { title: grabJsonString(text, 'title'), intro: grabJsonString(text, 'intro') };
+    var ui = meta.ui;
+    if(!ui || typeof ui !== 'object'){
+      var um = String(text).match(/"ui"\s*:\s*(\{[^{}]*\})/);
+      if(um){ try{ ui = JSON.parse(um[1]); }catch(e){ ui = null; } }
+    }
+    var items = [];
+    list.forEach(function(it){
+      if(!it || typeof it !== 'object') return;
+      if(mode === 'quiz'){
+        var q = studyStr(it.q || it.question);
+        var opts = (Array.isArray(it.options) ? it.options : (Array.isArray(it.choices) ? it.choices : [])).map(studyStr).filter(Boolean).slice(0, 6);
+        if(!q || opts.length < 2) return;
+        if(opts.every(function(o){ return /^\(?[A-Fa-f][\).:]\s+/.test(o); })) opts = opts.map(function(o){ return o.replace(/^\(?[A-Fa-f][\).:]\s+/, ''); });
+        var a = it.answer, idx = -1;
+        if(typeof a === 'number') idx = a;
+        else if(typeof a === 'string'){
+          var as = a.trim();
+          if(/^[A-Fa-f]$/.test(as)) idx = as.toUpperCase().charCodeAt(0) - 65;
+          else if(/^\d+$/.test(as)) idx = parseInt(as, 10);
+          else idx = opts.indexOf(as);
+        }
+        if(!(idx >= 0 && idx < opts.length)) return;
+        /* shuffle so the right answer is not always in the same slot, unless
+           the options refer to each other ("all of the above" etc.) */
+        if(!opts.some(function(o){ return /all of the above|none of the above|both|alle|ingen av|ambas|todas|alle der|tutte|toutes|beide/i.test(o); })){
+          var order = studyShuffle(studyRange(opts.length));
+          var newOpts = order.map(function(i){ return opts[i]; });
+          idx = order.indexOf(idx);
+          opts = newOpts;
+        }
+        items.push({ q: q, o: opts, a: idx, h: studyStr(it.hint), e: studyStr(it.explanation) });
+      }else{
+        var f = studyStr(it.front || it.term || it.q), b = studyStr(it.back || it.definition || it.a);
+        if(f && b) items.push({ f: f, b: b });
+      }
+    });
+    if(!items.length) return null;
+    return { title: studyStr(meta.title), intro: studyStr(meta.intro), ui: ui, items: items };
+  }
+
+  async function studyGenerate(spec, signal){
+    var n = spec.count;
+    var usr = 'Topic: ' + (spec.topic || '(see material)') + '\nCount: ' + n + (spec.difficulty ? '\nDifficulty: ' + spec.difficulty : '') +
+      (spec.material ? '\n\nMATERIAL:\n"""\n' + spec.material + '\n"""' : '');
+    var maxTok = spec.mode === 'quiz' ? Math.min(8000, 900 + n * 260) : Math.min(6500, 800 + n * 110);
+    var ctrl = new AbortController(), timer = setTimeout(function(){ ctrl.abort(); }, 120000);
+    var onAbort = function(){ ctrl.abort(); };
+    if(signal){ if(signal.aborted) ctrl.abort(); else signal.addEventListener('abort', onAbort); }
+    try{
+      var text = await puterChat([{ role: 'system', content: studySystemPrompt(spec) }, { role: 'user', content: usr }],
+        { model: settings.model, temperature: 0.5, maxTokens: maxTok, stream: false }, null, ctrl.signal);
+      var res = parseStudy(stripReasoning(text), spec.mode);
+      if(res && res.items.length > n) res.items = res.items.slice(0, n);
+      return res;
+    }finally{
+      clearTimeout(timer);
+      if(signal) signal.removeEventListener('abort', onAbort);
+    }
+  }
+
+  /* Returns true when a card was created and the turn is finished,
+     'ask' when the user wants a quiz/cards but gave no topic, false otherwise. */
+  async function runStudyIntent(conv, lastMsg, bubble, signal){
+    var raw = String(lastMsg.content || '');
+    var msgs = conv.messages, prev = msgs[msgs.length - 2];
+    var prevStudyAtt = prev && prev.role === 'assistant' ? (prev.attachments || []).filter(function(a){ return a.kind === 'study' && a.study; })[0] : null;
+    if(!studyPrefilter(raw, !!prevStudyAtt)) return false;
+
+    var hasAttText = (lastMsg.attachments || []).some(function(a){ return a.text != null; });
+    var prevMat = previousStudyMaterial(conv);
+    var route = await classifyStudy(raw, {
+      hasAttachedText: hasAttText, hasPrevious: !!prevMat,
+      prevStudy: prevStudyAtt ? { mode: prevStudyAtt.study.mode, topic: prevStudyAtt.study.title } : null
+    }, signal);
+    if(!route || !route.mode) return false;
+
+    var own = studyTextOfMessage(lastMsg), material = '';
+    if(route.material === 'message' || (route.material !== 'previous' && own.length > 700)) material = own;
+    else if(route.material === 'previous' || (!route.topic && !prevStudyAtt)) material = prevMat;
+    if(!material && !route.topic && prevStudyAtt){
+      route.topic = prevStudyAtt.study.topic || prevStudyAtt.study.title;
+      material = prevStudyAtt.study.source || '';
+    }
+    material = String(material || '').slice(0, 12000);
+    if(!route.topic && !material) return 'ask';
+
+    var isQuiz = route.mode === 'quiz';
+    var count = route.count > 0 ? route.count : (isQuiz ? 5 : 10);
+    count = Math.max(1, Math.min(isQuiz ? 25 : 50, count));
+    var spec = {
+      mode: route.mode, topic: route.topic, count: count, material: material,
+      language: route.language, difficulty: route.difficulty
+    };
+
+    /* swap the thinking label for a specific one (cloned, so its timers stop) */
+    var lab = bubble.querySelector('.tlabel');
+    if(lab && lab.parentNode){
+      var nl = lab.cloneNode(false);
+      nl.textContent = route.status || (isQuiz ? 'Writing your quiz\u2026' : 'Making your flashcards\u2026');
+      lab.parentNode.replaceChild(nl, lab);
+    }
+
+    var res = null;
+    for(var attempt = 0; attempt < 2 && !res; attempt++){
+      try{ res = await studyGenerate(spec, signal); }
+      catch(e){ if(signal.aborted) throw e; res = null; }
+    }
+    if(!res){
+      flashHint('Could not build the interactive card \u2014 answering in text instead.', 4500);
+      return false;
+    }
+
+    var ui = {};
+    Object.keys(STUDY_UI_EN).forEach(function(k){
+      var v = res.ui && typeof res.ui[k] === 'string' ? res.ui[k].trim() : '';
+      ui[k] = v || STUDY_UI_EN[k];
+    });
+    var title = res.title || route.topic || (isQuiz ? 'Quiz' : 'Flashcards');
+    var att = { kind: 'study', name: title, study: { mode: route.mode, title: title, topic: route.topic, ui: ui, items: res.items, source: material } };
+    var intro = res.intro || (isQuiz ? 'Here is your quiz.' : 'Here are your flashcards.');
+    conv.messages.push({ role: 'assistant', content: intro, attachments: [att] });
+    persist();
+    renderSidebar();
+    loadCurrentConversation();
+    notifyReplyDone(intro);
+    if(conv.messages.length === 2 && conv.messages[0].role === 'user'){
+      autoTitleConversation(conv, conv.messages[0].content, intro);
+    }
+    return true;
+  }
+
+  /* text version of a card, used for the model's context and for /export */
+  function studyAsText(a){
+    var S = a.study, lines = [];
+    if(!S || !S.items) return '';
+    lines.push((S.mode === 'quiz' ? 'Quiz: ' : 'Flashcards: ') + S.title);
+    S.items.forEach(function(it, i){
+      if(S.mode === 'quiz'){
+        lines.push((i + 1) + '. ' + it.q);
+        it.o.forEach(function(o, oi){ lines.push('   ' + String.fromCharCode(65 + oi) + ') ' + o + (oi === it.a ? '  [correct]' : '')); });
+        if(it.e) lines.push('   Why: ' + it.e);
+      }else{
+        lines.push((i + 1) + '. ' + it.f + ' \u2014 ' + it.b);
+      }
+    });
+    return lines.join('\n');
+  }
+
+  /* ---------- interactive card UI ---------- */
+  var ICON_QUIZ = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9.2a2.6 2.6 0 1 1 3.6 2.4c-.7.4-1.1.9-1.1 1.7"/><circle cx="12" cy="16.8" r=".6" fill="currentColor"/></svg>';
+  var ICON_CARDS = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="15" height="12" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v10"/></svg>';
+
+  function studyEl(tag, cls, text){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(text != null) e.textContent = text;
+    return e;
+  }
+  function studyBtn(cls, text, onClick){
+    var b = studyEl('button', 'study-btn' + (cls ? ' ' + cls : ''), text);
+    b.type = 'button';
+    b.addEventListener('click', function(e){ e.stopPropagation(); onClick(e); });
+    return b;
+  }
+  function studyHead(S, mode, rightText, pct){
+    var f = document.createDocumentFragment();
+    var h = studyEl('div', 'study-head');
+    var ic = studyEl('span', 'study-ic'); ic.innerHTML = mode === 'quiz' ? ICON_QUIZ : ICON_CARDS;
+    var t = studyEl('span', 'study-title', S.title); t.dir = 'auto';
+    h.appendChild(ic); h.appendChild(t); h.appendChild(studyEl('span', 'study-count', rightText));
+    var bar = studyEl('div', 'study-bar'), fill = document.createElement('i');
+    fill.style.width = Math.round(Math.max(0, Math.min(1, pct)) * 100) + '%';
+    bar.appendChild(fill);
+    f.appendChild(h); f.appendChild(bar);
+    return f;
+  }
+
+  function buildStudyEl(att){
+    return att.study.mode === 'quiz' ? buildQuizEl(att) : buildCardsEl(att);
+  }
+
+  function buildQuizEl(att){
+    var S = att.study, ui = S.ui, items = S.items, n = items.length;
+    var root = studyEl('div', 'study study-quiz');
+    root.tabIndex = 0;
+    function fresh(order){ return { kind: 'quiz', order: order || studyRange(n), i: 0, picks: {}, hints: {}, done: false }; }
+    if(!S.state || S.state.kind !== 'quiz') S.state = fresh();
+    var st = S.state;
+    function reset(order){ S.state = fresh(order); st = S.state; }
+    function score(){ var c = 0; items.forEach(function(it, k){ if(st.picks[k] === it.a) c++; }); return c; }
+    function after(){
+      persist();
+      render();
+      try{ root.focus({ preventScroll: true }); }catch(e){}
+      if(typeof maybeAutoScroll === 'function') maybeAutoScroll();
+    }
+    function choose(oi){
+      var k = st.order[st.i];
+      if(typeof st.picks[k] === 'number') return;
+      st.picks[k] = oi;
+      after();
+    }
+    function advance(){
+      if(st.i + 1 >= st.order.length) st.done = true; else st.i++;
+      after();
+    }
+
+    function render(){
+      root.innerHTML = '';
+      var total = st.order.length;
+      if(st.done){ renderResult(); return; }
+      var k = st.order[st.i], it = items[k], picked = st.picks[k], answered = typeof picked === 'number';
+      root.appendChild(studyHead(S, 'quiz', ui.question + ' ' + (st.i + 1) + ' ' + ui.of + ' ' + total, st.i / total));
+      var q = studyEl('div', 'study-q', it.q); q.dir = 'auto';
+      root.appendChild(q);
+      var opts = studyEl('div', 'study-opts');
+      it.o.forEach(function(text, oi){
+        var b = studyEl('button', 'study-opt'); b.type = 'button';
+        b.appendChild(studyEl('span', 'study-letter', String.fromCharCode(65 + oi)));
+        var tx = studyEl('span', 'study-opt-text', text); tx.dir = 'auto';
+        b.appendChild(tx);
+        if(answered){
+          b.disabled = true;
+          if(oi === it.a) b.classList.add('correct'); else if(oi === picked) b.classList.add('wrong');
+        }
+        b.addEventListener('click', function(e){ e.stopPropagation(); choose(oi); });
+        opts.appendChild(b);
+      });
+      root.appendChild(opts);
+
+      if(!answered && it.h){
+        if(st.hints[k]){
+          var hb = studyEl('div', 'study-hint'); hb.dir = 'auto';
+          hb.appendChild(studyEl('b', null, ui.hint + ': ')); hb.appendChild(document.createTextNode(it.h));
+          root.appendChild(hb);
+        }else{
+          var row = studyEl('div', 'study-actions left');
+          row.appendChild(studyBtn('ghost', ui.showHint, function(){ st.hints[k] = true; after(); }));
+          root.appendChild(row);
+        }
+      }
+      if(answered){
+        var ok = picked === it.a;
+        var fb = studyEl('div', 'study-fb ' + (ok ? 'ok' : 'bad')); fb.dir = 'auto';
+        fb.appendChild(studyEl('b', null, ok ? ui.correct : ui.wrong));
+        if(!ok){
+          var ca = studyEl('div', null, ui.correctAnswer + ': ' + String.fromCharCode(65 + it.a) + ') ' + it.o[it.a]);
+          ca.style.marginBottom = '2px';
+          fb.appendChild(ca);
+        }
+        if(it.e) fb.appendChild(document.createTextNode(it.e));
+        root.appendChild(fb);
+        var act = studyEl('div', 'study-actions');
+        act.appendChild(studyBtn('primary', st.i + 1 >= total ? ui.finish : ui.next, advance));
+        root.appendChild(act);
+      }
+    }
+
+    function renderResult(){
+      var sc = score(), pct = sc / n;
+      root.appendChild(studyHead(S, 'quiz', ui.score, 1));
+      var big = studyEl('div', 'study-score');
+      big.appendChild(studyEl('b', null, sc + ' / ' + n));
+      big.appendChild(studyEl('span', null, pct === 1 ? ui.perfect : (pct >= 0.6 ? ui.good : ui.keep)));
+      root.appendChild(big);
+      var missed = items.map(function(_, k){ return k; }).filter(function(k){ return st.picks[k] !== items[k].a; });
+      if(missed.length){
+        var det = studyEl('details', 'study-missed');
+        det.appendChild(studyEl('summary', null, ui.missed + ' (' + missed.length + ')'));
+        missed.forEach(function(k){
+          var it = items[k], box = studyEl('div', 'study-missed-item'); box.dir = 'auto';
+          box.appendChild(studyEl('div', 'mq', it.q));
+          box.appendChild(studyEl('div', 'ma', ui.correctAnswer + ': ' + it.o[it.a]));
+          if(it.e) box.appendChild(studyEl('div', 'me', it.e));
+          det.appendChild(box);
+        });
+        root.appendChild(det);
+      }
+      var act = studyEl('div', 'study-actions');
+      if(missed.length){
+        act.appendChild(studyBtn('', ui.retryMissed, function(){
+          st.order = studyShuffle(missed); st.i = 0; st.done = false;
+          missed.forEach(function(k){ delete st.picks[k]; delete st.hints[k]; });
+          after();
+        }));
+      }
+      act.appendChild(studyBtn('primary', ui.retry, function(){ reset(studyShuffle(studyRange(n))); after(); }));
+      root.appendChild(act);
+    }
+
+    root.addEventListener('keydown', function(e){
+      if(e.target !== root || e.ctrlKey || e.metaKey || e.altKey || st.done) return;
+      var k = st.order[st.i], it = items[k], answered = typeof st.picks[k] === 'number';
+      var key = e.key.toLowerCase(), idx = -1;
+      if(/^[1-9]$/.test(key)) idx = +key - 1; else if(/^[a-f]$/.test(key)) idx = key.charCodeAt(0) - 97;
+      if(!answered && idx >= 0 && idx < it.o.length){ e.preventDefault(); e.stopPropagation(); choose(idx); }
+      else if(answered && (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === ' ')){ e.preventDefault(); e.stopPropagation(); advance(); }
+    });
+
+    render();
+    return root;
+  }
+
+  function buildCardsEl(att){
+    var S = att.study, ui = S.ui, items = S.items, n = items.length;
+    var root = studyEl('div', 'study study-cards');
+    root.tabIndex = 0;
+    function fresh(order){ return { kind: 'cards', order: order || studyRange(n), i: 0, known: {}, done: false }; }
+    if(!S.state || S.state.kind !== 'cards') S.state = fresh();
+    var st = S.state, inner = null, flipped = false;
+    function reset(order){ S.state = fresh(order); st = S.state; }
+    function knownCount(){ var c = 0; items.forEach(function(_, k){ if(st.known[k] === true) c++; }); return c; }
+    function after(){
+      persist();
+      render();
+      try{ root.focus({ preventScroll: true }); }catch(e){}
+    }
+    function flip(){
+      if(!inner) return;
+      flipped = !flipped;
+      inner.classList.toggle('flipped', flipped);
+    }
+    function go(delta, mark){
+      var k = st.order[st.i];
+      if(mark === true) st.known[k] = true; else if(mark === false) st.known[k] = false;
+      var ni = st.i + delta;
+      if(ni < 0) return;
+      if(ni >= st.order.length) st.done = true; else st.i = ni;
+      after();
+    }
+    function deckText(){ return items.map(function(it){ return it.f.replace(/\s*\n\s*/g, ' ') + '\t' + it.b.replace(/\s*\n\s*/g, ' '); }).join('\n'); }
+
+    function render(){
+      root.innerHTML = '';
+      flipped = false; inner = null;
+      var total = st.order.length;
+      if(st.done){ renderDone(); return; }
+      var k = st.order[st.i], it = items[k];
+      root.appendChild(studyHead(S, 'cards', ui.card + ' ' + (st.i + 1) + ' ' + ui.of + ' ' + total + ' \u00b7 ' + knownCount() + ' ' + ui.knownCount, st.i / total));
+      var scene = studyEl('div', 'fc-scene');
+      inner = studyEl('div', 'fc-inner');
+      var fr = studyEl('div', 'fc-face fc-front'), bk = studyEl('div', 'fc-face fc-back');
+      fr.appendChild(studyEl('div', 'fc-label', ui.front));
+      var ft = studyEl('div', 'fc-text', it.f); ft.dir = 'auto'; fr.appendChild(ft);
+      bk.appendChild(studyEl('div', 'fc-label', ui.back));
+      var bt = studyEl('div', 'fc-text', it.b); bt.dir = 'auto'; bk.appendChild(bt);
+      inner.appendChild(fr); inner.appendChild(bk);
+      scene.appendChild(inner);
+      scene.addEventListener('click', flip);
+      root.appendChild(scene);
+      root.appendChild(studyEl('div', 'fc-tip', ui.flip));
+
+      var act = studyEl('div', 'fc-actions');
+      var prevB = studyBtn('', '\u2190', function(){ go(-1); });
+      prevB.title = ui.prev; prevB.setAttribute('aria-label', ui.prev); prevB.disabled = st.i === 0;
+      var nextB = studyBtn('', '\u2192', function(){ go(1); });
+      nextB.title = ui.next; nextB.setAttribute('aria-label', ui.next);
+      act.appendChild(prevB);
+      act.appendChild(studyBtn('bad grow', ui.again, function(){ go(1, false); }));
+      act.appendChild(studyBtn('ok grow', ui.known, function(){ go(1, true); }));
+      act.appendChild(nextB);
+      root.appendChild(act);
+
+      var tools = studyEl('div', 'study-actions');
+      tools.appendChild(studyBtn('ghost', ui.shuffle, function(){ st.order = studyShuffle(st.order); st.i = 0; after(); }));
+      var cp = studyBtn('ghost', ui.copy, function(){ copyText(deckText(), cp); });
+      tools.appendChild(cp);
+      root.appendChild(tools);
+    }
+
+    function renderDone(){
+      var kc = knownCount();
+      root.appendChild(studyHead(S, 'cards', ui.done, 1));
+      var big = studyEl('div', 'study-score');
+      big.appendChild(studyEl('b', null, kc + ' / ' + n));
+      big.appendChild(studyEl('span', null, ui.knownCount));
+      root.appendChild(big);
+      var remaining = items.map(function(_, k){ return k; }).filter(function(k){ return st.known[k] !== true; });
+      var act = studyEl('div', 'study-actions');
+      var cp = studyBtn('ghost', ui.copy, function(){ copyText(deckText(), cp); });
+      act.appendChild(cp);
+      act.appendChild(studyBtn('', ui.restart, function(){ reset(studyShuffle(studyRange(n))); after(); }));
+      if(remaining.length){
+        act.appendChild(studyBtn('primary', ui.reviewLeft + ' (' + remaining.length + ')', function(){
+          st.order = studyShuffle(remaining); st.i = 0; st.done = false; after();
+        }));
+      }
+      root.appendChild(act);
+    }
+
+    root.addEventListener('keydown', function(e){
+      if(e.target !== root || e.ctrlKey || e.metaKey || e.altKey || st.done) return;
+      if(e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowUp' || e.key === 'ArrowDown'){ e.preventDefault(); e.stopPropagation(); flip(); }
+      else if(e.key === 'ArrowRight'){ e.preventDefault(); e.stopPropagation(); go(1); }
+      else if(e.key === 'ArrowLeft'){ e.preventDefault(); e.stopPropagation(); go(-1); }
+    });
+
+    render();
+    return root;
+  }
+
   function thinkingPhases(text, hasFiles){
     var t = (text || '').toLowerCase();
     if(/```|\b(code|function|bug|error|script|html|css|javascript|python|regex|sql|debug|kode|feil)\b/.test(t)) return ['Reading your code question','Writing code'];
@@ -5899,6 +6575,13 @@
       var intent = { type: 'chat' };
       var target = null;
       var lang = detectLang(lastMsg && lastMsg.content);
+      if(lastMsg && lastMsg.role === 'user' && !mathActive){
+        var studyResult = await runStudyIntent(conv, lastMsg, bubble, activeController.signal);
+        if(studyResult === true) return;
+        if(studyResult === 'ask'){
+          apiMessages.unshift({ role: 'system', content: 'The user wants a quiz or flashcards but did not say on what. Briefly ask which topic they want (or invite them to paste notes), in their language. Do not write the quiz yourself yet.' });
+        }
+      }
       if(lastMsg && lastMsg.role === 'user' && !mathActive && melodyIntent(lastMsg.content)){
         var melAtt = makeMelodyAtt(lastMsg.content, lang);
         var melCap = lang === 'nb'
