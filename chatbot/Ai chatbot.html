@@ -12,7 +12,8 @@
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #070a10; color: #c8d4e8; font: 14px system-ui, sans-serif; }
     #app { height: 100%; display: flex; flex-direction: column; }
     #bar { height: 42px; flex: 0 0 42px; display: flex; align-items: center; gap: 10px; padding: 0 12px; background: #0b1220; border-bottom: 1px solid #1a2035; }
-    #dot { width: 8px; height: 8px; border-radius: 50%; background: #2ed573; box-shadow: 0 0 10px #2ed57388; }
+    #bar[hidden] { display: none; }
+    #dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4757; box-shadow: 0 0 10px #ff475788; }
     #title { font-weight: 650; }
     #origin { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #7f9bc5; font: 11px ui-monospace, monospace; }
     #reload { border: 1px solid #29436b; border-radius: 6px; background: #13233c; color: #a9ceff; padding: 5px 9px; cursor: pointer; }
@@ -25,14 +26,15 @@
 </head>
 <body>
   <div id="app">
-    <header id="bar">
+    <!-- Hidden by default: only appears when the chatbot fails to load -->
+    <header id="bar" hidden>
       <span id="dot"></span>
       <span id="title">WTFQ AI Chatbot</span>
-      <span id="origin">Loading from Cloudflare Worker…</span>
+      <span id="origin"></span>
       <button id="reload" type="button">Reload</button>
     </header>
     <main id="frame-wrap">
-      <div id="message"><div><strong>Loading chatbot…</strong>The chatbot is opening from your Cloudflare Worker.</div></div>
+      <div id="message" hidden></div>
       <iframe id="chat" title="WTFQ AI Chatbot" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </main>
   </div>
@@ -41,8 +43,8 @@
       const workerUrl = 'https://chatbot.andrio-hoyset.workers.dev/chat.html';
       const frame = document.getElementById('chat');
       const message = document.getElementById('message');
+      const bar = document.getElementById('bar');
       const originLabel = document.getElementById('origin');
-      const dot = document.getElementById('dot');
       const favicon = document.getElementById('dynamic-favicon');
       const sourceHtmlUrl = 'https://wtfq.online/chatbot/chat.html';
 
@@ -50,6 +52,17 @@
       let lastFavicon = 'https://wtfq.online/favicon.ico';
       document.title = lastTitle;
       let metadataRequestInFlight = false;
+
+      function showProblem(headline, detail) {
+        message.innerHTML = '<div><strong>' + headline + '</strong>' + detail + '</div>';
+        message.hidden = false;
+        bar.hidden = false;
+      }
+
+      function hideProblem() {
+        message.hidden = true;
+        bar.hidden = true;
+      }
 
       function applyMetadata(pageTitle, iconHref) {
         if (typeof pageTitle === 'string' && pageTitle.trim()) {
@@ -106,30 +119,24 @@
 
       function loadChat() {
         clearTimeout(loadFallbackTimer);
-        message.hidden = false;
-        message.innerHTML = '<div><strong>Loading chatbot…</strong>The chatbot is opening from your Cloudflare Worker.</div>';
+        hideProblem(); // nothing over the iframe while loading normally
         document.title = lastTitle || 'WTFQ AI Chatbot';
         originLabel.textContent = workerUrl;
-        dot.style.background = '#ffa502';
         syncMetadata();
         frame.src = workerUrl;
-        // Never leave the loading overlay stuck forever if the iframe cannot finish loading.
+        // If it hasn't loaded after 10s, reveal the bar and a message.
         loadFallbackTimer = setTimeout(() => {
-          message.innerHTML = '<div><strong>Chatbot is taking longer than expected.</strong>If it is still blank, check that the Worker URL opens directly, then press Reload.</div>';
-          message.hidden = false;
-          dot.style.background = '#ff4757';
+          showProblem('Chatbot is taking longer than expected.', 'If it is still blank, check that the Worker URL opens directly, then press Reload.');
         }, 10000);
       }
 
       frame.addEventListener('load', () => {
         clearTimeout(loadFallbackTimer);
-        message.hidden = true;
-        dot.style.background = '#2ed573';
+        hideProblem();
       });
       frame.addEventListener('error', () => {
-        message.innerHTML = '<div><strong>Could not load the chatbot.</strong>Check that the Worker URL opens correctly in your browser, then press Reload.</div>';
-        message.hidden = false;
-        dot.style.background = '#ff4757';
+        clearTimeout(loadFallbackTimer);
+        showProblem('Could not load the chatbot.', 'Check that the Worker URL opens correctly in your browser, then press Reload.');
       });
       document.getElementById('reload').addEventListener('click', loadChat);
       loadChat();
