@@ -1423,7 +1423,6 @@
         <button class="mode-btn" id="micBtn" title="Voice input" aria-label="Voice input">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
         </button>
-        <button class="mode-btn" id="mathModeBtn" title="Math mode" aria-label="Math mode">&Sigma;</button>
         <button class="send-btn" id="sendBtn" aria-label="Send">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="19" x2="12" y2="5"></line>
@@ -2340,7 +2339,6 @@
   var messagesWrap = document.getElementById('messagesWrap');
   var input = document.getElementById('input');
   var sendBtn = document.getElementById('sendBtn');
-  var mathModeBtn = document.getElementById('mathModeBtn');
   var micBtn = document.getElementById('micBtn');
   var composerCount = document.getElementById('composerCount');
   var composerInner = document.getElementById('composerInner');
@@ -3675,8 +3673,8 @@
   /* ---------- markdown: inline ---------- */
   function mdInline(raw){
     var store = [];
-    function ph(html){ store.push(html); return ' ' + (store.length - 1) + ' '; }
-    var s = escapeHtml(raw);
+    function ph(html){ store.push(html); return '\uE000' + (store.length - 1) + '\uE001'; }
+    var s = escapeHtml(String(raw).replace(/[\uE000\uE001]/g, ''));
 
     s = s.replace(/`([^`]+)`/g, function(_, inner){
       return ph('<code class="inline-code">' + inner + '</code>');
@@ -3695,7 +3693,7 @@
     s = s.replace(/(^|[\s(\[])_([^_\n]+)_(?=$|[\s.,!?:;)\]])/g, '$1<em>$2</em>');
     s = s.replace(/~~([^\n]+?)~~/g, '<del>$1</del>');
 
-    s = s.replace(/ (\d+) /g, function(_, i){ return store[+i]; });
+    s = s.replace(/\uE000(\d+)\uE001/g, function(m, i){ return store[+i] !== undefined ? store[+i] : ''; });
     return s.replace(/\n/g, '<br>');
   }
 
@@ -5052,7 +5050,6 @@
   }
   function clearComposer(){ input.innerHTML = ''; }
 
-  mathModeBtn.addEventListener('click', function(){ mathModeBtn.classList.toggle('active'); });
 
   /* ---------- hidden slash commands (typed in the composer, never sent to the model) ---------- */
   var hintFlashTimer = null;
@@ -7034,7 +7031,6 @@
     sendBtn.classList.toggle('is-stop', isGenerating);
     sendBtn.innerHTML = isGenerating ? ICON_STOP : ICON_SEND;
     sendBtn.title = isGenerating ? 'Stop generating' : 'Send';
-    mathModeBtn.disabled = isGenerating;
     attachBtn.disabled = isGenerating;
     if(micBtn) micBtn.disabled = isGenerating || (typeof micBusy !== 'undefined' && micBusy);
     if(isGenerating && listening){ stopMic(); }
@@ -7047,6 +7043,46 @@
   });
 
   /* ---------- assistant turn (used by send + regenerate) ---------- */
+  /* ---------- math model: equation detection + plain-text cleanup ---------- */
+  function isMathModelSelected(){
+    var p = currentPreset();
+    return !!(p && p.icon === 'sigma');
+  }
+  /* True when the message is a calculation/equation with one result (not a general question). */
+  function looksLikeEquation(text){
+    var t = String(text || '').toLowerCase();
+    if(!/\d/.test(t)) return false;
+    if(/[+\-*/^=\u00d7\u00f7\u221a%]/.test(t.replace(/https?:\/\/\S+/g, ''))) return true;
+    if(/\d\s*x\s*\d/.test(t)) return true;
+    return /\b(solve|calculate|calc|compute|evaluate|simplify|sqrt|square root|percent|plus|minus|times|divided|multiplied|regn ut|ganger|delt p\u00e5|hva er|what is|what's|whats)\b/.test(t) && /\d\s*(?:[a-z%]|$)|\d/.test(t);
+  }
+  /* Turns stray LaTeX into readable plain text so replies never show \div, \frac, $...$ etc. */
+  function cleanMathText(str){
+    var t = String(str == null ? '' : str);
+    var guard = 0;
+    while(/\\frac\s*\{[^{}]*\}\s*\{[^{}]*\}/.test(t) && guard++ < 6){
+      t = t.replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, function(_, a, b){
+        var wrap = function(x){ return /^[\w.]+$/.test(x.trim()) ? x.trim() : '(' + x.trim() + ')'; };
+        return wrap(a) + '/' + wrap(b);
+      });
+    }
+    t = t.replace(/\\sqrt\s*\{([^{}]*)\}/g, '\u221a($1)').replace(/\\sqrt\s*(\w+)/g, '\u221a$1');
+    t = t.replace(/\\(?:text|mathrm|mathbf|operatorname|textbf)\s*\{([^{}]*)\}/g, '$1');
+    t = t.replace(/\\boxed\s*\{([^{}]*)\}/g, '$1');
+    var map = { times:'\u00d7', div:'\u00f7', cdot:'\u00b7', pm:'\u00b1', approx:'\u2248', neq:'\u2260', ne:'\u2260',
+      leq:'\u2264', le:'\u2264', geq:'\u2265', ge:'\u2265', pi:'\u03c0', infty:'\u221e', ldots:'\u2026', dots:'\u2026', cdots:'\u2026',
+      rightarrow:'\u2192', to:'\u2192', Rightarrow:'\u21d2', degree:'\u00b0', circ:'\u00b0', theta:'\u03b8', alpha:'\u03b1', beta:'\u03b2',
+      Delta:'\u0394', sum:'\u03a3', quad:' ', qquad:'  ' };
+    t = t.replace(/\\([A-Za-z]+)/g, function(m, name){ return Object.prototype.hasOwnProperty.call(map, name) ? map[name] : m; });
+    var sup = { '0':'\u2070','1':'\u00b9','2':'\u00b2','3':'\u00b3','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079','-':'\u207b' };
+    t = t.replace(/\^\{?(-?\d{1,2})\}?/g, function(m, d){ return d.split('').map(function(c){ return sup[c] || c; }).join(''); });
+    t = t.replace(/\\\(|\\\)|\\\[|\\\]/g, '').replace(/\$\$/g, '');
+    t = t.replace(/\$([^$\n]+)\$/g, '$1');
+    t = t.replace(/\\,|\\;|\\!|\\ /g, ' ').replace(/\\left|\\right/g, '');
+    t = t.replace(/(\d)\s*\.\.\.\s*\(repeating[^)]*\)/gi, '$1\u2026');
+    return t;
+  }
+
   async function runAssistantTurn(){
     var conv = getCurrentConversation();
     if(!conv) return;
@@ -7065,7 +7101,8 @@
     var started = false;
     var liveText = '';
 
-    var mathActive = mathModeBtn.classList.contains('active');
+    var mathModel = isMathModelSelected();
+    var mathActive = mathModel && looksLikeEquation(lastUserMsg.content);
     var apiMessages = conv.messages.map(function(m){ return { role: m.role, content: buildApiContent(m) }; });
 
     var sysParts = settings.betaImagesEnabled ? [CAPABILITY_NOTE] : [];
@@ -7075,7 +7112,18 @@
     }
     if(settings.systemPrompt && settings.systemPrompt.trim()) sysParts.push(settings.systemPrompt.trim());
     if(settings.userName && settings.userName.trim()) sysParts.push('The user\'s name is ' + settings.userName.trim() + '. You may address them by name where it feels natural.');
-    if(mathActive) sysParts.push('You are a precise calculator and math assistant. Show brief working if useful, then end your reply on its own final line formatted exactly as: FINAL_ANSWER: <result>. Only one FINAL_ANSWER line, with just the final result after the colon.');
+    if(mathModel){
+      sysParts.push('You are a precise, friendly math assistant. Work step by step but keep it short, and double-check the arithmetic. ' +
+        'FORMAT RULES: write every number and equation in plain text with ordinary Unicode symbols (\u00d7 \u00f7 \u221a \u00b2 \u2248 \u2264 \u2265 \u03c0). ' +
+        'Never use LaTeX or math markup (no $...$, \\( \\), \\[ \\], \\frac, \\div, \\times, \\text, \\boxed). Never write the word "undefined" or placeholders. ' +
+        'Put spaces around operators, e.g. "128 \u00f7 3 = 42.67". For decimals that do not end, give a rounded value (up to 4 decimals) and, if neat, the exact fraction, e.g. "128/3 \u2248 42.6667". ' +
+        'Do not write things like "(repeating 6)".');
+      if(mathActive){
+        sysParts.push('The user\'s message is an equation or calculation. After your working, end your reply with one final line formatted exactly as: FINAL_ANSWER: <result> \u2014 only the final value (with units if any), in plain text, nothing else on that line.');
+      }else{
+        sysParts.push('The user\'s message is not a plain equation, so do NOT include any FINAL_ANSWER line; just answer normally.');
+      }
+    }
     if(sysParts.length) apiMessages.unshift({ role: 'system', content: sysParts.join('\n\n') });
 
     activeController = new AbortController();
@@ -7088,6 +7136,7 @@
         renderScheduled = false;
         var shown = stripReasoning(liveText);
         if(!shown) return; // still inside a reasoning block: keep the typing dots
+        if(mathModel){ shown = cleanMathText(shown).replace(/\n?FINAL_ANSWER:[^\n]*$/i, ''); }
         bubble.innerHTML = '';
         renderMessageContent(bubble, shown);
         maybeAutoScroll();
@@ -7209,12 +7258,15 @@
       if(intent.type === 'capability' && (looksLikeDenial(reply) || reply.trim().length < 3)) reply = capabilityAnswer(lang);
       var displayText = reply;
       var mathAnswer = null;
-      if(mathActive){
+      if(mathModel){
+        reply = cleanMathText(reply);
+        displayText = reply;
         var match = reply.match(/FINAL_ANSWER:\s*(.+)/i);
         if(match){
-          mathAnswer = match[1].trim();
+          /* Only equations get the answer box; the line is always removed from the visible text. */
+          if(mathActive) mathAnswer = match[1].trim().replace(/^[`*\s]+|[`*\s.]+$/g, '');
           displayText = reply.slice(0, match.index).trim();
-          if(!displayText) displayText = 'Here you go:';
+          if(!displayText) displayText = mathAnswer ? 'Here you go:' : reply.replace(/FINAL_ANSWER:\s*/i, '').trim();
         }
       }
 
