@@ -404,6 +404,7 @@
   .help-alert-tx{ font-size:13px; line-height:1.55; }
   .help-alert-tx b{ display:block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#b27a00; margin-bottom:2px; }
   :root[data-theme="dark"] .help-alert-tx b{ color:#f5c451; }
+  .settings-signin-alert{ margin:10px 0 8px; }
 
   /* Gentle glow on the ? button after onboarding, until the help panel is opened */
   .icon-btn.help-glow{
@@ -1475,6 +1476,10 @@
             <button type="button" class="btn btn-ghost" id="puterSignOutBtn">Sign out</button>
           </div>
         </div>
+        <div class="help-alert settings-signin-alert" id="puterSignInWarn" role="note" style="display:none">
+          <span class="help-alert-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg></span>
+          <span class="help-alert-tx"><b>Important</b>Sign in with your <strong>personal Microsoft</strong> or <strong>Apple</strong> account &mdash; not a school or work account. Google and email sign-in are not available on the Chromebooks used here.</span>
+        </div>
         <div class="note">Puter provides the AI for free &mdash; no API key needed. A free account is created when you sign in.</div>
       </div>
 
@@ -2523,6 +2528,8 @@
   }
   function refreshPuterUi(){
     if(!puterStatus) return;
+    var signInWarn = document.getElementById('puterSignInWarn');
+    if(signInWarn) signInWarn.style.display = (puterLoaded() && puterSignedIn()) ? 'none' : '';
     if(!puterLoaded()){
       puterStatus.textContent = PUTER_LOAD_MSG;
       puterSignInBtn.style.display = ''; puterSignOutBtn.style.display = 'none';
