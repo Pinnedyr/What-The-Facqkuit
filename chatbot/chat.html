@@ -653,6 +653,58 @@
 
   .composer-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; gap:10px; }
   .composer-foot .hint{ text-align:left; margin-top:0; flex:1; min-width:0; }
+  /* Model picker (sits under the input box) */
+  .model-picker{ position:relative; flex-shrink:0; }
+  .model-btn{
+    display:flex; align-items:center; gap:7px; height:30px; padding:0 10px 0 6px;
+    border-radius:999px; border:1px solid var(--border); background:var(--surface);
+    color:var(--text); font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer;
+    transition:background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .1s ease;
+  }
+  .model-btn:hover, .model-btn[aria-expanded="true"]{ background:var(--accent-soft); border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  .model-btn:active{ transform:scale(.97); }
+  .model-btn .mb-ico{
+    width:20px; height:20px; border-radius:50%; background:var(--accent); color:#fff;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .model-btn .mb-ico svg{ width:12px; height:12px; }
+  .model-btn .mb-chev{ color:var(--text-dim); transition:transform .18s ease; }
+  .model-btn[aria-expanded="true"] .mb-chev{ transform:rotate(180deg); }
+  .model-menu{
+    position:absolute; left:0; bottom:calc(100% + 10px); z-index:30; width:292px; max-width:calc(100vw - 32px);
+    background:var(--panel-bg); border:1px solid var(--border); border-radius:18px; padding:8px;
+    box-shadow:0 18px 44px var(--panel-shadow), 0 2px 6px rgba(0,0,0,.04);
+    transform-origin:bottom left;
+    opacity:0; transform:translateY(8px) scale(.97); pointer-events:none; visibility:hidden;
+    transition:opacity .16s ease, transform .16s cubic-bezier(.2,.8,.3,1), visibility .16s;
+  }
+  .model-menu.open{ opacity:1; transform:none; pointer-events:auto; visibility:visible; }
+  .model-menu-head{ font-size:10.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--text-dim); padding:4px 8px 6px; }
+  .model-opt{
+    width:100%; display:flex; align-items:center; gap:11px; padding:8px 10px; border:1px solid transparent; background:none;
+    border-radius:12px; cursor:pointer; text-align:left; font-family:inherit; color:var(--text);
+    transition:background .12s ease, border-color .12s ease, transform .1s ease;
+  }
+  .model-opt + .model-opt{ margin-top:2px; }
+  .model-opt:hover, .model-opt:focus-visible{ background:var(--surface); outline:none; }
+  .model-opt:active{ transform:scale(.985); }
+  .model-opt.selected{ background:var(--accent-soft); border-color:var(--accent); }
+  .model-opt .mo-ico{
+    width:34px; height:34px; border-radius:10px; flex-shrink:0; background:var(--accent-soft); color:var(--accent-2);
+    display:flex; align-items:center; justify-content:center; transition:background .12s ease, color .12s ease;
+  }
+  .model-opt.selected .mo-ico{ background:var(--accent); color:#fff; }
+  .model-opt .mo-ico svg{ width:17px; height:17px; }
+  .model-opt .mo-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+  .model-opt .mo-name{ font-size:13.5px; font-weight:600; }
+  .model-opt .mo-sub{ font-size:11.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .model-opt .mo-check{ width:18px; height:18px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; opacity:0; transform:scale(.6); transition:opacity .12s ease, transform .12s ease; }
+  .model-opt.selected .mo-check{ opacity:1; transform:none; }
+  .model-opt .mo-check svg{ width:11px; height:11px; }
+  .model-opt.more{ padding:8px 10px; }
+  .model-opt.more .mo-ico{ background:var(--surface); color:var(--text-dim); width:30px; height:30px; }
+  .model-opt.more .mo-name{ font-size:12.5px; font-weight:500; color:var(--text-dim); }
+  .model-menu hr{ border:none; border-top:1px solid var(--border); margin:6px 4px; }
   .composer-count{ font-size:11px; color:var(--text-dim); flex-shrink:0; white-space:nowrap; }
   .composer-count.warn{ color:var(--danger); font-weight:600; }
 
@@ -844,6 +896,19 @@
 
   .switch-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:10px 0; }
   .switch-row + .switch-row{ border-top:1px solid var(--border); }
+  .adv-toggle{
+    width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:10px 12px; margin:0 0 16px; border-radius:10px; border:1px dashed var(--border);
+    background:var(--surface); color:var(--text-dim); font-family:inherit; font-size:13px; font-weight:600;
+    cursor:pointer; transition:background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .adv-toggle:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--text); }
+  .adv-toggle .adv-left{ display:flex; align-items:center; gap:8px; }
+  .adv-toggle .adv-chev{ transition:transform .18s ease; }
+  .adv-toggle[aria-expanded="true"] .adv-chev{ transform:rotate(180deg); }
+  #advancedBox[hidden]{ display:none; }
+  #advancedBox{ animation:advIn .18s ease; }
+  @keyframes advIn{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
   .settings-divider{ height:1px; border:none; background:var(--border); margin:4px 0 18px; }
   .switch-row .switch-label{ font-size:13px; font-weight:600; color:var(--text); }
   .switch-row .switch-desc{ font-size:11.5px; color:var(--text-dim); margin-top:2px; line-height:1.4; }
@@ -873,6 +938,55 @@
   .settings-pane{ display:none; }
   .settings-pane.active{ display:block; }
 
+
+
+  /* ===== Settings dialog: fixed size, scrolling body, sticky footer ===== */
+  .panel.settings-panel{
+    max-width:540px; height:min(700px, 90vh); max-height:none; padding:0;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .settings-head{ padding:22px 26px 0; flex-shrink:0; }
+  .settings-head .sub{ margin:0 0 16px; }
+  .settings-body{ flex:1; min-height:0; overflow-y:auto; padding:20px 26px 8px; scrollbar-gutter:stable; }
+  .settings-panel .panel-actions{
+    margin:0; padding:14px 26px; border-top:1px solid var(--border); flex-shrink:0;
+    justify-content:flex-end; background:var(--panel-bg);
+  }
+  .settings-panel .panel-actions .btn{ flex:none; min-width:104px; }
+  .settings-tabs{ gap:0; margin-bottom:0; }
+  .settings-tab{ flex:1; margin-right:0; padding:10px 6px; text-align:center; font-size:13px; }
+  .settings-panel .settings-section-title{ margin:26px 0 12px; }
+  .settings-panel .settings-section-title:first-child{ margin-top:0; }
+  .settings-panel .field{ margin-bottom:18px; }
+  .settings-panel .field label{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .settings-panel .field .note{ margin-top:7px; }
+  .settings-panel .field input, .settings-panel .field textarea, .settings-panel .field select{ font-size:13.5px; text-overflow:ellipsis; }
+  .settings-panel .field-row{ gap:16px; align-items:flex-start; }
+  .settings-panel .segmented button{
+    min-width:0; padding:9px 8px; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .settings-panel .switch-row{ padding:12px 0; }
+  .settings-panel .switch-row > div:first-child{ min-width:0; }
+  .settings-panel .switch-label{ font-size:13.5px; }
+  .settings-panel .switch-desc{ font-size:12px; margin-top:3px; }
+  .settings-panel .adv-toggle{ margin:6px 0 20px; }
+  .settings-panel .mini-btn{ flex:none; }
+  .puter-card{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:12px 14px; border:1px solid var(--border); border-radius:12px; background:var(--surface);
+  }
+  .puter-card .puter-status{ flex:1; min-width:0; margin:0; font-size:13.5px; font-weight:500; overflow-wrap:anywhere; }
+  .puter-card .puter-actions{ margin:0; flex-shrink:0; flex-wrap:nowrap; }
+  .puter-card .puter-actions .btn{ flex:none; padding:8px 16px; font-size:13px; white-space:nowrap; }
+  @media (max-width:540px){
+    .settings-head{ padding:18px 18px 0; }
+    .settings-body{ padding:16px 18px 6px; }
+    .settings-panel .panel-actions{ padding:12px 18px; }
+    .settings-panel .panel-actions .btn{ flex:1; }
+    .settings-panel .field-row{ flex-direction:column; gap:0; }
+    .puter-card{ flex-wrap:wrap; }
+    #overlay{ padding:10px; }
+  }
 
   /* Tab icon choices (image buttons) */
   .icon-choices{ display:flex; gap:10px; flex-wrap:wrap; }
@@ -1318,6 +1432,13 @@
         </button>
       </div>
       <div class="composer-foot">
+        <div class="model-picker" id="modelPicker">
+          <button type="button" class="model-btn" id="modelBtn" aria-haspopup="menu" aria-expanded="false" title="Change model">
+            <span class="mb-ico" id="modelBtnIco"></span><span id="modelBtnLabel">Everyday</span>
+            <svg class="mb-chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"></polyline></svg>
+          </button>
+          <div class="model-menu" id="modelMenu" role="menu"></div>
+        </div>
         <div class="hint" id="hint" style="margin-top:0;">No token set — <button id="hintSettings">add one</button></div>
         <div class="composer-count" id="composerCount"></div>
       </div>
@@ -1332,9 +1453,10 @@
 <button class="img-viewer-close" id="imgViewerClose" title="Close" aria-label="Close image" style="display:none;">&times;</button>
 
 <div class="overlay" id="overlay">
-  <div class="panel">
-    <h3>Settings</h3>
-    <p class="sub">Settings are stored only in this browser. AI requests go through Puter.</p>
+  <div class="panel settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-head">
+    <h3 id="settingsTitle">Settings</h3>
+    <p class="sub">Saved only in this browser. AI requests go through Puter.</p>
 
     <div class="settings-tabs" role="tablist">
       <button class="settings-tab active" id="tabConnection" data-pane="paneConnection" type="button">Connection</button>
@@ -1342,32 +1464,46 @@
       <button class="settings-tab" id="tabBehavior" data-pane="paneBehavior" type="button">Behavior</button>
     </div>
 
+    </div>
+    <div class="settings-body" id="settingsBody">
     <div class="settings-pane active" id="paneConnection">
+      <div class="settings-section-title">Account</div>
       <div class="field">
-        <label>Puter account</label>
-        <div class="puter-status" id="puterStatus">Checking…</div>
-        <div class="puter-actions">
-          <button type="button" class="btn btn-primary" id="puterSignInBtn">Sign in to Puter</button>
-          <button type="button" class="btn btn-ghost" id="puterSignOutBtn">Sign out</button>
-          
+        <div class="puter-card">
+          <div class="puter-status" id="puterStatus">Checking…</div>
+          <div class="puter-actions">
+            <button type="button" class="btn btn-primary" id="puterSignInBtn">Sign in</button>
+            <button type="button" class="btn btn-ghost" id="puterSignOutBtn">Sign out</button>
+          </div>
         </div>
-        <div class="note">Puter provides the AI for free &mdash; no API key needed. A free Puter account is created when you sign in if you don&rsquo;t have one.</div>
+        <div class="note">Puter provides the AI for free &mdash; no API key needed. A free account is created when you sign in.</div>
       </div>
 
+      <div class="settings-section-title">Features</div>
       <div class="switch-row" id="betaImagesRow">
-        <div class="switch-label" style="font-size:16px;">Enable beta features</div>
+        <div>
+          <div class="switch-label">Enable beta features</div>
+          <div class="switch-desc">Image viewing and image creation (experimental).</div>
+        </div>
         <label class="switch">
           <input type="checkbox" id="betaImagesInput">
           <span class="slider"></span>
         </label>
       </div>
-      <hr class="settings-divider">
 
+      <button type="button" class="adv-toggle" id="advToggle" aria-expanded="false" aria-controls="advancedBox">
+        <span class="adv-left">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="advToggleLabel">Show advanced settings</span>
+        </span>
+        <svg class="adv-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+
+      <div id="advancedBox" hidden>
       <div class="field">
         <label for="modelInput">Model</label>
-        <input type="text" id="modelInput" placeholder="e.g. gpt-4.1-nano" list="modelList" autocomplete="off">
+        <input type="text" id="modelInput" placeholder="e.g. gpt-4o-mini" list="modelList" autocomplete="off">
         <datalist id="modelList">
-          <option value="gpt-4.1-nano">
           <option value="gpt-4.1-mini">
           <option value="gpt-4o-mini">
           <option value="gpt-5-nano">
@@ -1378,7 +1514,7 @@
           <option value="x-ai/grok-4-1-fast-non-reasoning">
           <option value="rekaai/reka-flash-3">
         </datalist>
-        <div class="note">Any model Puter offers (the list fills in once you are signed in). Text-only picks fall back to the Image model below for images.</div>
+        <div class="note">Any model Puter offers. Text-only models use the Image model for images.</div>
       </div>
 
       <div class="field">
@@ -1386,26 +1522,25 @@
         <input type="text" id="visionModelInput" placeholder="e.g. gpt-4o-mini" list="visionModelList" autocomplete="off">
         <datalist id="visionModelList">
           <option value="gpt-4o-mini">
-          <option value="gpt-4.1-nano">
           <option value="gpt-4.1-mini">
           <option value="google/gemini-2.5-flash">
           <option value="x-ai/grok-4-1-fast-non-reasoning">
           <option value="claude-sonnet-4">
         </datalist>
-        <div class="note">Used when the main model can't read images. Leave empty to disable.</div>
+        <div class="note">Used when the main model can't read images. Empty = off.</div>
       </div>
 
       <div class="field">
-        <label for="systemPromptInput">System prompt (optional)</label>
+        <label for="systemPromptInput">System prompt</label>
         <textarea id="systemPromptInput" placeholder="e.g. Answer concisely. Reply in Norwegian by default."></textarea>
-        <div class="note">Sent with every message.</div>
+        <div class="note">Optional. Sent with every message.</div>
       </div>
 
       <div class="field-row">
         <div class="field">
           <label for="temperatureInput">Temperature <span class="range-val" id="temperatureVal">0.7</span></label>
           <input type="range" id="temperatureInput" min="0" max="1.5" step="0.05" value="0.7">
-          <div class="note">Lower = focused, higher = creative.</div>
+          <div class="note">Low = focused, high = creative.</div>
         </div>
         <div class="field">
           <label for="maxTokensInput">Max output tokens</label>
@@ -1413,11 +1548,13 @@
           <div class="note">Caps reply length.</div>
         </div>
       </div>
+      </div><!-- /advancedBox -->
 
+      <div class="settings-section-title">Voice</div>
       <div class="field">
         <label for="voiceLangInput">Voice input language</label>
         <select id="voiceLangInput">
-          <option value="">Auto (match browser language)</option>
+          <option value="">Auto (browser language)</option>
           <option value="nb-NO">Norsk (bokmål)</option>
           <option value="en-US">English (US)</option>
           <option value="en-GB">English (UK)</option>
@@ -1432,10 +1569,10 @@
       <div class="field">
         <label for="ttsBackendInput">Read-aloud voice</label>
         <select id="ttsBackendInput">
-          <option value="browser">Browser voice (auto-picks a Norwegian/English voice)</option>
+          <option value="browser">Browser voice (automatic)</option>
           <option value="puter">Puter neural voice (beta)</option>
         </select>
-        <div class="note">Browser voice auto-detects the language. The Puter option uses a neural voice and falls back to the browser if it fails.</div>
+        <div class="note">Puter's neural voice falls back to the browser voice if it fails.</div>
       </div>
     </div>
 
@@ -1528,7 +1665,7 @@
       </div>
 
       <div class="settings-section-title">Reply language</div>
-      <div class="field" style="margin-bottom:0;">
+      <div class="field">
         <select id="replyLangInput">
           <option value="auto">Match your language</option>
           <option value="nb">Norsk (bokmål)</option>
@@ -1553,10 +1690,10 @@
 
       <div class="settings-section-title">Sending messages</div>
       <div class="segmented" id="sendKeySeg">
-        <button type="button" data-value="enter">Enter to send</button>
-        <button type="button" data-value="ctrlenter">Ctrl/⌘ + Enter to send</button>
+        <button type="button" data-value="enter">Enter</button>
+        <button type="button" data-value="ctrlenter">Ctrl/⌘ + Enter</button>
       </div>
-      <div class="note" style="margin-top:8px;">Shift + Enter adds a new line.</div>
+      <div class="note" style="margin-top:8px;">Pick the key that sends. Shift + Enter always adds a new line.</div>
 
       <div class="settings-section-title">Responses</div>
       <div class="switch-row">
@@ -1573,8 +1710,8 @@
       <div class="settings-section-title">Notifications</div>
       <div class="switch-row">
         <div>
-          <div class="switch-label">Sound when a reply finishes</div>
-          <div class="switch-desc">Chime when a reply finishes.</div>
+          <div class="switch-label">Reply sound</div>
+          <div class="switch-desc">Play a chime when a reply finishes.</div>
         </div>
         <label class="switch">
           <input type="checkbox" id="soundOnReplyInput">
@@ -1584,7 +1721,7 @@
       <div class="switch-row">
         <div>
           <div class="switch-label">Desktop notification</div>
-          <div class="switch-desc">Notify when a reply finishes in a background tab.</div>
+          <div class="switch-desc">When a reply finishes in a background tab.</div>
         </div>
         <label class="switch">
           <input type="checkbox" id="notifyOnReplyInput">
@@ -1601,9 +1738,11 @@
           <div class="switch-label">Delete all chats</div>
           <div class="switch-desc">Removes every conversation. Cannot be undone.</div>
         </div>
-        <button class="btn btn-ghost" id="deleteAllChatsBtn" type="button" style="color:var(--danger); border-color:var(--danger-border);">Delete all</button>
+        <button class="btn btn-ghost" id="deleteAllChatsBtn" type="button" style="color:var(--danger); border-color:var(--danger-border); flex:none; white-space:nowrap;">Delete all</button>
       </div>
     </div>
+
+    </div><!-- /settings-body -->
 
     <div class="panel-actions">
       <button class="btn btn-ghost" id="cancelSettings">Cancel</button>
@@ -1619,6 +1758,17 @@
     <div class="panel-actions">
       <button class="btn btn-ghost" id="betaWarnCancel">Cancel</button>
       <button class="btn btn-primary" id="betaWarnConfirm">Enable anyway</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="advWarnOverlay">
+  <div class="panel" style="max-width:420px;" role="alertdialog" aria-modal="true" aria-labelledby="advWarnTitle">
+    <h3 id="advWarnTitle">Show advanced settings?</h3>
+    <p class="sub">These settings change how the AI works &mdash; the model, image model, system prompt, temperature and reply length. A wrong value (for example a model that doesn't exist) can make replies fail or behave strangely. For everyday use, the model picker under the input box is all you need.</p>
+    <div class="panel-actions">
+      <button class="btn btn-ghost" id="advWarnCancel">Cancel</button>
+      <button class="btn btn-primary" id="advWarnConfirm">Show anyway</button>
     </div>
   </div>
 </div>
@@ -2251,7 +2401,7 @@
   var pasteRemoveBtn = document.getElementById('pasteRemoveBtn');
 
   /* ---------- settings (token/model/persona) ---------- */
-  var DEFAULT_MODEL = 'gpt-4.1-nano';   // fast, cheap and can read images; available through Puter
+  var DEFAULT_MODEL = 'gpt-4o-mini';   // best all-round pick; can read images; available through Puter
   var settings = {
     model:DEFAULT_MODEL, visionModel:'gpt-4o-mini', systemPrompt:'', temperature:0.7, maxTokens:1024, ttsBackend:'browser',
     streamResponses:true, userName:'', betaImagesEnabled:false,
@@ -2282,6 +2432,13 @@
       }catch(e){}
     }
     if(settings.ttsBackend === 'hf') settings.ttsBackend = 'puter';
+    /* One-time: the old default (gpt-4.1-nano) becomes the new default (gpt-4o-mini). */
+    if(settings.model === 'gpt-4.1-nano' || settings.model === 'o3-mini') settings.model = DEFAULT_MODEL;   // these don't work here
+    if(!settings.defaultMigratedMini){
+      if(!settings.model || settings.model === 'gpt-4.1-nano') settings.model = DEFAULT_MODEL;
+      settings.defaultMigratedMini = true;
+      saveSettingsToStorage();
+    }
     if(!settings.themeMode){
       var oldTheme = null;
       try{ oldTheme = localStorage.getItem('classroom_theme'); }catch(e){}
@@ -2430,10 +2587,28 @@
 
   /* One call into puter.ai.chat. opts: { model, temperature, maxTokens, stream }.
      Streams through onDelta when opts.stream; returns the full text. */
+  function isReasoningModel(id){
+    var m = String(id || '').toLowerCase().split(':')[0].split('/').pop();
+    return /^o[134](-|$)/.test(m) || /^gpt-5/.test(m) || /reasoner|thinking|^deepseek-r1/.test(m);
+  }
+  function errText(err){
+    try{
+      if(!err) return '';
+      if(typeof err === 'string') return err;
+      return String(err.message || (err.error && (err.error.message || err.error)) || JSON.stringify(err));
+    }catch(e){ return ''; }
+  }
+
   async function puterChat(messages, opts, onDelta, signal){
     if(!puterLoaded()) throw new Error(PUTER_LOAD_MSG);
     throwIfAborted(signal);
     var o = { model: opts.model, temperature: opts.temperature, max_tokens: opts.maxTokens, stream: !!opts.stream };
+    /* Reasoning models (o1/o3/o4, gpt-5, deepseek-reasoner...) reject a custom temperature, and the
+       "thinking" counts against the token limit — a small limit leaves nothing for the actual answer. */
+    if(isReasoningModel(o.model)){
+      delete o.temperature;
+      o.max_tokens = Math.max(o.max_tokens || 0, 6000);
+    }
 
     async function run(call){
       var resp = await raceAbort(call, signal);
@@ -2472,6 +2647,13 @@
       return await run(window.puter.ai.chat(messages, false, o));
     }catch(err){
       if(err && err.name === 'AbortError') throw err;
+      console.warn('[chat] model error for', o.model, err);
+      /* Some models refuse optional parameters — retry once with only the essentials. */
+      if(/temperature|unsupported|not supported|max_tokens|max_completion/i.test(errText(err)) && ('temperature' in o)){
+        delete o.temperature;
+        try{ return await run(window.puter.ai.chat(messages, false, o)); }
+        catch(errRetry){ if(errRetry && errRetry.name === 'AbortError') throw errRetry; err = errRetry; }
+      }
       var wrapped = wrapPuterError(err);
       var imgs = dataUrlsInMessages(messages);
       /* Some models/providers want images the documented way — retry once, only if
@@ -2501,6 +2683,10 @@
           if(id && typeof id === 'string') ids.push(id);
         });
         if(!ids.length) return;
+        var lookup = {};
+        ids.forEach(function(id){ var k = id.toLowerCase(); lookup[k] = true; lookup[k.split('/').pop()] = true; });
+        puterModelIds = lookup;
+        updateHint();
         var dl = document.getElementById('modelList');
         if(!dl) return;
         var have = {};
@@ -2722,6 +2908,7 @@
       settingsPanes.forEach(function(p){ p.classList.remove('active'); });
       tab.classList.add('active');
       document.getElementById(tab.dataset.pane).classList.add('active');
+      var sb = document.getElementById('settingsBody'); if(sb) sb.scrollTop = 0;
     });
   });
 
@@ -2768,13 +2955,122 @@
     notifyOnReplyInput.checked = !!settings.notifyOnReply;
     streamResponsesInput.checked = settings.streamResponses !== false;
   }
+  /* ---------- model picker (simplified choices under the input box) ----------
+     Edit MODEL_PRESETS to change what the picker offers. Each pick lists candidate
+     model ids in order of preference; the first one Puter actually offers is used,
+     and a pick is never hidden. */
+  var PICKER_ICONS = {
+    spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.3L19 10l-5.1 1.7L12 17l-1.9-5.3L5 10l5.1-1.7z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>',
+    code:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    sigma:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5H6l6 7-6 7h12"/></svg>',
+    bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 4 14 12 14 11 22 20 10 12 10 13 2"/></svg>',
+    gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+  };
+  var MODEL_PRESETS = [
+    { ids:['gpt-4o-mini'],               icon:'spark', name:'Everyday',         sub:'GPT-4o mini \u00b7 best all-round' },
+    { ids:['claude-sonnet-4','claude-sonnet-4-5','claude-sonnet-4-6'], icon:'code',  name:'Coding',           sub:'Claude Sonnet \u00b7 code & debugging' },
+    { ids:['gpt-4.1'],                   icon:'sigma', name:'Math & reasoning', sub:'GPT-4.1 \u00b7 careful step-by-step' },
+    { ids:['google/gemini-2.5-flash'],   icon:'bolt',  name:'Fast',             sub:'Gemini 2.5 Flash \u00b7 quick answers' }
+  ];
+  var puterModelIds = null;   // lowercase lookup of ids Puter offers (null = not known yet)
+  var modelBtn = document.getElementById('modelBtn');
+  var modelBtnLabel = document.getElementById('modelBtnLabel');
+  var modelBtnIco = document.getElementById('modelBtnIco');
+  var modelMenu = document.getElementById('modelMenu');
+  var modelPicker = document.getElementById('modelPicker');
+
+  function modelOffered(id){
+    if(!puterModelIds) return true;
+    var k = String(id).toLowerCase();
+    return !!(puterModelIds[k] || puterModelIds[k.split('/').pop()]);
+  }
+  /* The model id this pick will use: the first candidate Puter lists, else the first candidate
+     (a pick is never hidden — if the model really is unavailable, the chat falls back to the default). */
+  function presetModelId(p){
+    for(var i = 0; i < p.ids.length; i++){ if(modelOffered(p.ids[i])) return p.ids[i]; }
+    return p.ids[0];
+  }
+  function currentPreset(){
+    for(var i = 0; i < MODEL_PRESETS.length; i++){
+      if(MODEL_PRESETS[i].ids.indexOf(settings.model) !== -1) return MODEL_PRESETS[i];
+    }
+    return null;
+  }
+  function isModelMenuOpen(){ return modelMenu.classList.contains('open'); }
+  function closeModelMenu(){
+    modelMenu.classList.remove('open');
+    modelBtn.setAttribute('aria-expanded', 'false');
+  }
+  function openModelMenu(){
+    renderModelMenu();
+    modelMenu.classList.add('open');
+    modelBtn.setAttribute('aria-expanded', 'true');
+    var sel = modelMenu.querySelector('.model-opt.selected') || modelMenu.querySelector('.model-opt');
+    if(sel) sel.focus();
+  }
+  function renderModelMenu(){
+    modelMenu.innerHTML = '<div class="model-menu-head">Choose a model</div>';
+    var cur = currentPreset();
+    MODEL_PRESETS.forEach(function(p){
+      var id = presetModelId(p);
+      if(!id) return;
+      var on = (cur === p);
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'model-opt' + (on ? ' selected' : '');
+      b.setAttribute('role', 'menuitemradio');
+      b.setAttribute('aria-checked', on ? 'true' : 'false');
+      b.innerHTML = '<span class="mo-ico">' + PICKER_ICONS[p.icon] + '</span><span class="mo-text"><span class="mo-name">' +
+        escapeHtml(p.name) + '</span><span class="mo-sub">' + escapeHtml(p.sub) + '</span></span><span class="mo-check">' + PICKER_ICONS.check + '</span>';
+      b.addEventListener('click', function(){
+        settings.model = id;
+        saveSettingsToStorage();
+        updateHint();
+        closeModelMenu();
+        flashHint('Switched to ' + p.name + ' (' + id + ').', 2200);
+      });
+      modelMenu.appendChild(b);
+    });
+    modelMenu.appendChild(document.createElement('hr'));
+    var more = document.createElement('button');
+    more.type = 'button';
+    more.className = 'model-opt more' + (cur ? '' : ' selected');
+    more.innerHTML = '<span class="mo-ico">' + PICKER_ICONS.gear + '</span><span class="mo-text"><span class="mo-name">' +
+      (cur ? 'More models\u2026' : 'Custom: ' + escapeHtml(settings.model)) + '</span></span>';
+    more.addEventListener('click', function(){ closeModelMenu(); openSettings(); });
+    modelMenu.appendChild(more);
+  }
+  function renderModelPicker(){
+    if(!modelBtn) return;
+    var cur = currentPreset();
+    modelBtnLabel.textContent = cur ? cur.name : (settings.model || 'Model');
+    modelBtnIco.innerHTML = PICKER_ICONS[cur ? cur.icon : 'gear'];
+    modelBtn.title = 'Model: ' + (settings.model || '');
+    if(isModelMenuOpen()) renderModelMenu();
+  }
+  modelBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(isModelMenuOpen()) closeModelMenu(); else openModelMenu();
+  });
+  document.addEventListener('click', function(e){
+    if(isModelMenuOpen() && !modelPicker.contains(e.target)) closeModelMenu();
+  });
+  modelMenu.addEventListener('keydown', function(e){
+    if(e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    var items = Array.prototype.slice.call(modelMenu.querySelectorAll('.model-opt'));
+    var i = items.indexOf(document.activeElement);
+    i = e.key === 'ArrowDown' ? (i + 1) % items.length : (i - 1 + items.length) % items.length;
+    items[i].focus();
+  });
+
   function updateHint(){
+    renderModelPicker();
     if(!puterLoaded()){
       hint.innerHTML = 'Puter is not loaded — check your connection and reload.';
     }else if(puterSignedIn()){
-      hint.innerHTML = 'Using <strong style="color:var(--text)">' + escapeHtml(settings.model) + '</strong> — <button id="hintSettings2">change</button>';
-      var b = document.getElementById('hintSettings2');
-      if(b) b.addEventListener('click', openSettings);
+      hint.textContent = '';
     }else{
       hint.innerHTML = 'Not signed in to Puter — <button id="hintSettings">sign in</button>';
       var b2 = document.getElementById('hintSettings');
@@ -2784,7 +3080,30 @@
       });
     }
   }
+  /* Advanced settings stay folded away (and need a confirmation to open). */
+  var advToggle = document.getElementById('advToggle');
+  var advToggleLabel = document.getElementById('advToggleLabel');
+  var advancedBox = document.getElementById('advancedBox');
+  var advWarnOverlay = document.getElementById('advWarnOverlay');
+  function setAdvancedOpen(open){
+    advancedBox.hidden = !open;
+    advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    advToggleLabel.textContent = open ? 'Hide advanced settings' : 'Show advanced settings';
+  }
+  advToggle.addEventListener('click', function(){
+    if(!advancedBox.hidden){ setAdvancedOpen(false); return; }
+    advWarnOverlay.classList.add('open');
+  });
+  document.getElementById('advWarnCancel').addEventListener('click', function(){ advWarnOverlay.classList.remove('open'); });
+  document.getElementById('advWarnConfirm').addEventListener('click', function(){
+    advWarnOverlay.classList.remove('open');
+    setAdvancedOpen(true);
+  });
+  advWarnOverlay.addEventListener('click', function(e){ if(e.target === advWarnOverlay) advWarnOverlay.classList.remove('open'); });
+
   function openSettings(){
+    setAdvancedOpen(false);
+    (function(){ var sb = document.getElementById('settingsBody'); if(sb) sb.scrollTop = 0; })();
     refreshPuterUi();
     loadPuterModelLists();
     modelInput.value = settings.model || '';
@@ -6874,6 +7193,10 @@
         }else if(settings.betaImagesEnabled && hasImages && rejected && !liveText && useModel === visionFallback && useModel !== backupVision){
           flashHint('Light image model unavailable — retrying with ' + backupVision.split('/').pop() + '…', 4500);
           reply = await streamAI(apiMessages, onDelta, activeController.signal, backupVision);
+        }else if(rejected && !liveText && useModel !== DEFAULT_MODEL){
+          console.warn('[chat] falling back from', useModel, firstErr);
+          flashHint(useModel.split('/').pop() + ' didn\u2019t respond (' + errText(firstErr).replace(/\s+/g, ' ').slice(0, 70) + ') \u2014 using ' + DEFAULT_MODEL + '.', 7000);
+          reply = await streamAI(apiMessages, onDelta, activeController.signal, DEFAULT_MODEL);
         }else{
           if(hasImages && firstErr && firstErr.name !== 'AbortError' && !firstErr.isAuthError && !firstErr.isLimitError && modelSeesImages(useModel) !== true){
             firstErr.message += ' (This model may not accept images — choose a vision model in Settings.)';
@@ -7053,6 +7376,8 @@
       return;
     }
     if(e.key === 'Escape'){
+      if(isModelMenuOpen()){ closeModelMenu(); modelBtn.focus(); return; }
+      if(advWarnOverlay.classList.contains('open')){ advWarnOverlay.classList.remove('open'); return; }
       if(obWarn.classList.contains('open')){ obWarn.classList.remove('open'); return; }
       if(fakeOverlay.classList.contains('open')){ closeFakeSetup(); return; }
       if(imgViewer.classList.contains('open')){ closeImageViewer(); return; }
