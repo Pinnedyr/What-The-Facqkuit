@@ -52,7 +52,8 @@
   { "key": "snowrider",                 "label": "Snowrider 3D",               "url": "https://snowriderio.io/" },
   { "key": "musiclab",                  "label": "Chrome Musiclab",            "url": "https://musiclab.chromeexperiments.com/Song-Maker/" },
   { "key": "crazy-cattle",              "label": "Crazy Cattle",               "url": "https://crazy-cattle.co/" },
-  { "key": "orbit-kick",               "label": "Orbit kick",                 "url": "https://orbitkick.hotglue.me"  },
-  { "key": "ragebait-sim",               "label": "Ragebait sim",                 "url": "https://r74n.com/mini/ragebait"  },
-  { "key": "cork7",               "label": "Cork7",                 "url": "https://cork7.com/", "badge": "new" }
+  { "key": "orbit-kick",               "label": "Orbit Kick",                 "url": "https://orbitkick.hotglue.me"  },
+  { "key": "ragebait-sim",               "label": "Ragebait Sim",                 "url": "https://r74n.com/mini/ragebait"  },
+  { "key": "cork7",               "label": "Cork7",                 "url": "https://cork7.com/", "badge": "new" },
+  { "key": "evo-world",               "label": "Evo World",                 "url": "https://evoworld.io/", "badge": "new" }
 ]
