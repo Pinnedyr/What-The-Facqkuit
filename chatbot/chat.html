@@ -711,6 +711,14 @@
   .model-opt.more .mo-ico{ background:var(--surface); color:var(--text-dim); width:30px; height:30px; }
   .model-opt.more .mo-name{ font-size:12.5px; font-weight:500; color:var(--text-dim); }
   .model-menu hr{ border:none; border-top:1px solid var(--border); margin:6px 4px; }
+  .usage-box{ padding:8px 10px 6px; }
+  .usage-top{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:11.5px; color:var(--text-dim); margin-bottom:6px; }
+  .usage-top b{ color:var(--text); font-weight:600; font-size:12px; }
+  .usage-track{ height:7px; border-radius:99px; background:var(--surface); border:1px solid var(--border); overflow:hidden; }
+  .usage-fill{ height:100%; width:0; border-radius:99px; background:var(--accent); transition:width .5s var(--ease-out,ease), background .2s ease; }
+  .usage-fill.warn{ background:#f0b429; }
+  .usage-fill.high{ background:var(--danger); }
+  .usage-note{ font-size:10.5px; color:var(--text-dim); margin-top:5px; }
   .composer-count{ font-size:11px; color:var(--text-dim); flex-shrink:0; white-space:nowrap; }
   .composer-count.warn{ color:var(--danger); font-weight:600; }
 
@@ -3154,9 +3162,7 @@
   };
   var MODEL_PRESETS = [
     { ids:['gpt-4o-mini'],               icon:'spark', name:'Everyday',         sub:'GPT-4o mini \u00b7 best all-round' },
-    { ids:['claude-sonnet-4','claude-sonnet-4-5','claude-sonnet-4-6'], icon:'code',  name:'Coding',           sub:'Claude Sonnet \u00b7 code & debugging' },
-    { ids:['gpt-4.1'],                   icon:'sigma', name:'Math & reasoning', sub:'GPT-4.1 \u00b7 careful step-by-step' },
-    { ids:['google/gemini-2.5-flash'],   icon:'bolt',  name:'Fast',             sub:'Gemini 2.5 Flash \u00b7 quick answers' }
+    { ids:['gpt-4.1'],                   icon:'sigma', name:'Math & reasoning', sub:'GPT-4.1 \u00b7 careful step-by-step' }
   ];
   var puterModelIds = null;   // lowercase lookup of ids Puter offers (null = not known yet)
   var modelBtn = document.getElementById('modelBtn');
@@ -3182,6 +3188,53 @@
     }
     return null;
   }
+  /* ---- Puter credit usage (shown in the model menu) ---- */
+  var puterUsage = null, puterUsageErr = '', puterUsageAt = 0, puterUsageBusy = false;
+  function usageNumbers(u){
+    if(!u) return null;
+    var ai = u.allowanceInfo || u.allowance_info || {};
+    var total = Number(ai.monthUsageAllowance != null ? ai.monthUsageAllowance : ai.month_usage_allowance);
+    var left = Number(ai.remaining);
+    var used = null;
+    if(isFinite(total) && total > 0 && isFinite(left)) used = total - left;
+    else if(u.usage && isFinite(Number(u.usage.total)) && isFinite(total) && total > 0) used = Number(u.usage.total);
+    if(used == null || !isFinite(total) || total <= 0) return null;
+    return { used: Math.max(0, Math.min(total, used)), total: total };
+  }
+  function fmtCredits(micro){
+    var usd = micro / 100000000;   /* Puter counts in microcents: 1 USD = 100,000,000 */
+    return usd >= 100 ? '$' + usd.toFixed(0) : '$' + usd.toFixed(2);
+  }
+  function paintUsage(box){
+    if(!box) box = modelMenu.querySelector('.usage-box');
+    if(!box) return;
+    var n = usageNumbers(puterUsage);
+    if(!puterSignedIn()){ box.innerHTML = '<div class="usage-top"><span>Credits</span></div><div class="usage-note">Sign in to Puter to see your usage.</div>'; return; }
+    if(!n){
+      box.innerHTML = '<div class="usage-top"><span>Credits used</span></div><div class="usage-track"><div class="usage-fill"></div></div><div class="usage-note">' +
+        (puterUsageBusy ? 'Loading usage\u2026' : (puterUsageErr ? 'Usage unavailable right now.' : 'Loading usage\u2026')) + '</div>';
+      return;
+    }
+    var pct = Math.round(n.used / n.total * 100);
+    box.innerHTML = '<div class="usage-top"><span>Credits used</span><b>' + fmtCredits(n.used) + ' of ' + fmtCredits(n.total) + '</b></div>' +
+      '<div class="usage-track"><div class="usage-fill' + (pct >= 90 ? ' high' : (pct >= 70 ? ' warn' : '')) + '"></div></div>' +
+      '<div class="usage-note">' + pct + '% of your Puter plan this month</div>';
+    var f = box.querySelector('.usage-fill');
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ f.style.width = Math.max(2, pct) + '%'; }); });
+  }
+  async function refreshPuterUsage(force){
+    if(!puterLoaded() || !puterSignedIn() || puterUsageBusy) return;
+    if(!force && puterUsage && Date.now() - puterUsageAt < 20000) return;
+    puterUsageBusy = true; puterUsageErr = '';
+    try{
+      var fnc = window.puter.auth.getMonthlyUsage;
+      if(typeof fnc !== 'function') throw new Error('not supported');
+      puterUsage = await window.puter.auth.getMonthlyUsage();
+      puterUsageAt = Date.now();
+    }catch(e){ puterUsageErr = errText(e) || 'error'; }
+    puterUsageBusy = false;
+    if(isModelMenuOpen()) paintUsage();
+  }
   function isModelMenuOpen(){ return modelMenu.classList.contains('open'); }
   function closeModelMenu(){
     modelMenu.classList.remove('open');
@@ -3189,6 +3242,7 @@
   }
   function openModelMenu(){
     renderModelMenu();
+    refreshPuterUsage(true);
     modelMenu.classList.add('open');
     modelBtn.setAttribute('aria-expanded', 'true');
     var sel = modelMenu.querySelector('.model-opt.selected') || modelMenu.querySelector('.model-opt');
@@ -3218,6 +3272,10 @@
       modelMenu.appendChild(b);
     });
     modelMenu.appendChild(document.createElement('hr'));
+    var ub = document.createElement('div');
+    ub.className = 'usage-box';
+    modelMenu.appendChild(ub);
+    paintUsage(ub);
     var more = document.createElement('button');
     more.type = 'button';
     more.className = 'model-opt more' + (cur ? '' : ' selected');
