@@ -3201,9 +3201,10 @@
     if(used == null || !isFinite(total) || total <= 0) return null;
     return { used: Math.max(0, Math.min(total, used)), total: total };
   }
-  function fmtCredits(micro){
-    var usd = micro / 100000000;   /* Puter counts in microcents: 1 USD = 100,000,000 */
-    return usd >= 100 ? '$' + usd.toFixed(0) : '$' + usd.toFixed(2);
+  function daysLeftText(){
+    var d = new Date(), last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    var left = last - d.getDate();
+    return left === 0 ? 'Resets tomorrow' : left + (left === 1 ? ' day' : ' days') + ' until the end of the month';
   }
   function paintUsage(box){
     if(!box) box = modelMenu.querySelector('.usage-box');
@@ -3216,9 +3217,9 @@
       return;
     }
     var pct = Math.round(n.used / n.total * 100);
-    box.innerHTML = '<div class="usage-top"><span>Credits used</span><b>' + fmtCredits(n.used) + ' of ' + fmtCredits(n.total) + '</b></div>' +
+    box.innerHTML = '<div class="usage-top"><span>Credits used</span><b>' + pct + '%</b></div>' +
       '<div class="usage-track"><div class="usage-fill' + (pct >= 90 ? ' high' : (pct >= 70 ? ' warn' : '')) + '"></div></div>' +
-      '<div class="usage-note">' + pct + '% of your Puter plan this month</div>';
+      '<div class="usage-note">' + daysLeftText() + '</div>';
     var f = box.querySelector('.usage-fill');
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ f.style.width = Math.max(2, pct) + '%'; }); });
   }
