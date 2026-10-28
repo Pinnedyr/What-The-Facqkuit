@@ -398,6 +398,12 @@
     margin: 4px 0 0;
   }
 
+  /* --- Puter login warning --- */
+  .login-warning { display: flex; align-items: flex-start; gap: 10px; background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.5); color: #FDE68A; border-radius: var(--radius); padding: 11px 14px; font-size: 13.5px; line-height: 1.4; margin: 0 0 14px; }
+  .login-warning[hidden] { display: none; }
+  .login-warning .lw-icon { flex: none; }
+  .login-warning b { color: #FEF3C7; }
+
   /* --- Language selector --- */
   .lang-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   .lang-toggle {
@@ -538,6 +544,7 @@
 
   <section class="card" id="screen-upload">
     <h2>Upload document</h2>
+    <div class="login-warning" role="note" hidden></div>
     <div class="dropzone" id="dropzone">
       <input type="file" id="file-input" accept=".docx">
       <div class="dz-text"><b>Click to choose a file</b> or drag a .docx file here</div>
@@ -560,6 +567,7 @@
         <div class="status-line" id="download-status"></div>
       </div>
     </div>
+    <div class="login-warning" role="note" hidden></div>
     <div id="empty-holder"></div>
     <div class="ws-grid">
       <main class="doc-canvas"><article class="doc-page" id="doc-page"></article></main>
@@ -669,6 +677,7 @@
     <div class="modal-head"><h3 id="settings-title">Settings</h3><button type="button" class="x" data-close aria-label="Close">✕</button></div>
     <label class="sub-label">Puter account</label>
     <p class="hint" id="puter-account" style="margin:0 0 10px;"></p>
+    <div class="login-warning" role="note" hidden></div>
     <div class="btn-row">
       <button type="button" class="secondary" id="puter-signin">Sign in to Puter</button>
       <button type="button" class="secondary" id="puter-signout" hidden>Sign out</button>
@@ -832,6 +841,13 @@
   function puterReady() {
     return typeof window.puter !== "undefined" && window.puter && window.puter.ai && window.puter.auth;
   }
+  const LOGIN_WARNING = `<span class="lw-icon" aria-hidden="true">⚠</span><span><b>Puter login:</b> Email and Gmail login doesn't work on the Chromebooks used here. Please use a personal Microsoft or Apple account to log in.</span>`;
+  // Shows the warning wherever it appears (upload screen, workspace, settings) while the user is not signed in to Puter.
+  function updateLoginWarning() {
+    let show = false;
+    try { show = !!(puterReady() && !puter.auth.isSignedIn()); } catch (e) { show = false; }
+    document.querySelectorAll(".login-warning").forEach((w) => { if (!w.innerHTML) w.innerHTML = LOGIN_WARNING; w.hidden = !show; });
+  }
   function describePuterError(err) {
     if (!err) return "";
     const m = (err.error && (err.error.message || err.error)) || err.message || err.msg || err;
@@ -860,7 +876,7 @@
   async function puterChat(prompt) {
     if (!puterReady()) { const e = new Error("no puter"); e.code = "no_puter"; throw e; }
     if (!puter.auth.isSignedIn()) {
-      try { await puter.auth.signIn(); }
+      try { await puter.auth.signIn(); updateLoginWarning(); }
       catch (err) { const e = new Error("signin"); e.code = "signin_failed"; throw e; }
     }
     let resp;
@@ -884,7 +900,7 @@
     const d = e && e.detail ? " (" + e.detail + ")" : "";
     switch (e && e.code) {
       case "no_puter": return "Couldn't load Puter (js.puter.com). Check your internet connection and reload the page.";
-      case "signin_failed": return "The Puter sign-in was cancelled or blocked. Allow popups for this page and try again.";
+      case "signin_failed": return "The Puter sign-in was cancelled or blocked. Allow popups for this page and try again. Email and Gmail login doesn't work on the Chromebooks used here — use a personal Microsoft or Apple account.";
       case "credits": return "Your Puter account doesn't have enough balance or quota for this right now." + d;
       case "rate_limited": return "Too many requests. Wait a moment and try again." + d;
       case "model": return "The model “" + aiModel + "” wasn't found or isn't allowed. Choose another model in Settings." + d;
@@ -1200,6 +1216,7 @@
     line.innerHTML = (spinning ? '<span class="spinner"></span>' : "") + escapeHtml(msg);
   }
   async function refreshAccount() {
+    updateLoginWarning();
     const line = el("puter-account");
     if (!puterReady()) { line.textContent = "Puter isn't loaded (check your internet connection)."; el("puter-signin").hidden = true; el("puter-signout").hidden = true; return; }
     if (!puter.auth.isSignedIn()) { line.textContent = "Not signed in yet."; el("puter-signin").hidden = false; el("puter-signout").hidden = true; return; }
@@ -1922,6 +1939,7 @@
 
   // ---------- AI filling ----------
   function updateFillButton() {
+    updateLoginWarning();
     if (!puterReady()) setFillStatus("Couldn't load Puter (js.puter.com). Check your internet connection and reload the page.", true);
     else if (!puter.auth.isSignedIn()) setFillStatus("The first time you use AI filling, a Puter sign-in window (popup) opens.", false);
   }
