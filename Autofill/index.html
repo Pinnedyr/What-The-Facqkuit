@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="no">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dokumentutfyller</title>
+<title>Document Filler</title>
 <link rel="icon" type="image/png" href="https://wtfq.online/images/Logo.png">
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -398,6 +398,8 @@
     margin: 4px 0 0;
   }
 
+  /* --- Language selector --- */
+  .lang-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   .lang-toggle {
     display: inline-flex;
     border: 1px solid var(--line);
@@ -417,6 +419,25 @@
   .lang-btn + .lang-btn { border-left: 1px solid var(--line); }
   .lang-btn.active { background: var(--accent-soft); color: var(--accent-ink); }
   .lang-btn:hover:not(.active) { color: var(--ink); }
+
+  .switch { display: inline-flex; align-items: center; gap: 9px; cursor: pointer; font-size: 13px; color: var(--ink-soft); user-select: none; position: relative; }
+  .switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .switch .track { width: 40px; height: 22px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s ease; flex: none; }
+  .switch .thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--ink); transition: transform .2s ease, background .2s ease; }
+  .switch input:checked + .track { background: var(--accent); }
+  .switch input:checked + .track .thumb { transform: translateX(18px); background: #0F172A; }
+  .switch input:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .switch:hover .switch-label { color: var(--ink); }
+
+  .lang-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .25s ease, margin-top .25s ease; margin-top: 0; }
+  .lang-more.open { grid-template-rows: 1fr; margin-top: 12px; }
+  .lang-more-inner { overflow: hidden; min-height: 0; padding: 2px; visibility: hidden; transition: visibility 0s linear .25s; }
+  .lang-more.open .lang-more-inner { visibility: visible; transition-delay: 0s; }
+  .lang-grid { display: flex; flex-wrap: wrap; gap: 6px; max-height: 210px; overflow-y: auto; padding: 2px 2px 4px; margin: 10px 0 12px; }
+  .lang-grid .chip { display: inline-flex; align-items: baseline; gap: 6px; }
+  .lang-grid .chip small { font-size: 11px; color: var(--ink-faint); }
+  .lang-grid .chip.active small { color: var(--accent-ink); opacity: .8; }
+  .lang-empty { font-size: 12.5px; color: var(--ink-faint); padding: 4px 2px; }
 
   .modal { position: fixed; inset: 0; z-index: 50; background: rgba(2,6,23,.72); display: flex; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
   .modal[hidden] { display: none; }
@@ -510,16 +531,16 @@
         <path d="M5 15v3.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-    <h1>Dokumentutfyller</h1>
-    <button type="button" class="secondary" id="settings-btn" style="margin-left:auto;">⚙ Innstillinger</button>
+    <h1>Document Filler</h1>
+    <button type="button" class="secondary" id="settings-btn" style="margin-left:auto;">⚙ Settings</button>
   </header>
-  <p class="tagline">Last opp en .docx-fil. Du får se dokumentet slik det er, med feltene markert. La KI fylle ut alt, fyll ut ett og ett felt, eller skriv selv — og last ned en ferdig utfylt .docx.</p>
+  <p class="tagline">Upload a .docx file. You'll see the document as it is, with the fields highlighted. Let AI fill everything in, fill in one field at a time, or write it yourself — then download a completed .docx.</p>
 
   <section class="card" id="screen-upload">
-    <h2>Last opp dokument</h2>
+    <h2>Upload document</h2>
     <div class="dropzone" id="dropzone">
       <input type="file" id="file-input" accept=".docx">
-      <div class="dz-text"><b>Klikk for å velge fil</b> eller dra en .docx-fil hit</div>
+      <div class="dz-text"><b>Click to choose a file</b> or drag a .docx file here</div>
     </div>
     <div class="status-line" id="upload-status"></div>
   </section>
@@ -531,8 +552,8 @@
         <span class="tb-count" id="review-count"></span>
       </div>
       <div class="tb-actions">
-        <button type="button" class="ai-btn" id="fill-all-btn">✦ Fyll ut alt med KI</button>
-        <button type="button" class="dl-btn" id="download-btn">⬇ Last ned .docx</button>
+        <button type="button" class="ai-btn" id="fill-all-btn">✦ Fill everything with AI</button>
+        <button type="button" class="dl-btn" id="download-btn">⬇ Download .docx</button>
       </div>
       <div class="tb-status">
         <div class="status-line" id="fill-status"></div>
@@ -544,37 +565,54 @@
       <main class="doc-canvas"><article class="doc-page" id="doc-page"></article></main>
       <aside class="side">
         <details class="side-card" id="settings-panel" open>
-          <summary>KI-innstillinger</summary>
-          <label for="context-input" style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;">Ekstra kontekst til KI-en (valgfritt) — f.eks. hvem som svarer, eller fakta den trenger</label>
-    <textarea id="context-input" placeholder="F.eks: «Jeg heter Kari Hansen og dette gjelder søknad om foreldrepermisjon fra 1. mars.»"></textarea>
+          <summary>AI settings</summary>
+          <label for="context-input" style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;">Extra context for the AI (optional) — e.g. who is answering, or facts it needs</label>
+    <textarea id="context-input" placeholder="E.g. “My name is Kari Hansen and this is about a parental leave application from 1 March.”"></textarea>
 
     <div class="style-panel">
       <div class="field-group">
-        <label>Språk KI-en skal skrive på</label>
-        <div class="lang-toggle" id="lang-toggle">
-          <button type="button" class="lang-btn active" data-lang="no">Norsk</button>
-          <button type="button" class="lang-btn" data-lang="en">Engelsk</button>
+        <label>Language the AI writes in</label>
+        <div class="lang-row">
+          <div class="lang-toggle" id="lang-toggle">
+            <button type="button" class="lang-btn active" data-lang="no">Norwegian</button>
+            <button type="button" class="lang-btn" data-lang="en">English</button>
+          </div>
+          <label class="switch">
+            <input type="checkbox" role="switch" id="more-langs-toggle" aria-controls="lang-more">
+            <span class="track"><span class="thumb"></span></span>
+            <span class="switch-label">More languages</span>
+          </label>
         </div>
+        <div class="lang-more" id="lang-more">
+          <div class="lang-more-inner">
+            <input type="search" id="lang-search" class="field-input" placeholder="Search languages …" autocomplete="off">
+            <div class="lang-grid" id="lang-grid"></div>
+            <label class="sub-label" for="custom-lang-input">Other language</label>
+            <input type="text" id="custom-lang-input" class="field-input" placeholder="Not in the list? Type any language, e.g. Scottish Gaelic" autocomplete="off">
+            <p class="hint" style="margin:6px 0 0;">The label placed before inserted answers will be “Answer:”.</p>
+          </div>
+        </div>
+        <p class="hint" id="lang-current" style="margin:10px 0 0;"></p>
       </div>
 
       <div class="field-group">
-        <label for="complexity-slider">Hvor avansert skal KI skrive?</label>
+        <label for="complexity-slider">How advanced should the AI's writing be?</label>
         <div class="slider-row">
-          <span class="slider-end">Enkelt</span>
+          <span class="slider-end">Simple</span>
           <input type="range" id="complexity-slider" min="1" max="5" step="1" value="3">
-          <span class="slider-end">Avansert</span>
+          <span class="slider-end">Advanced</span>
         </div>
         <p class="hint" id="complexity-desc" style="margin:6px 0 0;"></p>
       </div>
 
       <div class="field-group">
-        <label>Stil på teksten KI setter inn</label>
+        <label>Style of the text the AI inserts</label>
         <div class="chip-row" id="style-presets"></div>
 
         <div class="style-row">
           <div class="field-sub">
             <label class="sub-label" for="font-input">Font</label>
-            <input type="text" id="font-input" list="font-list" class="field-input" placeholder="Standard (arves fra dokumentet)">
+            <input type="text" id="font-input" list="font-list" class="field-input" placeholder="Default (inherited from the document)">
             <datalist id="font-list">
               <option value="Calibri"></option>
               <option value="Aptos"></option>
@@ -587,61 +625,61 @@
             </datalist>
           </div>
           <div class="field-sub narrow">
-            <label class="sub-label" for="size-input">Størrelse (pt)</label>
-            <input type="number" id="size-input" class="field-input" min="6" max="72" step="0.5" placeholder="Standard">
+            <label class="sub-label" for="size-input">Size (pt)</label>
+            <input type="number" id="size-input" class="field-input" min="6" max="72" step="0.5" placeholder="Default">
           </div>
         </div>
 
-        <label class="sub-label">Farge</label>
+        <label class="sub-label">Color</label>
         <div class="swatch-row">
           <div id="color-swatches" style="display:flex; gap:8px;"></div>
           <div class="custom-color-wrap">
             <input type="color" id="custom-color-input" value="#8C2F39">
-            <span>Egendefinert</span>
+            <span>Custom</span>
           </div>
         </div>
 
         <div class="toggle-row">
-          <label><input type="checkbox" id="italic-toggle" checked> Kursiv</label>
-          <label><input type="checkbox" id="bold-toggle"> Fet</label>
+          <label><input type="checkbox" id="italic-toggle" checked> Italic</label>
+          <label><input type="checkbox" id="bold-toggle"> Bold</label>
         </div>
 
-        <div class="preview-box" id="style-preview">Svar: Slik vil teksten KI setter inn se ut.</div>
+        <div class="preview-box" id="style-preview">Answer: This is how the text the AI inserts will look.</div>
       </div>
     </div>
         </details>
         <div class="side-card"><details class="how">
-      <summary>Hvordan feltene ble funnet</summary>
+      <summary>How fields were found</summary>
       <ul>
-        <li><b>Spørsmål</b> — avsnitt som slutter med «?». Svaret settes inn som et nytt avsnitt rett etter.</li>
-        <li><b>Felt</b> — avsnitt som slutter med «:», f.eks. «Navn:». Svaret føyes til på samme linje.</li>
-        <li><b>Tabellcelle</b> — tomme celler i en tabell hvor andre celler i raden har innhold. Første rad i hver tabell antas å være overskrift.</li>
+        <li><b>Question</b> — paragraphs ending with “?”. The answer is inserted as a new paragraph right after.</li>
+        <li><b>Field</b> — paragraphs ending with “:”, e.g. “Name:”. The answer is appended on the same line.</li>
+        <li><b>Table cell</b> — empty cells in a table where other cells in the row have content. The first row of each table is assumed to be a header.</li>
       </ul>
-      <p style="margin:8px 0 0;">KI-svar er forslag basert på dokumentets innhold og det du eventuelt skriver over — les alltid gjennom før du bruker dokumentet videre.</p>
+      <p style="margin:8px 0 0;">AI answers are suggestions based on the document's content and anything you write above — always read through before using the document further.</p>
     </details></div>
       </aside>
     </div>
   </div>
 
-  <footer class="credit">Dokumentet behandles i nettleseren din. Kun teksten KI-en trenger (spørsmål, felt og et utdrag) sendes via Puter til KI-modellen.</footer>
+  <footer class="credit">The document is processed in your browser. Only the text the AI needs (questions, fields and an excerpt) is sent to the AI model via Puter.</footer>
 </div>
 
 <div class="modal" id="settings-modal" hidden>
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-    <div class="modal-head"><h3 id="settings-title">Innstillinger</h3><button type="button" class="x" data-close aria-label="Lukk">✕</button></div>
-    <label class="sub-label">Puter-konto</label>
+    <div class="modal-head"><h3 id="settings-title">Settings</h3><button type="button" class="x" data-close aria-label="Close">✕</button></div>
+    <label class="sub-label">Puter account</label>
     <p class="hint" id="puter-account" style="margin:0 0 10px;"></p>
     <div class="btn-row">
-      <button type="button" class="secondary" id="puter-signin">Logg inn på Puter</button>
-      <button type="button" class="secondary" id="puter-signout" hidden>Logg ut</button>
+      <button type="button" class="secondary" id="puter-signin">Sign in to Puter</button>
+      <button type="button" class="secondary" id="puter-signout" hidden>Sign out</button>
     </div>
-    <p class="hint" style="margin:10px 0 14px;">KI-utfyllingen går via Puter. Er du ikke innlogget, åpnes et innloggingsvindu (popup) automatisk første gang du bruker den.</p>
-    <label class="sub-label" for="ai-model">Modell</label>
-    <input type="text" id="ai-model" list="model-list" class="field-input" spellcheck="false" placeholder="La stå tom for Puters standardmodell">
+    <p class="hint" style="margin:10px 0 14px;">AI filling runs through Puter. If you're not signed in, a sign-in window (popup) opens automatically the first time you use it.</p>
+    <label class="sub-label" for="ai-model">Model</label>
+    <input type="text" id="ai-model" list="model-list" class="field-input" spellcheck="false" placeholder="Leave empty for Puter's default model">
     <datalist id="model-list"><option value="gpt-5-nano"></option><option value="claude-sonnet-4-6"></option><option value="gemini-2.5-flash-lite"></option><option value="meta-llama/llama-4-maverick"></option></datalist>
     <div class="btn-row" style="margin-top:16px;">
-      <button type="button" class="primary" id="settings-save" style="width:auto;">Lagre</button>
-      <button type="button" class="secondary" id="settings-test">Test KI</button>
+      <button type="button" class="primary" id="settings-save" style="width:auto;">Save</button>
+      <button type="button" class="secondary" id="settings-test">Test AI</button>
     </div>
     <div class="status-line" id="settings-status"></div>
   </div>
@@ -667,14 +705,17 @@
   let zip = null;
   let xmlDoc = null;
   let items = []; // {id, type, kind, label, node, answer, filled}
-  let originalName = "dokument";
+  let originalName = "document";
   let stylesDoc = null;
   let detectedStyles = []; // [{font, size, label}] found in the uploaded document
   let complexity = 3;
-  let answerLanguage = "no";
+  let answerLanguage = "no";   // a language code from LANGUAGES, or "custom"
+  let previousLanguage = "no"; // last non-custom choice, restored if the custom field is emptied
+  let customLanguage = "";
   let styleSettings = { font: "", size: null, color: "8C2F39", italic: true, bold: false };
 
   const el = (id) => document.getElementById(id);
+  const fieldsText = (n) => n + (n === 1 ? " field" : " fields");
 
   (function animateKicker() {
     const node = el("wtfq-title");
@@ -690,8 +731,102 @@
     });
   })();
 
+  // ---------- languages ----------
+  // [code, English name, native name, answer label, rtl?, name used in the AI prompt (optional)]
+  const LANGUAGES = [
+    ["af", "Afrikaans", "Afrikaans", "Antwoord: "],
+    ["sq", "Albanian", "Shqip", "Përgjigje: "],
+    ["am", "Amharic", "አማርኛ", "መልስ: "],
+    ["ar", "Arabic", "العربية", "الإجابة: ", 1],
+    ["hy", "Armenian", "Հայերեն", "Պատասխան: "],
+    ["az", "Azerbaijani", "Azərbaycanca", "Cavab: "],
+    ["eu", "Basque", "Euskara", "Erantzuna: "],
+    ["be", "Belarusian", "Беларуская", "Адказ: "],
+    ["bn", "Bengali", "বাংলা", "উত্তর: "],
+    ["bs", "Bosnian", "Bosanski", "Odgovor: "],
+    ["bg", "Bulgarian", "Български", "Отговор: "],
+    ["my", "Burmese", "မြန်မာ", "အဖြေ: "],
+    ["ca", "Catalan", "Català", "Resposta: "],
+    ["zh", "Chinese (Simplified)", "简体中文", "答案：", 0, "Simplified Chinese (简体中文)"],
+    ["zh-TW", "Chinese (Traditional)", "繁體中文", "答案：", 0, "Traditional Chinese (繁體中文)"],
+    ["hr", "Croatian", "Hrvatski", "Odgovor: "],
+    ["cs", "Czech", "Čeština", "Odpověď: "],
+    ["da", "Danish", "Dansk", "Svar: "],
+    ["nl", "Dutch", "Nederlands", "Antwoord: "],
+    ["en", "English", "English", "Answer: "],
+    ["eo", "Esperanto", "Esperanto", "Respondo: "],
+    ["et", "Estonian", "Eesti", "Vastus: "],
+    ["tl", "Filipino", "Filipino", "Sagot: "],
+    ["fi", "Finnish", "Suomi", "Vastaus: "],
+    ["fr", "French", "Français", "Réponse : "],
+    ["gl", "Galician", "Galego", "Resposta: "],
+    ["ka", "Georgian", "ქართული", "პასუხი: "],
+    ["de", "German", "Deutsch", "Antwort: "],
+    ["el", "Greek", "Ελληνικά", "Απάντηση: "],
+    ["gu", "Gujarati", "ગુજરાતી", "જવાબ: "],
+    ["ha", "Hausa", "Hausa", "Amsa: "],
+    ["he", "Hebrew", "עברית", "תשובה: ", 1],
+    ["hi", "Hindi", "हिन्दी", "उत्तर: "],
+    ["hu", "Hungarian", "Magyar", "Válasz: "],
+    ["is", "Icelandic", "Íslenska", "Svar: "],
+    ["id", "Indonesian", "Bahasa Indonesia", "Jawaban: "],
+    ["ga", "Irish", "Gaeilge", "Freagra: "],
+    ["it", "Italian", "Italiano", "Risposta: "],
+    ["ja", "Japanese", "日本語", "回答："],
+    ["kk", "Kazakh", "Қазақша", "Жауап: "],
+    ["km", "Khmer", "ខ្មែរ", "ចម្លើយ: "],
+    ["ko", "Korean", "한국어", "답변: "],
+    ["lo", "Lao", "ລາວ", "ຄຳຕອບ: "],
+    ["la", "Latin", "Latina", "Responsum: "],
+    ["lv", "Latvian", "Latviešu", "Atbilde: "],
+    ["lt", "Lithuanian", "Lietuvių", "Atsakymas: "],
+    ["mk", "Macedonian", "Македонски", "Одговор: "],
+    ["ms", "Malay", "Bahasa Melayu", "Jawapan: "],
+    ["mt", "Maltese", "Malti", "Tweġiba: "],
+    ["mr", "Marathi", "मराठी", "उत्तर: "],
+    ["mn", "Mongolian", "Монгол", "Хариулт: "],
+    ["ne", "Nepali", "नेपाली", "उत्तर: "],
+    ["no", "Norwegian", "Norsk", "Svar: ", 0, "Norwegian (Bokmål)"],
+    ["nn", "Norwegian Nynorsk", "Nynorsk", "Svar: ", 0, "Norwegian (Nynorsk)"],
+    ["fa", "Persian", "فارسی", "پاسخ: ", 1],
+    ["pl", "Polish", "Polski", "Odpowiedź: "],
+    ["pt", "Portuguese", "Português", "Resposta: "],
+    ["pa", "Punjabi", "ਪੰਜਾਬੀ", "ਜਵਾਬ: "],
+    ["ro", "Romanian", "Română", "Răspuns: "],
+    ["ru", "Russian", "Русский", "Ответ: "],
+    ["sr", "Serbian", "Srpski", "Odgovor: ", 0, "Serbian (Latin script)"],
+    ["si", "Sinhala", "සිංහල", "පිළිතුර: "],
+    ["sk", "Slovak", "Slovenčina", "Odpoveď: "],
+    ["sl", "Slovenian", "Slovenščina", "Odgovor: "],
+    ["es", "Spanish", "Español", "Respuesta: "],
+    ["sw", "Swahili", "Kiswahili", "Jibu: "],
+    ["sv", "Swedish", "Svenska", "Svar: "],
+    ["ta", "Tamil", "தமிழ்", "பதில்: "],
+    ["te", "Telugu", "తెలుగు", "సమాధానం: "],
+    ["th", "Thai", "ไทย", "คำตอบ: "],
+    ["tr", "Turkish", "Türkçe", "Cevap: "],
+    ["uk", "Ukrainian", "Українська", "Відповідь: "],
+    ["ur", "Urdu", "اردو", "جواب: ", 1],
+    ["uz", "Uzbek", "Oʻzbekcha", "Javob: "],
+    ["vi", "Vietnamese", "Tiếng Việt", "Trả lời: "],
+    ["cy", "Welsh", "Cymraeg", "Ateb: "],
+    ["yo", "Yoruba", "Yorùbá", "Ìdáhùn: "],
+    ["zu", "Zulu", "isiZulu", "Impendulo: "]
+  ].map(([code, name, native, prefix, rtl, ai]) => ({ code, name, native, prefix, rtl: !!rtl, ai: ai || null }));
+  const LANG_BY_CODE = new Map(LANGUAGES.map((l) => [l.code, l]));
+
+  function currentLang() {
+    if (answerLanguage === "custom" && customLanguage) {
+      return { code: "custom", name: customLanguage, native: customLanguage, prefix: "Answer: ", rtl: false, ai: customLanguage };
+    }
+    return LANG_BY_CODE.get(answerLanguage) || LANG_BY_CODE.get("no");
+  }
+  function langPromptName(l) {
+    if (l.ai) return l.ai;
+    return l.native && l.native !== l.name ? l.name + " (" + l.native + ")" : l.name;
+  }
+
   // ---------- Puter AI client ----------
-  const ANSWER_PREFIX = { no: "Svar: ", en: "Answer: " };
   try { aiModel = localStorage.getItem("wtfq_puter_model") || aiModel; } catch (e) { /* storage unavailable */ }
 
   function puterReady() {
@@ -748,48 +883,42 @@
   function puterErrorMessage(e) {
     const d = e && e.detail ? " (" + e.detail + ")" : "";
     switch (e && e.code) {
-      case "no_puter": return "Fikk ikke lastet Puter (js.puter.com). Sjekk nettforbindelsen og last siden på nytt.";
-      case "signin_failed": return "Innloggingen på Puter ble avbrutt eller blokkert. Tillat popup-vinduer for denne siden og prøv igjen.";
-      case "credits": return "Puter-kontoen din har ikke nok saldo/kvote til dette akkurat nå." + d;
-      case "rate_limited": return "For mange forespørsler. Vent litt og prøv igjen." + d;
-      case "model": return "Modellen «" + aiModel + "» ble ikke funnet eller er ikke tillatt. Velg en annen modell i Innstillinger." + d;
-      case "empty_completion": return "Modellen ga et tomt svar. Prøv igjen, fyll ut færre felt om gangen, eller bytt modell.";
-      case "invalid_json": return "Modellen svarte i et format som ikke kunne leses. Prøv igjen, eller velg en annen modell.";
-      default: return "Noe gikk galt med KI-tjenesten. Prøv igjen om litt." + d;
+      case "no_puter": return "Couldn't load Puter (js.puter.com). Check your internet connection and reload the page.";
+      case "signin_failed": return "The Puter sign-in was cancelled or blocked. Allow popups for this page and try again.";
+      case "credits": return "Your Puter account doesn't have enough balance or quota for this right now." + d;
+      case "rate_limited": return "Too many requests. Wait a moment and try again." + d;
+      case "model": return "The model “" + aiModel + "” wasn't found or isn't allowed. Choose another model in Settings." + d;
+      case "empty_completion": return "The model returned an empty answer. Try again, fill in fewer fields at a time, or switch model.";
+      case "invalid_json": return "The model replied in a format that couldn't be read. Try again, or choose another model.";
+      default: return "Something went wrong with the AI service. Try again shortly." + d;
     }
   }
 
-  // ---------- error copy ----------
-
   // ---------- complexity + style settings ----------
-  const LANGUAGE_OPTIONS = {
-    no: { label: "Norsk", instruction: "Skriv alle svarene på norsk (bokmål) — uansett hvilket språk selve dokumentet er skrevet på." },
-    en: { label: "Engelsk", instruction: "Write every answer in English — regardless of what language the document itself is written in." }
-  };
   const COMPLEXITY_DESCRIPTIONS = {
-    1: { label: "Svært enkelt", hint: "Korte setninger, hverdagsspråk, ingen fagord.", prompt: "svært enkelt, med korte setninger og hverdagslige ord — som om du forklarer det for noen uten forkunnskaper" },
-    2: { label: "Enkelt", hint: "Klart og lettfattelig, uten fagsjargong.", prompt: "enkelt og lett forståelig, uten unødvendig fagsjargong" },
-    3: { label: "Vanlig", hint: "Nøytralt, alminnelig språknivå.", prompt: "på et vanlig, nøytralt språknivå" },
-    4: { label: "Fagpreget", hint: "En del fagbegreper og presisjon.", prompt: "presist og noe fagpreget, med relevante fagbegreper der det er naturlig" },
-    5: { label: "Avansert / faglig", hint: "Akademisk, presist fagspråk.", prompt: "avansert og faglig, med presist fagspråk, på et nivå som passer en akademisk eller profesjonell sammenheng" }
+    1: { label: "Very simple", hint: "Short sentences, everyday language, no jargon.", prompt: "very simply, with short sentences and everyday words — as if explaining it to someone with no prior knowledge" },
+    2: { label: "Simple", hint: "Clear and easy to follow, without technical jargon.", prompt: "simply and easy to understand, without unnecessary jargon" },
+    3: { label: "Normal", hint: "Neutral, ordinary language level.", prompt: "at a normal, neutral language level" },
+    4: { label: "Technical", hint: "Some technical terms and precision.", prompt: "precisely and somewhat technically, using relevant specialist terms where natural" },
+    5: { label: "Advanced / expert", hint: "Academic, precise technical language.", prompt: "at an advanced, expert level, with precise technical language suited to an academic or professional context" }
   };
   const COLOR_PRESETS = [
-    { hex: null, label: "Standard (arver dokumentet)" },
-    { hex: "000000", label: "Svart" },
-    { hex: "8C2F39", label: "Rødbrun" },
-    { hex: "9C7A24", label: "Gull" },
-    { hex: "1F4E5F", label: "Blå" },
-    { hex: "2F5233", label: "Grønn" }
+    { hex: null, label: "Default (inherits the document)" },
+    { hex: "000000", label: "Black" },
+    { hex: "8C2F39", label: "Burgundy" },
+    { hex: "9C7A24", label: "Gold" },
+    { hex: "1F4E5F", label: "Blue" },
+    { hex: "2F5233", label: "Green" }
   ];
 
   function styleInstructionText() {
     const c = COMPLEXITY_DESCRIPTIONS[complexity] || COMPLEXITY_DESCRIPTIONS[3];
-    const lang = LANGUAGE_OPTIONS[answerLanguage] || LANGUAGE_OPTIONS.no;
-    return lang.instruction + " " +
-      "Skriv " + c.prompt + ". " +
-      "Skriv naturlig og personlig, som om et menneske skrev det for hånd — varier setningsoppbygningen, " +
-      "unngå stive eller typiske KI-formuleringer (som «Det er viktig å nevne at», «I dagens samfunn», " +
-      "overdrevne oppsummeringer eller unødvendige høflighetsfraser), og gå rett på sak slik et menneske ville gjort.";
+    const langName = langPromptName(currentLang());
+    return "Write every answer in " + langName + " — regardless of what language the document itself is written in. " +
+      "Write " + c.prompt + ". " +
+      "Write naturally and personally, as if a human wrote it by hand — vary the sentence structure, " +
+      "avoid stiff or typical AI phrasing (such as “It is important to note that”, “In today's society”, " +
+      "excessive summaries or unnecessary pleasantries), and get straight to the point the way a person would.";
   }
 
   function clearChipActive() {
@@ -861,7 +990,7 @@
       chip.type = "button";
       chip.className = "chip";
       chip.textContent = s.label;
-      chip.title = "Samme font/størrelse som dokumentet, svart tekst";
+      chip.title = "Same font and size as the document, black text";
       chip.onclick = () => applyStylePreset(preset, chip);
       row.appendChild(chip);
       if (!first) first = { preset, chip };
@@ -870,7 +999,7 @@
     const defaultChip = document.createElement("button");
     defaultChip.type = "button";
     defaultChip.className = "chip";
-    defaultChip.textContent = "Fremhevet";
+    defaultChip.textContent = "Highlighted";
     defaultChip.onclick = () => applyStylePreset(hl, defaultChip);
     row.appendChild(defaultChip);
     if (autoApply && first) applyStylePreset(first.preset, first.chip);
@@ -942,14 +1071,14 @@
     const list = [];
     if (defFont || defSize) {
       list.push({ font: defFont || "", size: defSize || null,
-        label: "Dokumentets standard (" + [defFont, defSize ? defSize + " pt" : null].filter(Boolean).join(", ") + ")" });
+        label: "Document default (" + [defFont, defSize ? defSize + " pt" : null].filter(Boolean).join(", ") + ")" });
     }
     Array.from(found.entries()).sort((a, b) => b[1] - a[1]).forEach(([key]) => {
       if (list.length >= 4) return;
       const [font, sizeStr] = key.split("|");
       const size = sizeStr ? parseInt(sizeStr, 10) : null;
       if (list.some((l) => l.font === font && l.size === size)) return;
-      list.push({ font, size, label: [font || "Standardfont", size ? size + " pt" : null].filter(Boolean).join(", ") });
+      list.push({ font, size, label: [font || "Default font", size ? size + " pt" : null].filter(Boolean).join(", ") });
     });
     return list;
   }
@@ -991,18 +1120,76 @@
   updatePreview();
   el("complexity-desc").textContent = COMPLEXITY_DESCRIPTIONS[3].label + " — " + COMPLEXITY_DESCRIPTIONS[3].hint;
 
-  const PREVIEW_TEXT = { no: "Slik vil teksten KI setter inn se ut.", en: "This is how the text the AI inserts will look." };
+  // ---------- language selector ----------
+  const PREVIEW_TEXT = "This is how the text the AI inserts will look.";
   function updatePreviewText() {
-    el("style-preview").textContent = (ANSWER_PREFIX[answerLanguage] || "") + PREVIEW_TEXT[answerLanguage];
-    prefixEls.forEach((p) => { p.textContent = ANSWER_PREFIX[answerLanguage] || ""; });
+    const l = currentLang();
+    el("style-preview").textContent = l.prefix + PREVIEW_TEXT;
+    prefixEls.forEach((p) => { p.textContent = l.prefix; });
+  }
+  function updateLangCurrent() {
+    const l = currentLang();
+    el("lang-current").textContent = "The AI will write in " + langPromptName(l) + ".";
+  }
+  function setAnswerLanguage(code) {
+    answerLanguage = code;
+    if (code !== "custom") {
+      previousLanguage = code;
+      el("custom-lang-input").value = "";
+      customLanguage = "";
+    }
+    document.querySelectorAll("#lang-toggle .lang-btn").forEach((b) => b.classList.toggle("active", b.dataset.lang === code));
+    document.querySelectorAll("#lang-grid .chip").forEach((c) => c.classList.toggle("active", c.dataset.lang === code));
+    updateLangCurrent();
+    updatePreviewText();
+  }
+  function renderLangGrid() {
+    const q = el("lang-search").value.trim().toLowerCase();
+    const grid = el("lang-grid");
+    grid.innerHTML = "";
+    const list = LANGUAGES.filter((l) => !q || l.name.toLowerCase().includes(q) || l.native.toLowerCase().includes(q) || l.code.toLowerCase() === q);
+    list.forEach((l) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip" + (l.code === answerLanguage ? " active" : "");
+      chip.dataset.lang = l.code;
+      chip.appendChild(document.createTextNode(l.name));
+      if (l.native && l.native !== l.name) {
+        const sm = document.createElement("small");
+        sm.textContent = l.native;
+        chip.appendChild(sm);
+      }
+      chip.addEventListener("click", () => setAnswerLanguage(l.code));
+      grid.appendChild(chip);
+    });
+    if (!list.length) {
+      const empty = document.createElement("div");
+      empty.className = "lang-empty";
+      empty.textContent = "No match in the list — type it under “Other language” below.";
+      grid.appendChild(empty);
+    }
   }
   document.querySelectorAll("#lang-toggle .lang-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      answerLanguage = btn.dataset.lang === "en" ? "en" : "no";
-      document.querySelectorAll("#lang-toggle .lang-btn").forEach((b) => b.classList.toggle("active", b === btn));
-      updatePreviewText();
-    });
+    btn.addEventListener("click", () => setAnswerLanguage(btn.dataset.lang));
   });
+  el("more-langs-toggle").addEventListener("change", () => {
+    el("lang-more").classList.toggle("open", el("more-langs-toggle").checked);
+  });
+  el("lang-search").addEventListener("input", renderLangGrid);
+  el("custom-lang-input").addEventListener("input", () => {
+    customLanguage = el("custom-lang-input").value.trim();
+    if (customLanguage) {
+      answerLanguage = "custom";
+      document.querySelectorAll("#lang-toggle .lang-btn").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll("#lang-grid .chip").forEach((c) => c.classList.remove("active"));
+      updateLangCurrent();
+      updatePreviewText();
+    } else if (answerLanguage === "custom") {
+      setAnswerLanguage(previousLanguage);
+    }
+  });
+  renderLangGrid();
+  updateLangCurrent();
   updatePreviewText();
 
   function openModal(id) { el(id).hidden = false; }
@@ -1014,11 +1201,11 @@
   }
   async function refreshAccount() {
     const line = el("puter-account");
-    if (!puterReady()) { line.textContent = "Puter er ikke lastet (sjekk nettforbindelsen)."; el("puter-signin").hidden = true; el("puter-signout").hidden = true; return; }
-    if (!puter.auth.isSignedIn()) { line.textContent = "Ikke logget inn ennå."; el("puter-signin").hidden = false; el("puter-signout").hidden = true; return; }
+    if (!puterReady()) { line.textContent = "Puter isn't loaded (check your internet connection)."; el("puter-signin").hidden = true; el("puter-signout").hidden = true; return; }
+    if (!puter.auth.isSignedIn()) { line.textContent = "Not signed in yet."; el("puter-signin").hidden = false; el("puter-signout").hidden = true; return; }
     el("puter-signin").hidden = true; el("puter-signout").hidden = false;
-    line.textContent = "Logget inn på Puter.";
-    try { const u = await puter.auth.getUser(); if (u && u.username) line.textContent = "Logget inn som " + u.username + "."; } catch (e) { /* keep generic text */ }
+    line.textContent = "Signed in to Puter.";
+    try { const u = await puter.auth.getUser(); if (u && u.username) line.textContent = "Signed in as " + u.username + "."; } catch (e) { /* keep generic text */ }
   }
   function openSettings(msg) {
     el("ai-model").value = aiModel;
@@ -1032,25 +1219,25 @@
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModals(); });
   el("puter-signin").addEventListener("click", async () => {
     if (!puterReady()) { setSettingsStatus(puterErrorMessage({ code: "no_puter" }), true); return; }
-    try { await puter.auth.signIn(); setSettingsStatus("Innlogget.", false); }
+    try { await puter.auth.signIn(); setSettingsStatus("Signed in.", false); }
     catch (e) { setSettingsStatus(puterErrorMessage({ code: "signin_failed" }), true); }
     refreshAccount(); updateFillButton();
   });
   el("puter-signout").addEventListener("click", async () => {
     try { await puter.auth.signOut(); } catch (e) { /* ignore */ }
-    setSettingsStatus("Utlogget fra Puter.", false); refreshAccount(); updateFillButton();
+    setSettingsStatus("Signed out of Puter.", false); refreshAccount(); updateFillButton();
   });
   el("settings-save").addEventListener("click", () => {
     aiModel = el("ai-model").value.trim();
     let ok = true;
     try { localStorage.setItem("wtfq_puter_model", aiModel); } catch (e) { ok = false; }
-    setSettingsStatus(ok ? "Lagret." : "Valget gjelder denne økten, men nettleseren lot meg ikke lagre det.", !ok);
+    setSettingsStatus(ok ? "Saved." : "The choice applies to this session, but the browser wouldn't let me save it.", !ok);
   });
   el("settings-test").addEventListener("click", async () => {
     const prev = aiModel;
     aiModel = el("ai-model").value.trim();
-    setSettingsStatus("Tester KI …", false, true);
-    try { await puterChat("Svar kun med ordet OK."); setSettingsStatus("KI fungerer" + (aiModel ? " med modellen «" + aiModel + "»" : " med Puters standardmodell") + ". Trykk Lagre for å beholde valget.", false); }
+    setSettingsStatus("Testing AI …", false, true);
+    try { await puterChat("Reply with only the word OK."); setSettingsStatus("AI works" + (aiModel ? " with the model “" + aiModel + "”" : " with Puter's default model") + ". Press Save to keep the choice.", false); }
     catch (e) { setSettingsStatus(puterErrorMessage(e), true); }
     finally { aiModel = prev; refreshAccount(); updateFillButton(); }
   });
@@ -1079,10 +1266,10 @@
   async function handleFile(file) {
     setUploadStatus("", false);
     if (!/\.docx$/i.test(file.name)) {
-      reportUploadError("Denne filen ser ikke ut som en .docx-fil. Eksporter fra Google Dokumenter som «Microsoft Word (.docx)» og prøv igjen.");
+      reportUploadError("This file doesn't look like a .docx file. Export from Google Docs as “Microsoft Word (.docx)” and try again.");
       return;
     }
-    setUploadStatus("Leser dokumentet …", false, true);
+    setUploadStatus("Reading the document …", false, true);
     try {
       const buf = await file.arrayBuffer();
       const newZip = await JSZip.loadAsync(buf);
@@ -1113,8 +1300,8 @@
       el("screen-upload").hidden = true;
       el("workspace").hidden = false;
       el("settings-panel").open = window.matchMedia ? window.matchMedia("(min-width: 1000px)").matches : true;
-      el("review-count").textContent = items.length ? items.length + " felt funnet" : "";
-      el("empty-holder").innerHTML = items.length ? "" : '<p class="empty-note">Fant ingen spørsmål, felt eller tomme tabellceller i dette dokumentet. Se «Hvordan feltene ble funnet» under for hva verktøyet ser etter.</p>';
+      el("review-count").textContent = items.length ? fieldsText(items.length) + " found" : "";
+      el("empty-holder").innerHTML = items.length ? "" : '<p class="empty-note">Found no questions, fields or empty table cells in this document. See “How fields were found” below for what the tool looks for.</p>';
       setUploadStatus("", false);
       setFillStatus("", false); setDownloadStatus("", false);
       updateFillButton();
@@ -1122,7 +1309,7 @@
       growAll();
     } catch (err) {
       console.error(err);
-      reportUploadError("Kunne ikke lese denne filen som en .docx-fil. Sjekk at det er en gyldig Word-fil, ikke en gammel .doc-fil.");
+      reportUploadError("Couldn't read this file as a .docx file. Check that it's a valid Word file, not an old .doc file.");
     }
   }
 
@@ -1136,7 +1323,7 @@
     label.textContent = file.name + " · " + sizeKb + " kB";
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.textContent = "Bytt fil";
+    btn.textContent = "Change file";
     btn.onclick = () => { fileInput.value = ""; fileInput.click(); };
     chip.appendChild(label);
     chip.appendChild(btn);
@@ -1185,8 +1372,8 @@
           if (!hasContent) return;
           cells.forEach((cell, cIdx) => {
             if (texts[cIdx] === "") {
-              const header = headerCells[cIdx] || ("kolonne " + (cIdx + 1));
-              const rowLabel = texts.filter((t) => t).join(" · ") || ("rad " + (rIdx + 1));
+              const header = headerCells[cIdx] || ("column " + (cIdx + 1));
+              const rowLabel = texts.filter((t) => t).join(" · ") || ("row " + (rIdx + 1));
               found.push({
                 id: idx++, type: "cell", kind: "cell",
                 label: header + " — " + rowLabel,
@@ -1427,7 +1614,7 @@
     if (!blip) return null;
     const ext = dr.getElementsByTagNameNS(WPD, "extent")[0];
     const src = docImages.get(blip.getAttributeNS(RNS, "embed"));
-    if (!src) { const ph = document.createElement("span"); ph.className = "img-missing"; ph.textContent = "[bilde]"; return ph; }
+    if (!src) { const ph = document.createElement("span"); ph.className = "img-missing"; ph.textContent = "[image]"; return ph; }
     const img = document.createElement("img");
     img.src = src; img.alt = "";
     const w = ext ? Math.round(parseInt(ext.getAttribute("cx"), 10) / 9525) : 0;
@@ -1677,7 +1864,7 @@
 
   function updateFieldBtn(item) {
     if (!item.ui) return;
-    item.ui.btn.textContent = "✦ " + ((item.answer || "").trim() ? "Fyll ut på nytt" : "Fyll ut denne");
+    item.ui.btn.textContent = "✦ " + ((item.answer || "").trim() ? "Fill in again" : "Fill in this one");
   }
   function setFieldLoading(item, on) {
     item.loading = on;
@@ -1701,13 +1888,14 @@
     if (mode === "block") {
       const pfx = document.createElement("span");
       pfx.className = "pfx";
-      pfx.textContent = ANSWER_PREFIX[answerLanguage] || "";
+      pfx.textContent = currentLang().prefix;
       prefixEls.push(pfx);
       wrap.appendChild(pfx);
     }
     const ta = document.createElement("textarea");
     ta.rows = 1;
-    ta.placeholder = mode === "cell" ? "Skriv her …" : "Skriv svar her, eller la KI fylle ut …";
+    ta.dir = "auto"; // right-to-left languages (Arabic, Hebrew, …) type and display correctly
+    ta.placeholder = mode === "cell" ? "Type here …" : "Type an answer here, or let AI fill it in …";
     ta.value = item.answer || "";
     ta.setAttribute("aria-label", item.label);
     const btn = document.createElement("button");
@@ -1734,8 +1922,8 @@
 
   // ---------- AI filling ----------
   function updateFillButton() {
-    if (!puterReady()) setFillStatus("Fikk ikke lastet Puter (js.puter.com). Sjekk nettforbindelsen og last siden på nytt.", true);
-    else if (!puter.auth.isSignedIn()) setFillStatus("Første gang du bruker KI-utfylling åpnes et innloggingsvindu fra Puter (popup).", false);
+    if (!puterReady()) setFillStatus("Couldn't load Puter (js.puter.com). Check your internet connection and reload the page.", true);
+    else if (!puter.auth.isSignedIn()) setFillStatus("The first time you use AI filling, a Puter sign-in window (popup) opens.", false);
   }
   updateFillButton();
 
@@ -1756,9 +1944,9 @@
   }
 
   function describeItem(it, i) {
-    if (it.type === "question") return (i + 1) + ". Spørsmål: \"" + it.label + "\"";
-    if (it.type === "field") return (i + 1) + ". Felt som skal fylles ut: \"" + it.label + "\"";
-    return (i + 1) + ". Tabellcelle å fylle ut. " + it.label;
+    if (it.type === "question") return (i + 1) + ". Question: \"" + it.label + "\"";
+    if (it.type === "field") return (i + 1) + ". Field to fill in: \"" + it.label + "\"";
+    return (i + 1) + ". Table cell to fill in. " + it.label;
   }
 
   async function fillAll() {
@@ -1766,25 +1954,25 @@
     const targets = items.filter((it) => it.source !== "user" && !it.loading);
     const skipped = items.filter((it) => it.source === "user").length;
     if (!targets.length) {
-      setFillStatus("Alle feltene har tekst du har skrevet selv. Tøm et felt, eller trykk «Fyll ut denne» i feltet, hvis KI skal skrive det.", false);
+      setFillStatus("Every field already has text you wrote yourself. Clear a field, or press “Fill in this one” in the field, if you want the AI to write it.", false);
       return;
     }
     const btn = el("fill-all-btn");
     btn.disabled = true;
     targets.forEach((it) => setFieldLoading(it, true));
-    setFillStatus("KI fyller ut " + targets.length + " felt (kan ta opptil ett minutt) …", false, true);
+    setFillStatus("AI is filling in " + fieldsText(targets.length) + " (can take up to a minute) …", false, true);
 
     const contextText = buildContextText();
     const extra = el("context-input").value.trim();
     const lines = targets.map(describeItem).join("\n");
-    const prompt = "Du fyller ut et dokument automatisk, som om du var personen som besvarer det.\n\n" +
+    const prompt = "You are filling in a document automatically, as if you were the person answering it.\n\n" +
       styleInstructionText() + "\n\n" +
-      (extra ? "Ekstra kontekst/instruksjoner fra brukeren:\n" + extra + "\n\n" : "") +
-      "Utdrag fra dokumentet (for sammenheng):\n\"\"\"\n" + contextText + "\n\"\"\"\n\n" +
-      "Felt som skal besvares, i rekkefølge:\n" + lines + "\n\n" +
-      "Svar KUN med en gyldig JSON-liste av strenger, nøyaktig " + targets.length + " strenger, i samme rekkefølge som feltene over. " +
-      "Hver streng er selve svaret/verdien for det feltet — kort, presist og naturlig. " +
-      "Ikke ta med feltnummer, anførselstegn rundt hele svaret, eller noen forklaring.";
+      (extra ? "Extra context/instructions from the user:\n" + extra + "\n\n" : "") +
+      "Excerpt from the document (for context):\n\"\"\"\n" + contextText + "\n\"\"\"\n\n" +
+      "Fields to answer, in order:\n" + lines + "\n\n" +
+      "Reply ONLY with a valid JSON array of strings, exactly " + targets.length + " strings, in the same order as the fields above. " +
+      "Each string is the actual answer/value for that field — short, precise and natural. " +
+      "Do not include field numbers, quotation marks around the whole answer, or any explanation.";
 
     try {
       const result = parseJsonArray(await puterChat(prompt));
@@ -1794,9 +1982,9 @@
         const v = result[i];
         if ((typeof v === "string" || typeof v === "number") && String(v).trim()) { setAnswer(it, String(v).trim(), "ai"); n++; }
       });
-      const tail = skipped ? " (" + skipped + " felt du har skrevet selv er urørt)" : "";
-      if (n === targets.length) setFillStatus("Ferdig — " + n + " felt fylt ut" + tail + ". Les gjennom før du laster ned.", false);
-      else setFillStatus("KI svarte på " + n + " av " + targets.length + " felt" + tail + ". Trykk «Fyll ut alt» igjen for resten.", true);
+      const tail = skipped ? " (" + fieldsText(skipped) + " you wrote yourself left untouched)" : "";
+      if (n === targets.length) setFillStatus("Done — " + fieldsText(n) + " filled in" + tail + ". Read through before downloading.", false);
+      else setFillStatus("The AI answered " + n + " of " + targets.length + " fields" + tail + ". Press “Fill everything with AI” again for the rest.", true);
     } catch (e) {
       console.error(e);
       setFillStatus(puterErrorMessage(e), true);
@@ -1812,12 +2000,12 @@
     const contextText = buildContextText();
     const extra = el("context-input").value.trim();
     const desc = describeItem(item, 0).replace(/^1\.\s*/, "");
-    const prompt = "Du fyller ut ett felt i et dokument, som om du var personen som besvarer det.\n\n" +
+    const prompt = "You are filling in one field in a document, as if you were the person answering it.\n\n" +
       styleInstructionText() + "\n\n" +
-      (extra ? "Ekstra kontekst/instruksjoner fra brukeren:\n" + extra + "\n\n" : "") +
-      "Utdrag fra dokumentet (for sammenheng):\n\"\"\"\n" + contextText + "\n\"\"\"\n\n" +
+      (extra ? "Extra context/instructions from the user:\n" + extra + "\n\n" : "") +
+      "Excerpt from the document (for context):\n\"\"\"\n" + contextText + "\n\"\"\"\n\n" +
       desc + "\n\n" +
-      "Svar KUN med selve svarteksten — kort, presist og naturlig. Ikke ta med anførselstegn eller forklaring.";
+      "Reply ONLY with the answer text itself — short, precise and natural. Do not include quotation marks or any explanation.";
     try {
       const text = await puterChat(prompt);
       setAnswer(item, text.trim().replace(/^["“«]+|["”»]+$/g, "").trim(), "ai");
@@ -1839,14 +2027,14 @@
   }
 
   // ---------- writing answers back into the XML ----------
-  function styledRun(doc, text) {
+  function styledRun(doc, text, rtl) {
     const r = doc.createElementNS(WNS, "w:r");
     const rPr = doc.createElementNS(WNS, "w:rPr");
     let hasProps = false;
 
     // Element order below follows the required CT_RPr sequence
-    // (rFonts, b, i, color, sz, szCs, ...) — Word rejects an out-of-order
-    // rPr as corrupt, so this order must not be changed casually.
+    // (rFonts, b, bCs, i, iCs, color, sz, szCs, rtl, ...) — Word rejects an
+    // out-of-order rPr as corrupt, so this order must not be changed casually.
     if (styleSettings.font) {
       const rFonts = doc.createElementNS(WNS, "w:rFonts");
       rFonts.setAttributeNS(WNS, "w:ascii", styleSettings.font);
@@ -1857,10 +2045,12 @@
     }
     if (styleSettings.bold) {
       rPr.appendChild(doc.createElementNS(WNS, "w:b"));
+      rPr.appendChild(doc.createElementNS(WNS, "w:bCs")); // bold for complex scripts (Arabic, Hebrew, Hindi, Thai …)
       hasProps = true;
     }
     if (styleSettings.italic) {
       rPr.appendChild(doc.createElementNS(WNS, "w:i"));
+      rPr.appendChild(doc.createElementNS(WNS, "w:iCs")); // italic for complex scripts
       hasProps = true;
     }
     if (styleSettings.color) {
@@ -1877,6 +2067,10 @@
       szCs.setAttributeNS(WNS, "w:val", halfPoints);
       rPr.appendChild(sz);
       rPr.appendChild(szCs);
+      hasProps = true;
+    }
+    if (rtl) {
+      rPr.appendChild(doc.createElementNS(WNS, "w:rtl"));
       hasProps = true;
     }
     if (hasProps) r.appendChild(rPr);
@@ -1896,12 +2090,18 @@
   function applyAnswer(doc, item) {
     const answer = (item.answer || "").trim();
     if (!answer) return;
+    const lang = currentLang();
     if (item.kind === "afterPara") {
       const p = doc.createElementNS(WNS, "w:p");
-      p.appendChild(styledRun(doc, (ANSWER_PREFIX[answerLanguage] || "Svar: ") + answer));
+      if (lang.rtl) {
+        const pPr = doc.createElementNS(WNS, "w:pPr");
+        pPr.appendChild(doc.createElementNS(WNS, "w:bidi"));
+        p.appendChild(pPr);
+      }
+      p.appendChild(styledRun(doc, lang.prefix + answer, lang.rtl));
       if (item.node.parentNode) { item.node.parentNode.insertBefore(p, item.node.nextSibling); insertedNodes.push(p); }
     } else if (item.kind === "inlinePara") {
-      { const run = styledRun(doc, " " + answer); item.node.appendChild(run); insertedNodes.push(run); }
+      { const run = styledRun(doc, " " + answer, lang.rtl); item.node.appendChild(run); insertedNodes.push(run); }
     } else if (item.kind === "cell") {
       let p = null;
       for (let i = 0; i < item.node.children.length; i++) {
@@ -1911,7 +2111,7 @@
         p = doc.createElementNS(WNS, "w:p");
         item.node.appendChild(p);
       }
-      { const run = styledRun(doc, answer); p.appendChild(run); insertedNodes.push(run); }
+      { const run = styledRun(doc, answer, lang.rtl); p.appendChild(run); insertedNodes.push(run); }
     }
   }
 
@@ -1922,7 +2122,7 @@
     if (!zip || !xmlDoc) return;
     const btn = el("download-btn");
     btn.disabled = true;
-    setDownloadStatus("Setter sammen dokumentet …", false, true);
+    setDownloadStatus("Assembling the document …", false, true);
     insertedNodes = [];
     try {
       items.forEach((item) => applyAnswer(xmlDoc, item));
@@ -1938,17 +2138,17 @@
         mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         compression: "DEFLATE"
       });
-      const filename = (originalName || "dokument") + "-utfylt.docx";
+      const filename = (originalName || "document") + "-filled.docx";
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url; a.download = filename;
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
       const answered = items.filter((it) => (it.answer || "").trim()).length;
-      setDownloadStatus("Dokumentet er lastet ned som " + filename + (answered ? " (" + answered + " svar satt inn)." : " — men ingen felt er fylt ut ennå, så filen er lik originalen."), false);
+      setDownloadStatus("The document was downloaded as " + filename + (answered ? " (" + (answered === 1 ? "1 answer" : answered + " answers") + " inserted)." : " — but no fields have been filled in yet, so the file is identical to the original."), false);
     } catch (e) {
       console.error(e);
-      setDownloadStatus("Kunne ikke lage filen. Prøv å laste opp dokumentet på nytt.", true);
+      setDownloadStatus("Couldn't create the file. Try uploading the document again.", true);
     } finally {
       // Undo the insertions so a second download never duplicates the answers.
       insertedNodes.forEach((n) => { if (n.parentNode) n.parentNode.removeChild(n); });
