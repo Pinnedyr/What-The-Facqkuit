@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aria is broken</title>
+  <title>Aria — Temporarily Unavailable</title>
   <link rel="icon" href="images/logo.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
@@ -65,7 +65,7 @@
 
     .hero h1 {
       font-family: 'Orbitron', monospace;
-      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-size: clamp(1.8rem, 5vw, 3rem);
       color: white;
       margin-bottom: 1rem;
     }
@@ -78,6 +78,26 @@
       font-size: 1rem;
       line-height: 1.8;
       opacity: .7;
+    }
+
+    /* Archive download block: always visible, directly under the hero. */
+    .archive-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .archive-section p {
+      color: #8db4ff;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .button-link {
+      display: inline-block;
+      text-decoration: none;
     }
 
     .status-card {
@@ -298,17 +318,28 @@
     <div class="content">
 
       <header class="hero">
-        <h1 id="heroTitle">Aria is <span>broken</span></h1>
+        <h1 id="heroTitle">Aria is <span>temporarily unavailable</span></h1>
         <p id="heroSubtitle">
           Development is currently on hold.
         </p>
       </header>
 
+      <!-- GAME ARCHIVE DOWNLOAD (always visible, above the fold) -->
+      <section class="archive-section" id="archiveSection">
+        <p>You can still download the game archive</p>
+
+        <a class="button button-link"
+           href="https://drive.google.com/uc?export=download&id=1RIvcr7IulTrpq0iNEV4LGYGuIeXQLIsl"
+           rel="noopener">
+          DOWNLOAD ARCHIVE
+        </a>
+      </section>
+
       <!-- PAUSED MODE MESSAGE -->
       <section class="status-card" id="pausedNotice" hidden>
         <div class="status">SERVICE STATUS: PAUSED</div>
 
-        <h2>Aria is broken.</h2>
+        <h2>Service temporarily unavailable</h2>
 
         <p>
           Aria is currently unavailable while development
@@ -316,12 +347,12 @@
         </p>
 
         <p class="development-date">
-          Don't expect development within 2027.
+          Development is not expected to resume before 2028.
         </p>
 
         <p>
-          Downloads have been temporarily disabled.
-          If Aria opens again, this page can be re-enabled.
+          Beta downloads have been temporarily disabled.
+          If Aria becomes available again, this page will be updated.
         </p>
       </section>
 
@@ -446,9 +477,10 @@
       const notice = document.getElementById('pausedNotice');
 
       if (ARIA_PAUSED) {
-        document.title = 'Aria is broken';
+        document.title = 'Aria — Temporarily Unavailable';
 
-        title.innerHTML = 'Aria is <span>broken</span>';
+        title.innerHTML =
+          'Aria is <span>temporarily unavailable</span>';
 
         subtitle.textContent =
           'Development is currently on hold.';
