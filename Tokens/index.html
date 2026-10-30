@@ -313,16 +313,16 @@ updateDisplay();
 
 // Konverter Coins til Tokens
 convertBtn.addEventListener("click", () => {
-  if (coins >= 10000) {
-    const newTokens = Math.floor(coins / 10000);
+  if (coins >= 1000) {
+    const newTokens = Math.floor(coins / 1000);
     tokens += newTokens;
-    coins -= newTokens * 10000;
+    coins -= newTokens * 1000;
     setCookie("coins", coins);
     setCookie("tokens", tokens);
     updateDisplay();
     alert(`${newTokens} Token(s) have been added`);
   } else {
-    alert("You need atleast 10000 Coins to get 1 Token!");
+    alert("You need atleast 1000 Coins to get 1 Token!");
   }
 });
 
