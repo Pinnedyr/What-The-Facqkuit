@@ -8,7 +8,14 @@
   <meta name="color-scheme" content="dark" />
   <link rel="preconnect" href="https://wtfq.online" crossorigin>
 
-  <title>What the facqkuit</title>
+  <title>What The Facqkuit</title>
+
+  <!-- Tell Google and social sites the exact name -->
+  <meta property="og:title" content="What The Facqkuit">
+  <meta property="og:site_name" content="What The Facqkuit">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"What The Facqkuit","alternateName":"WTFQ","url":"https://www.wtfq.online/"}
+  </script>
 
   <link rel="icon" type="image/png" href="https://wtfq.online/images/Logo.png"> 
 
@@ -46,6 +53,10 @@
     }
     h1 > * { flex: none; }
     h1 .grow > span { display: inline-block; }
+
+    /* The "Q.online" text is painted by CSS only, so it never exists as real
+       page text and search engines can't read it into the title or heading. */
+    .grow.tail > span::before { content: attr(data-t); }
 
     /* Layering: the big initials sit UNDER the sliding letters, so the initials'
        glow can never paint over (or "overlap") the letters while they slide out. */
@@ -276,7 +287,7 @@
         <div style="text-align:center;">
           <a class="description">Discover and play top online games, explore school tools, and have fun safely at WTFQ.online!</a>
         </div>
-        
+
         <nav class="quick-links" aria-label="Quick links">
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSckiALFsZhY7CymY6bAQRYuAGhrNWw_8QfA0eliQnA7PxNRdg/viewform?usp=header" target="_blank" rel="noopener noreferrer">Suggestions</a>
           <span class="dot">•</span>
@@ -439,10 +450,13 @@
       try {
         window.scrollTo(0, 0);
 
-        // Add "Q.online" after the F
+        // Add "Q.online" after the F.
+        // The text is drawn by CSS (::before + data-t), so it is never real page text,
+        // and it is hidden from screen readers and search engines.
         tail = document.createElement('span');
         tail.className = 'grow tail';
-        tail.innerHTML = '<span>Q.online</span>';
+        tail.innerHTML = '<span data-t="Q.online"></span>';
+        tail.setAttribute('aria-hidden', 'true');
         h1.appendChild(tail);
 
         // Measure everything BEFORE any animation touches the layout
