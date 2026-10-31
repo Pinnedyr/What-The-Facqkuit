@@ -3,75 +3,93 @@
 > The best website to play and find games at school.
 
 ## 🌐 Live Site
+
 https://wtfq.online
 
 ---
 
 ## 🎮 About
 
-WTFQ.online is a curated hub for online games and educational tools, designed specifically for students to use at school. It provides:
+WTFQ.online is a curated hub for online games and educational tools, designed specifically for students to use at school.
 
-- Quick access to fun online games
-- Educational tools like school planners and assignments
-- Easy search functionality to find games instantly
-- Highlights for **new** and **hot** links
-- Access to the Token website with games created by our team
-- YouTube Unblocker & VideoPlayer for unrestricted video access
-- Schoolplan site for managing assignments and schedules
+It provides:
 
-The goal is to make school downtime or breaks more fun while keeping everything organized and accessible.
+- Quick access to fun online games.
+- Educational tools like school planners and assignments.
+- Easy search functionality to find games instantly.
+- Highlights for **new** and **hot** links.
+- Access to the Token website with games created by our team.
+- YouTube Unblocker and VideoPlayer.
+- Schoolplan for managing assignments and schedules.
+
+Our goal is to make school downtime and breaks more enjoyable while keeping everything organized and accessible.
 
 ---
 
-## 🖥 Features
+## 🖥️ Features
 
-- 🔎 Search bar to quickly find your favorite games
-- 🆕 New and 🔥 Hot links visually highlighted
-- 📚 Educational resources included alongside games
-- 🚀 Fully static, fast-loading, and school-friendly
-- 🎮 Games made by our team on the Token site
-- ▶️ YouTube Unblocker for videos at school
-- 🗂 Schoolplan site to organize assignments and schedules
+- 🔎 Search bar to quickly find games.
+- 🆕 New and 🔥 Hot links visually highlighted.
+- 📚 Educational resources.
+- 🚀 Fully static and fast-loading.
+- 🎮 Games made by our team on the Token site.
+- ▶️ YouTube Unblocker and VideoPlayer.
+- 🗂️ Schoolplan for organizing assignments and schedules.
 
 ---
 
 ## ⚙️ How It Works
 
-- Each game or resource is linked via a button in the grid.
-- Search bar filters links in real-time.
-- “New” and “Hot” labels indicate trending or recently added content.
-- Clicking a link opens it in a new tab, keeping the hub accessible.
+- Each game or resource is linked through a button in the grid.
+- The search bar filters links in real time.
+- New and Hot labels highlight recently added or popular content.
+- Clicking a link opens it in a new tab.
 
 ---
 
 ## 💡 Contributing
 
-Want to add a new game or educational tool?  
-Click [here](https://docs.google.com/forms/d/e/1FAIpQLSckiALFsZhY7CymY6bAQRYuAGhrNWw_8QfA0eliQnA7PxNRdg/viewform?usp=header)
+Want to suggest a new game or educational tool?
+
+[Submit a suggestion here](https://docs.google.com/forms/d/e/1FAIpQLSckiALFsZhY7CymY6bAQRYuAGhrNWw_8QfA0eliQnA7PxNRdg/viewform?usp=header)
 
 ---
 
 ## ⚠️ Disclaimer
 
-This site is intended for school use and personal entertainment.  
-All linked games and tools are external, and users should follow their school’s policies.
+This site is intended for school use and personal entertainment.
+
+All linked games and tools are external services. Users should follow their school's policies when accessing them.
 
 ---
 
 ## 👤 Author
 
-Created and maintained by Pinnedyr.
+Created and maintained by **Pinnedyr**.
+
+Official website: https://wtfq.online
 
 ---
 
-## 📜 License
+## 🔒 Copyright & License
 
-MIT License
+Copyright © 2026 Pinnedyr. All rights reserved.
 
-Copyright (c) 2026 Pinnedyr
+**WTFQ.online is proprietary software.**
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, subject to the following conditions:
+The source code, project files, designs, and associated materials are exclusively authorized for use by WTFQ.online and its officially operated services.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+You are NOT permitted to:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+- Copy or reuse the source code.
+- Create unauthorized copies or forks.
+- Redistribute or republish project files.
+- Modify or adapt the software for other projects.
+- Host your own version of WTFQ.online.
+- Use any part of the project without written permission.
+
+Public access to this repository does not mean that its contents are free to copy or reuse.
+
+See the [LICENSE](LICENSE) file for the complete licensing terms.
+
+Third-party libraries and external resources remain subject to their respective licenses.
