@@ -184,6 +184,118 @@
     .quick-links a.aria { color: violet; }
     .quick-links .dot { opacity: .6; }
 
+    /* ── OFFGRID launch button ─────────────────────────────────────────────── */
+    :root {
+      --offgrid-lime: #c8f36b;
+      --offgrid-lime-hover: #d6ff83;
+      --offgrid-ink: #11150e;
+    }
+    .offgrid-launch-wrap {
+      max-width: 620px;
+      margin: 18px auto 22px;
+      padding: 0 4px;
+    }
+    .offgrid-launch-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      min-height: 76px;
+      padding: 13px 16px;
+      overflow: visible;
+      text-align: left;
+      text-decoration: none;
+      color: var(--offgrid-ink);
+      background: linear-gradient(115deg, #d5ff83 0%, var(--offgrid-lime) 55%, #b4e653 100%);
+      border: 1px solid rgba(226,255,176,.65);
+      border-radius: 18px;
+      box-shadow: 0 8px 26px rgba(145,205,69,.14), inset 0 1px 0 rgba(255,255,255,.45);
+      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .offgrid-launch-btn:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.06);
+      box-shadow: 0 12px 32px rgba(145,205,69,.23), inset 0 1px 0 rgba(255,255,255,.55);
+    }
+    .offgrid-launch-btn:active { transform: translateY(0) scale(.99); }
+    .offgrid-launch-btn:focus-visible {
+      outline: 3px solid #f8fafc;
+      outline-offset: 4px;
+    }
+    .offgrid-launch-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 46px;
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border-radius: 13px;
+      overflow: hidden;
+      background: var(--offgrid-ink);
+    }
+    .offgrid-launch-icon img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .offgrid-launch-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+    .offgrid-launch-copy strong {
+      font-size: 1.08rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      line-height: 1.1;
+    }
+    .offgrid-launch-copy small {
+      color: rgba(17,21,14,.76);
+      font-size: .88rem;
+      line-height: 1.25;
+    }
+    .offgrid-launch-spacer { flex: 1; }
+    .offgrid-launch-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: none;
+      padding: 11px 14px;
+      border-radius: 11px;
+      color: var(--offgrid-lime);
+      background: var(--offgrid-ink);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .07em;
+      white-space: nowrap;
+      transition: background .16s ease;
+    }
+    .offgrid-launch-btn:hover .offgrid-launch-cta { background: #20291a; }
+    .offgrid-launch-btn::after {
+      content: "NEW";
+      position: absolute;
+      top: -8px;
+      right: 12px;
+      padding: 3px 7px;
+      border: 1px solid rgba(200,243,107,.65);
+      border-radius: 7px;
+      color: var(--offgrid-lime);
+      background: #172014;
+      font-size: 9px;
+      font-weight: 850;
+      letter-spacing: .09em;
+      box-shadow: 0 3px 10px rgba(0,0,0,.25);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .offgrid-launch-btn, .offgrid-launch-cta { transition: none; }
+      .offgrid-launch-btn:hover { transform: none; }
+    }
+
     #search-input { -webkit-appearance: none; appearance: none; outline: none; }
     #search-input::-webkit-search-cancel-button { filter: invert(1); }
 
@@ -286,6 +398,26 @@
       <div class="reveal">
         <div style="text-align:center;">
           <a class="description">Discover and play top online games, explore school tools, and have fun safely at WTFQ.online!</a>
+        </div>
+
+        <div class="offgrid-launch-wrap">
+          <a
+            class="offgrid-launch-btn"
+            href="https://offgrid.wtfq.online/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Try OFFGRID — Every website unblocked even in exam mode"
+          >
+            <span class="offgrid-launch-icon" aria-hidden="true">
+              <img src="https://offgrid.wtfq.online/logo.svg" alt="" />
+            </span>
+            <span class="offgrid-launch-copy">
+              <strong>OFFGRID</strong>
+              <small>Every website unblocked even in exam mode.</small>
+            </span>
+            <span class="offgrid-launch-spacer" aria-hidden="true"></span>
+            <span class="offgrid-launch-cta">TRY IT <span aria-hidden="true">↗</span></span>
+          </a>
         </div>
 
         <nav class="quick-links" aria-label="Quick links">
@@ -410,7 +542,7 @@
 
     // In-app browsers (TikTok): open the quick links in the same tab too
     if (document.documentElement.classList.contains('in-app')) {
-      document.querySelectorAll('.quick-links a').forEach(a => a.removeAttribute('target'));
+      document.querySelectorAll('.quick-links a, .offgrid-launch-btn').forEach(a => a.removeAttribute('target'));
     }
   </script>
 
