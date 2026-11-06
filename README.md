@@ -34,7 +34,6 @@ Our goal is to make school downtime and breaks more enjoyable while keeping ever
 - 🚀 Fully static and fast-loading.
 - 🎮 Games made by our team on the Token site.
 - ▶️ YouTube Unblocker and VideoPlayer.
-- 🗂️ Schoolplan for organizing assignments and schedules.
 
 ---
 
