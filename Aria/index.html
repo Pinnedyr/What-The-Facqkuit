@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aria — Temporarily Unavailable</title>
+  <title>Aria — Discontinued</title>
   <link rel="icon" href="images/logo.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
@@ -80,26 +80,6 @@
       opacity: .7;
     }
 
-    /* Archive download block: always visible, directly under the hero. */
-    .archive-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      text-align: center;
-    }
-
-    .archive-section p {
-      color: #8db4ff;
-      font-weight: 600;
-      font-size: 1.05rem;
-    }
-
-    .button-link {
-      display: inline-block;
-      text-decoration: none;
-    }
-
     .status-card {
       width: 100%;
       max-width: 720px;
@@ -109,7 +89,6 @@
       border: 1px solid rgba(58, 123, 255, .35);
       border-radius: 1rem;
       box-shadow: 0 0 45px rgba(58, 123, 255, .1);
-      animation: fadeInUp .8s ease-out;
     }
 
     .status {
@@ -138,71 +117,18 @@
       margin-top: .75rem;
     }
 
-    .development-date {
-      color: #8db4ff !important;
-      font-weight: 600;
-      opacity: 1 !important;
-      margin-top: 1.25rem !important;
-    }
-
-    .footer {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        var(--accent),
-        transparent
-      );
-      opacity: .3;
-    }
-
-    /* Original download page is hidden while paused. */
-    body.aria-paused .download-section,
-    body.aria-paused .features,
-    body.aria-paused .modal-overlay {
-      display: none !important;
-    }
-
-    /* Original page is restored when ARIA_PAUSED = false. */
-    body:not(.aria-paused) .status-card {
-      display: none;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      width: 100%;
-    }
-
-    .feature {
-      background: #0b0f18;
-      border: 1px solid var(--border);
-      border-radius: .75rem;
-      padding: 1.5rem;
-      text-align: center;
-    }
-
-    .feature h3 {
-      font-family: 'Orbitron', monospace;
-      color: white;
-      margin-bottom: .75rem;
-      font-size: 1rem;
-    }
-
-    .feature p {
-      font-size: .875rem;
-      line-height: 1.7;
-      opacity: .65;
-    }
-
-    .download-section {
+    .archive-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.5rem;
-      margin-top: 3rem;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .archive-section p {
+      color: #8db4ff;
+      font-weight: 600;
+      font-size: 1.05rem;
     }
 
     .button {
@@ -223,70 +149,16 @@
       box-shadow: 0 0 30px rgba(58, 123, 255, .3);
     }
 
-    .button-contact {
-      background: rgba(58, 123, 255, .1);
-      color: var(--text);
+    .button-link {
+      display: inline-block;
+      text-decoration: none;
     }
 
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(4, 6, 12, .9);
-      padding: 1rem;
-    }
-
-    .modal-overlay.open {
-      display: flex;
-    }
-
-    .modal {
+    .footer {
       width: 100%;
-      max-width: 400px;
-      padding: 2rem;
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      background: #0b0f18;
-      text-align: center;
-    }
-
-    .modal h2 {
-      color: white;
-      font-family: 'Orbitron', monospace;
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal input {
-      width: 100%;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border);
-      border-radius: .5rem;
-      background: var(--bg);
-      color: white;
-      font: inherit;
-    }
-
-    .modal-message {
-      font-size: .85rem;
-      margin-bottom: 1rem;
-    }
-
-    .modal-close {
-      float: right;
-      color: white;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 1.3rem;
-    }
-
-    [hidden] {
-      display: none !important;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: .3;
     }
 
     @keyframes fadeInUp {
@@ -309,6 +181,119 @@
         font-size: .9rem;
       }
     }
+
+    /* ── OFFGRID launch button ─────────────────────────────────────────────── */
+    :root {
+      --offgrid-lime: #c8f36b;
+      --offgrid-lime-hover: #d6ff83;
+      --offgrid-ink: #11150e;
+    }
+    .offgrid-launch-wrap {
+      width: 100%;
+      max-width: 620px;
+      margin: 18px auto 22px;
+      padding: 0 4px;
+    }
+    .offgrid-launch-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      min-height: 76px;
+      padding: 13px 16px;
+      overflow: visible;
+      text-align: left;
+      text-decoration: none;
+      color: var(--offgrid-ink);
+      background: linear-gradient(115deg, #d5ff83 0%, var(--offgrid-lime) 55%, #b4e653 100%);
+      border: 1px solid rgba(226,255,176,.65);
+      border-radius: 18px;
+      box-shadow: 0 8px 26px rgba(145,205,69,.14), inset 0 1px 0 rgba(255,255,255,.45);
+      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .offgrid-launch-btn:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.06);
+      box-shadow: 0 12px 32px rgba(145,205,69,.23), inset 0 1px 0 rgba(255,255,255,.55);
+    }
+    .offgrid-launch-btn:active { transform: translateY(0) scale(.99); }
+    .offgrid-launch-btn:focus-visible {
+      outline: 3px solid #f8fafc;
+      outline-offset: 4px;
+    }
+    .offgrid-launch-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 46px;
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border-radius: 13px;
+      overflow: hidden;
+      background: var(--offgrid-ink);
+    }
+    .offgrid-launch-icon img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .offgrid-launch-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+    .offgrid-launch-copy strong {
+      font-size: 1.08rem;
+      font-weight: 850;
+      letter-spacing: .11em;
+      line-height: 1.1;
+    }
+    .offgrid-launch-copy small {
+      color: rgba(17,21,14,.76);
+      font-size: .88rem;
+      line-height: 1.25;
+    }
+    .offgrid-launch-spacer { flex: 1; }
+    .offgrid-launch-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: none;
+      padding: 11px 14px;
+      border-radius: 11px;
+      color: var(--offgrid-lime);
+      background: var(--offgrid-ink);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .07em;
+      white-space: nowrap;
+      transition: background .16s ease;
+    }
+    .offgrid-launch-btn:hover .offgrid-launch-cta { background: #20291a; }
+    .offgrid-launch-btn::after {
+      content: "NEW";
+      position: absolute;
+      top: -8px;
+      right: 12px;
+      padding: 3px 7px;
+      border: 1px solid rgba(200,243,107,.65);
+      border-radius: 7px;
+      color: var(--offgrid-lime);
+      background: #172014;
+      font-size: 9px;
+      font-weight: 850;
+      letter-spacing: .09em;
+      box-shadow: 0 3px 10px rgba(0,0,0,.25);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .offgrid-launch-btn, .offgrid-launch-cta { transition: none; }
+      .offgrid-launch-btn:hover { transform: none; }
+    }
   </style>
 </head>
 
@@ -318,13 +303,27 @@
     <div class="content">
 
       <header class="hero">
-        <h1 id="heroTitle">Aria is <span>temporarily unavailable</span></h1>
-        <p id="heroSubtitle">
-          Development is currently on hold.
-        </p>
+        <h1>Aria is <span>discontinued</span></h1>
+        <p>Development has ended and Aria is no longer available.</p>
       </header>
 
-      <!-- GAME ARCHIVE DOWNLOAD (always visible, above the fold) -->
+      <!-- DISCONTINUED NOTICE -->
+      <section class="status-card">
+        <div class="status">SERVICE STATUS: DISCONTINUED</div>
+
+        <h2>Aria has been discontinued</h2>
+
+        <p>
+          Aria is no longer being developed or supported.
+          Beta downloads have been permanently disabled.
+        </p>
+
+        <p>
+          Thank you to everyone who used and supported Aria.
+        </p>
+      </section>
+
+      <!-- GAME ARCHIVE DOWNLOAD -->
       <section class="archive-section" id="archiveSection">
         <p>You can still download the game archive</p>
 
@@ -335,264 +334,31 @@
         </a>
       </section>
 
-      <!-- PAUSED MODE MESSAGE -->
-      <section class="status-card" id="pausedNotice" hidden>
-        <div class="status">SERVICE STATUS: PAUSED</div>
-
-        <h2>Service temporarily unavailable</h2>
-
-        <p>
-          Aria is currently unavailable while development
-          is on hold.
-        </p>
-
-        <p class="development-date">
-          Development is not expected to resume before 2028.
-        </p>
-
-        <p>
-          Beta downloads have been temporarily disabled.
-          If Aria becomes available again, this page will be updated.
-        </p>
-      </section>
-
-      <!-- ORIGINAL FEATURE CARDS -->
-      <section class="features" id="features">
-        <article class="feature">
-          <h3>Fast Responses</h3>
-          <p>
-            Get lightning fast responses with the latest
-            model of Aria AI.
-          </p>
-        </article>
-
-        <article class="feature">
-          <h3>Your Safety Matters</h3>
-          <p>
-            No chats are uploaded or saved to our databases.
-          </p>
-        </article>
-
-        <article class="feature">
-          <h3>Access Anytime</h3>
-          <p>
-            Access the latest version by opening index.html.
-          </p>
-        </article>
-      </section>
-
-      <!-- DOWNLOAD INTERFACE -->
-      <section class="download-section" id="downloadSection">
-        <p>Stable Release — COMING SOON</p>
-
-        <button class="button" onclick="openModal()">
-          DOWNLOAD BETA
-        </button>
-
-        <button class="button button-contact"
-                onclick="contactDevelopers()">
-          CONTACT DEVELOPERS
-        </button>
-      </section>
+      <!-- OFFGRID LAUNCH BUTTON -->
+      <div class="offgrid-launch-wrap">
+        <a
+          class="offgrid-launch-btn"
+          href="https://offgrid.wtfq.online/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Try OFFGRID — Every website unblocked even in exam mode"
+        >
+          <span class="offgrid-launch-icon" aria-hidden="true">
+            <img src="https://offgrid.wtfq.online/logo.svg" alt="" />
+          </span>
+          <span class="offgrid-launch-copy">
+            <strong>OFFGRID</strong>
+            <small>Every website unblocked even in exam mode.</small>
+          </span>
+          <span class="offgrid-launch-spacer" aria-hidden="true"></span>
+          <span class="offgrid-launch-cta">TRY IT <span aria-hidden="true">↗</span></span>
+        </a>
+      </div>
 
     </div>
   </main>
 
   <div class="footer"></div>
-
-  <!-- DOWNLOAD MODAL -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <button class="modal-close"
-              onclick="closeModal()"
-              aria-label="Close">✕</button>
-
-      <h2>Which school do you attend?</h2>
-
-      <input
-        id="schoolInput"
-        type="text"
-        placeholder="Enter your school..."
-        autocomplete="off"
-      >
-
-      <p class="modal-message" id="modalMessage"></p>
-
-      <button class="button" onclick="checkPassword()">
-        DOWNLOAD
-      </button>
-    </div>
-  </div>
-
-  <!-- FIREBASE: ORIGINAL PROJECT CONFIGURATION -->
-  <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-
-    import {
-      getFirestore,
-      doc,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDUbdcOv8kIrWIXcZwpkx9w1bSy_mhlPr4",
-      authDomain: "aria-b410c.firebaseapp.com",
-      projectId: "aria-b410c",
-      storageBucket: "aria-b410c.firebasestorage.app",
-      messagingSenderId: "514125299765",
-      appId: "1:514125299765:web:b64e741d2c8838763a717c",
-      measurementId: "G-RGLJ7CGRGW"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window._firebaseDB = db;
-    window._firestoreUtils = { doc, getDoc };
-  </script>
-
-  <script>
-    /*
-     * ARIA MAINTENANCE SWITCH
-     *
-     * true  = maintenance page; downloads disabled
-     * false = original download interface restored
-     *
-     * Change this one value when Aria opens again.
-     */
-    const ARIA_PAUSED = true;
-
-    const CONTACT_LINK =
-      'https://docs.google.com/forms/d/e/1FAIpQLSe_OOq0v5BVQWdQwSUn435zFz5dIbloXJ7nGiGxeNh8W0e03w/viewform?usp=publish-editor';
-
-    function applyAriaMode() {
-      document.body.classList.toggle(
-        'aria-paused',
-        ARIA_PAUSED
-      );
-
-      const title = document.getElementById('heroTitle');
-      const subtitle = document.getElementById('heroSubtitle');
-      const notice = document.getElementById('pausedNotice');
-
-      if (ARIA_PAUSED) {
-        document.title = 'Aria — Temporarily Unavailable';
-
-        title.innerHTML =
-          'Aria is <span>temporarily unavailable</span>';
-
-        subtitle.textContent =
-          'Development is currently on hold.';
-
-        notice.hidden = false;
-      } else {
-        document.title = 'Aria Download';
-
-        title.innerHTML = 'Download <span>Aria</span>';
-
-        subtitle.textContent =
-          'Free access to the Aria Beta version here.';
-
-        notice.hidden = true;
-      }
-    }
-
-    function openModal() {
-      if (ARIA_PAUSED) return;
-
-      document.getElementById('modalOverlay')
-        .classList.add('open');
-
-      document.getElementById('schoolInput').focus();
-    }
-
-    function closeModal() {
-      document.getElementById('modalOverlay')
-        .classList.remove('open');
-    }
-
-    async function checkPassword() {
-      // Safety guard: no downloads while paused.
-      if (ARIA_PAUSED) return;
-
-      const input = document.getElementById('schoolInput')
-        .value.trim();
-
-      const message = document.getElementById('modalMessage');
-
-      if (!input) {
-        message.textContent = 'Please enter your school.';
-        return;
-      }
-
-      if (!window._firebaseDB) {
-        message.textContent = 'Firebase is not ready. Try again.';
-        return;
-      }
-
-      message.textContent = 'Checking...';
-
-      try {
-        const { doc, getDoc } = window._firestoreUtils;
-
-        const docRef = doc(
-          window._firebaseDB,
-          'config',
-          input
-        );
-
-        const snapshot = await getDoc(docRef);
-
-        if (!snapshot.exists()) {
-          message.textContent = 'You do not have access.';
-          return;
-        }
-
-        const data = snapshot.data();
-
-        if (!data.fileURL) {
-          message.textContent = 'No download link was found.';
-          return;
-        }
-
-        const link = document.createElement('a');
-        link.href = data.fileURL;
-        link.download = '';
-
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        message.textContent = 'Download started.';
-      } catch (error) {
-        message.textContent = 'Error: ' + error.message;
-      }
-    }
-
-    function contactDevelopers() {
-      if (ARIA_PAUSED) return;
-
-      window.location.href = CONTACT_LINK;
-    }
-
-    // Close the modal when clicking its backdrop.
-    document.getElementById('modalOverlay')
-      .addEventListener('click', function (event) {
-        if (event.target === this) {
-          closeModal();
-        }
-      });
-
-    // Apply the mode immediately.
-    applyAriaMode();
-
-    // Keep functions available to the HTML buttons.
-    window.openModal = openModal;
-    window.closeModal = closeModal;
-    window.checkPassword = checkPassword;
-    window.contactDevelopers = contactDevelopers;
-  </script>
 
 </body>
 </html>
