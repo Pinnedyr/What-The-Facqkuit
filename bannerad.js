@@ -1,13 +1,13 @@
 (() => {
-  const BANNER_VISIBLE_TIME = 5000; // 5 sek
+  const BANNER_VISIBLE_TIME = 5000;
   const MIN_WAIT = 5 * 60 * 1000;
   const MAX_WAIT = 10 * 60 * 1000;
 
   const banners = [
     {
-      bannertekst: "Want the best schoolplans? Click here to open schoolplans and add your own class.",
-      bannerfarge: "#ff4757",
-      bannerlink: "https://www.wtfq.online/skoleplaner/"
+      bannertekst: "Want to unblock any website, even in exam mode? Click here.",
+      bannerfarge: "#C8FF5F",
+      bannerlink: "https://offgrid.wtfq.online/"
     },
     {
       bannertekst: "Do you have suggestions for our site? Click here.",
@@ -23,11 +23,6 @@
       bannertekst: "Follow our Tiktok, by clicking here or by seaching @www.wtfq.online!",
       bannerfarge: "#576e50",
       bannerlink: "https://www.tiktok.com/@www.wtfq.online"
-    },
-    {
-      bannertekst: "Try Aria AI here, the best unblocked AI!",
-      bannerfarge: "#0095c7",
-      bannerlink: "https://www.wtfq.online/Aria"
     }
   ];
 
