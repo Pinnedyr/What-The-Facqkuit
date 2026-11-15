@@ -1,709 +1,383 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="description" content="WTFQ.online is a safe and fun website where students can discover and play top online games, access school plans, and explore educational tools all in one place. Join our community and enjoy games, learning, and creativity!">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="color-scheme" content="dark" />
-  <link rel="preconnect" href="https://wtfq.online" crossorigin>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0f172a">
+<meta name="description" content="WTFQ.online is a safe and fun website where students can discover and play top online games, access school plans, and explore educational tools all in one place. Join our community and enjoy games, learning, and creativity!">
+<link rel="canonical" href="https://wtfq.online/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f172a'/%3E%3Ctext x='50' y='66' font-size='52' font-family='sans-serif' font-weight='800' text-anchor='middle' fill='%2338bdf8'%3EW%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://wtfq.online/">
+<meta property="og:site_name" content="What The Facqkuit">
+<meta property="og:title" content="What The Facqkuit">
+<meta property="og:description" content="Discover and play top online games, explore school tools, and have fun safely at WTFQ.online!">
+<meta name="twitter:card" content="summary">
+<title>What The Facqkuit</title>
 
-  <title>What The Facqkuit</title>
 
-  <!-- Tell Google and social sites the exact name -->
-  <meta property="og:title" content="What The Facqkuit">
-  <meta property="og:site_name" content="What The Facqkuit">
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","name":"What The Facqkuit","alternateName":"WTFQ","url":"https://www.wtfq.online/"}
-  </script>
+<style>
+:root{--bg:#05070d;--card:rgba(255,255,255,.04);--line:rgba(255,255,255,.1);--text:#e8ebf4;--muted:#8d95aa;--accent:#9db8ff}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;background:radial-gradient(120% 70% at 50% -10%,#0f1730 0%,var(--bg) 60%) fixed;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+a{color:var(--muted);text-decoration:none}a:hover,a:focus-visible{color:var(--text)}
 
-  <link rel="icon" type="image/png" href="https://wtfq.online/images/Logo.png"> 
+#intro{position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .5s ease,visibility .5s}
+#intro.done{opacity:0;visibility:hidden}
+#intro .introTitle{margin:0;font-size:clamp(28px,7vw,56px);font-weight:700;letter-spacing:.5px;display:flex;flex-wrap:wrap;justify-content:center}
+#intro .introTitle span{display:inline-block;opacity:0;transform:translateY(16px);animation:pop .5s ease-out forwards}
+.loader{width:min(220px,60vw);height:2px;background:var(--line);overflow:hidden}
+.loader i{display:block;height:100%;width:0;background:var(--accent);animation:load 1.5s ease-out forwards}
+@keyframes pop{to{opacity:1;transform:none}}
+@keyframes load{to{width:100%}}
+@media(prefers-reduced-motion:reduce){#intro{display:none}}
 
-  <script>
-    // Turns the intro on before the first paint.
-    // Skipped for people who prefer reduced motion and for browsers without the Web Animations API.
-    (function () {
-      var ok = typeof Element !== 'undefined' && Element.prototype.animate &&
-               !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
-      if (ok) document.documentElement.classList.add('intro');
-      // TikTok / other in-app browsers: flag them so we can tune the experience
-      var ua = navigator.userAgent || '';
-      if (/musical_ly|BytedanceWebview|TikTok|Bytedance|trill/i.test(ua)) document.documentElement.classList.add('in-app');
-      if (/Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (window.matchMedia && matchMedia('(max-width: 640px)').matches)) document.documentElement.classList.add('mobile');
-    })();
-  </script>
-
-  <style>
-    :root { --gap: 12px; --glow: #60a5fa; }
-    * { box-sizing: border-box; }
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      margin: 0; padding: 24px; background: #0f172a; color: #e2e8f0;
-      overflow-x: hidden;
-    }
-    h1 { 
-      margin: 0 0 8px; 
-      font-size: clamp(2rem, 8.5vw, 5.6rem);
-      line-height: 1.2;
-      letter-spacing: 0;
-      display: inline-flex;
-      align-items: baseline;
-      white-space: nowrap;
-      position: relative;
-    }
-    h1 > * { flex: none; }
-    h1 .grow > span { display: inline-block; }
-
-    /* The "Q.online" text is painted by CSS only, so it never exists as real
-       page text and search engines can't read it into the title or heading. */
-    .grow.tail > span::before { content: attr(data-t); }
-
-    /* Layering: the big initials sit UNDER the sliding letters, so the initials'
-       glow can never paint over (or "overlap") the letters while they slide out. */
-    h1 .ch   { position: relative; z-index: 1; }
-    h1 .grow { position: relative; z-index: 2; }
-
-    /* ── Intro animation (only active while <html class="intro">) ───────────
-       Start state: just "WTF" + "Q.online". Everything else is collapsed to
-       zero width, with its text parked behind the letter to its left.
-       Clipping is done with clip-path (only the LEFT edge is cut), not
-       overflow:hidden, so glows, descenders (q) and blur never get cropped. */
-    html.intro #logo { visibility: hidden; will-change: transform; }
-    html.intro .reveal { opacity: 0; }
-    html.intro .grow {
-      width: 0;
-      clip-path: inset(-0.4em -0.6em -0.4em 0);
-    }
-    html.intro .grow > span { transform: translateX(-100%); }
-    html.intro .grow.tail { width: auto; }
-    html.intro .grow.tail > span { transform: none; }
-
-    /* Soft ambient glow behind the title during the intro */
-    #logo-aura {
-      position: fixed; left: 50%; top: 50%;
-      width: 60vmax; height: 60vmax;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(circle, rgba(96,165,250,.28) 0%, rgba(139,92,246,.12) 35%, transparent 65%);
-      pointer-events: none; opacity: 0; z-index: 0;
-    }
-    #main-content, footer { position: relative; z-index: 1; }
-
-    /* Sparkle particles */
-    .spark {
-      position: fixed; width: 6px; height: 6px; border-radius: 50%;
-      background: #fff; box-shadow: 0 0 10px 2px var(--glow);
-      pointer-events: none; z-index: 5; opacity: 0;
-    }
-
-    p.hint { margin: 0 0 20px; opacity: .8; }
-    .container { max-width: 1000px; margin: 0 auto; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: var(--gap);
-    }
-
-    a.link {
-      display: inline-block;
-      width: 100%;
-      text-decoration: none;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: #1f2937;
-      color: #f8fafc;
-      text-align: center;
-      border: 1px solid #334155;
-      transition: transform .04s ease, background .15s ease, border-color .15s ease;
-      user-select: none;
-    }
-    a.link:hover { background: #111827; border-color: #475569; }
-    a.link:active { transform: translateY(1px); }
-    a.link[aria-disabled="true"] { opacity: .6; cursor: not-allowed; }
-
-    .link.new {
-      position: relative;
-    }
-    .link.new::after {
-      content: "NEW";
-      position: absolute;
-      justify-content: center;
-      align-items: center;
-      top: -6px;
-      right: -6px;
-      background: blue;
-      color: white;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-weight: bold;
-      box-shadow: 0 0 6px rgba(0,0,0,0.4);
-      animation: pulse 1.2s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0%   { transform: scale(1); opacity: 1; }
-      50%  { transform: scale(1.4); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .link.hot {
-      position: relative;
-    }
-    .link.hot::after {
-      content: "HOT🔥";
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: red;
-      color: white;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-weight: bold;
-      box-shadow: 0 0 6px rgba(0,0,0,0.4);
-      animation: pulse-hot 1.2s infinite ease-in-out;
-    }
-    @keyframes pulse-hot {
-      0%   { transform: scale(1); opacity: 1; }
-      50%  { transform: scale(1.4); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .description {
-      text-align: center;
-      color: gray;
-      font-size: 0.9rem;
-    }
-
-    /* ── Quick links row ──────────────────────────────────────────────────── */
-    .quick-links {
-      display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-      gap: 8px 12px; margin: 6px 0 14px; font-size: 1.2rem;
-    }
-    .quick-links a { color: lightblue; text-decoration: underline; }
-    .quick-links a.aria { color: violet; }
-    .quick-links .dot { opacity: .6; }
-
-    /* ── OFFGRID launch button ─────────────────────────────────────────────── */
-    :root {
-      --offgrid-lime: #c8f36b;
-      --offgrid-lime-hover: #d6ff83;
-      --offgrid-ink: #11150e;
-    }
-    .offgrid-launch-wrap {
-      max-width: 620px;
-      margin: 18px auto 22px;
-      padding: 0 4px;
-    }
-    .offgrid-launch-btn {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      width: 100%;
-      min-height: 76px;
-      padding: 13px 16px;
-      overflow: visible;
-      text-align: left;
-      text-decoration: none;
-      color: var(--offgrid-ink);
-      background: linear-gradient(115deg, #d5ff83 0%, var(--offgrid-lime) 55%, #b4e653 100%);
-      border: 1px solid rgba(226,255,176,.65);
-      border-radius: 18px;
-      box-shadow: 0 8px 26px rgba(145,205,69,.14), inset 0 1px 0 rgba(255,255,255,.45);
-      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .offgrid-launch-btn:hover {
-      transform: translateY(-2px);
-      filter: saturate(1.06);
-      box-shadow: 0 12px 32px rgba(145,205,69,.23), inset 0 1px 0 rgba(255,255,255,.55);
-    }
-    .offgrid-launch-btn:active { transform: translateY(0) scale(.99); }
-    .offgrid-launch-btn:focus-visible {
-      outline: 3px solid #f8fafc;
-      outline-offset: 4px;
-    }
-    .offgrid-launch-icon {
-      display: grid;
-      place-items: center;
-      flex: 0 0 46px;
-      width: 46px;
-      height: 46px;
-      padding: 0;
-      border-radius: 13px;
-      overflow: hidden;
-      background: var(--offgrid-ink);
-    }
-    .offgrid-launch-icon img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .offgrid-launch-copy {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      min-width: 0;
-    }
-    .offgrid-launch-copy strong {
-      font-size: 1.08rem;
-      font-weight: 850;
-      letter-spacing: .11em;
-      line-height: 1.1;
-    }
-    .offgrid-launch-copy small {
-      color: rgba(17,21,14,.76);
-      font-size: .88rem;
-      line-height: 1.25;
-    }
-    .offgrid-launch-spacer { flex: 1; }
-    .offgrid-launch-cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      flex: none;
-      padding: 11px 14px;
-      border-radius: 11px;
-      color: var(--offgrid-lime);
-      background: var(--offgrid-ink);
-      font-size: .78rem;
-      font-weight: 800;
-      letter-spacing: .07em;
-      white-space: nowrap;
-      transition: background .16s ease;
-    }
-    .offgrid-launch-btn:hover .offgrid-launch-cta { background: #20291a; }
-    .offgrid-launch-btn::after {
-      content: "NEW";
-      position: absolute;
-      top: -8px;
-      right: 12px;
-      padding: 3px 7px;
-      border: 1px solid rgba(200,243,107,.65);
-      border-radius: 7px;
-      color: var(--offgrid-lime);
-      background: #172014;
-      font-size: 9px;
-      font-weight: 850;
-      letter-spacing: .09em;
-      box-shadow: 0 3px 10px rgba(0,0,0,.25);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .offgrid-launch-btn, .offgrid-launch-cta { transition: none; }
-      .offgrid-launch-btn:hover { transform: none; }
-    }
-
-    #search-input { -webkit-appearance: none; appearance: none; outline: none; }
-    #search-input::-webkit-search-cancel-button { filter: invert(1); }
-
-    /* ── Loading skeletons (so the grid never looks empty/broken) ─────────── */
-    .skeleton {
-      height: 46px; border-radius: 14px; border: 1px solid #334155;
-      background: linear-gradient(90deg, #1f2937 25%, #273449 50%, #1f2937 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.2s infinite linear;
-    }
-    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-    .grid-error { grid-column: 1 / -1; text-align: center; color: #fca5a5; }
-    .grid-error button {
-      margin-top: 8px; padding: 10px 18px; border-radius: 12px; border: 1px solid #475569;
-      background: #1f2937; color: #f8fafc; font-size: 1rem;
-    }
-    .no-results { grid-column: 1 / -1; text-align: center; color: #94a3b8; display: none; }
-
-    /* ── "Open in browser" tip, shown only inside TikTok's in-app browser ─── */
-    #inapp-tip {
-      display: none; position: fixed; left: 12px; right: 12px;
-      bottom: calc(12px + env(safe-area-inset-bottom));
-      z-index: 20; padding: 12px 14px; border-radius: 14px;
-      background: rgba(30,41,59,.96); border: 1px solid #475569; color: #e2e8f0;
-      font-size: .9rem; line-height: 1.35; align-items: center; gap: 10px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.5);
-      opacity: 0; animation: tipIn .4s ease 4s forwards;
-    }
-    html.in-app #inapp-tip { display: flex; }
-    #inapp-tip button {
-      flex: none; background: transparent; border: 0; color: #94a3b8;
-      font-size: 1.4rem; line-height: 1; padding: 4px 8px;
-    }
-    @keyframes tipIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-
-    /* ── Touch devices ────────────────────────────────────────────────────── */
-    @media (hover: none) {
-      a.link:hover { background: #1f2937; border-color: #334155; }
-    }
-    a, button, input { -webkit-tap-highlight-color: transparent; }
-    a.link, .quick-links a { touch-action: manipulation; }
-
-    /* ── Phones ───────────────────────────────────────────────────────────── */
-    @media (max-width: 640px) {
-      body {
-        padding: 16px 14px calc(28px + env(safe-area-inset-bottom));
-        padding-left: max(14px, env(safe-area-inset-left));
-        padding-right: max(14px, env(safe-area-inset-right));
-      }
-      h1 { font-size: clamp(1.6rem, 8vw, 3rem); margin-bottom: 6px; }
-      .description { font-size: .95rem; line-height: 1.4; display: inline-block; padding: 0 4px; }
-
-      .quick-links { font-size: 1rem; gap: 8px; margin: 10px 0 14px; }
-      .quick-links .dot { display: none; }
-      .quick-links a {
-        text-decoration: none; padding: 9px 14px; border-radius: 999px;
-        background: #1f2937; border: 1px solid #334155;
-      }
-
-      #search-input { padding: 14px 16px !important; font-size: 16px !important; border-radius: 16px !important; } /* 16px stops iOS zoom */
-
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-      a.link {
-        display: flex; align-items: center; justify-content: center;
-        min-height: 54px; padding: 12px 10px; font-size: .95rem; line-height: 1.2;
-        border-radius: 16px; overflow-wrap: anywhere;
-      }
-      a.link:active { transform: scale(.97); background: #111827; }
-      .link.new::after, .link.hot::after { top: -7px; right: -2px; }
-
-      footer { margin-top: 28px !important; padding-bottom: 60px; }
-      footer p { margin: 8px 0; }
-    }
-    @media (max-width: 340px) {
-      .grid { grid-template-columns: 1fr; }
-    }
-  </style>
+header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:18px clamp(16px,4vw,32px)}
+.logo{font-size:18px;font-weight:700;color:var(--text);letter-spacing:.3px}.logo b{color:var(--accent);font-weight:700}
+nav{display:flex;gap:22px;flex-wrap:wrap;font-size:14px}
+.wrap{max-width:1216px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+.hero{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:space-between;padding-top:40px;padding-bottom:20px}
+.hero>div{flex:1;min-width:260px}
+h1.title{margin:0 0 8px;font-size:clamp(34px,6vw,60px);font-weight:700;letter-spacing:-.02em;line-height:1.05}
+.hero p{margin:0;color:var(--muted);font-size:16px;max-width:46ch;line-height:1.5}
+.promo{position:relative;display:flex;flex-direction:column;gap:3px;border-radius:14px;padding:14px 20px 14px 48px;width:320px;max-width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);color:#03200d;box-shadow:0 0 0 1px rgba(134,239,172,.5),0 8px 30px rgba(34,197,94,.35);transition:transform .2s,box-shadow .2s}
+.promo::before{content:"";position:absolute;left:20px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#03200d;box-shadow:0 0 0 0 rgba(3,32,13,.5);animation:ping 2s ease-out infinite}
+.promo:hover,.promo:focus-visible{transform:translateY(-3px);color:#03200d;box-shadow:0 0 0 1px #86efac,0 12px 40px rgba(34,197,94,.55)}
+.promo:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.promo b{font-size:17px;font-weight:800;color:#03200d;letter-spacing:.3px}.promo span{font-size:13px;font-weight:600;color:#06380f}
+@keyframes ping{to{box-shadow:0 0 0 10px rgba(3,32,13,0)}}
+@media(prefers-reduced-motion:reduce){.promo::before{animation:none}}
+.cols{display:flex;gap:28px;align-items:flex-start;margin-top:8px}
+main{flex:1;min-width:0}
+.bar{position:sticky;top:0;z-index:5;background:rgba(5,7,13,.82);backdrop-filter:blur(10px);padding:12px 0 10px;margin-bottom:8px}
+.bar input{margin-bottom:10px}
+input{width:100%;max-width:360px;height:42px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);padding:0 18px;font-size:16px}
+input::placeholder{color:var(--muted)}
+input:focus-visible{outline:2px solid var(--accent);border-color:transparent}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.chip{flex:none;height:32px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:500 13px Inter,system-ui,sans-serif;cursor:pointer;transition:color .15s,border-color .15s}
+.chip:hover{color:var(--text);border-color:rgba(255,255,255,.3)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip[aria-pressed="true"]{background:var(--text);border-color:var(--text);color:var(--bg)}
+.cat{margin:32px 0 12px;font-size:15px;font-weight:600;color:var(--muted)}
+.cat:first-child{margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));grid-auto-rows:112px;grid-auto-flow:dense;gap:12px}
+.tile{position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;border-radius:14px;overflow:hidden;background:var(--card);border:1px solid var(--line);color:var(--text);font-weight:500;font-size:13px;transition:transform .2s,border-color .2s,background .2s}
+.tile:hover,.tile:focus-visible{transform:translateY(-3px);border-color:rgba(157,184,255,.6);background:rgba(157,184,255,.07);color:var(--text)}
+.tile:focus-visible{outline:2px solid var(--accent)}
+.tile .ico{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+.tile .ico img{width:26px;height:26px;object-fit:contain;border-radius:6px}
+.tile span{line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.badge{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 6px;border-radius:999px;background:var(--accent);color:var(--bg)}
+.badge.hot{background:#ffb48a}
+.empty{color:var(--muted);padding:24px 0}
+.totop{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:6;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(5,7,13,.8);color:var(--text);font-size:18px;cursor:pointer}
+.totop:hover{border-color:var(--accent)}
+.side{width:300px;flex:none;position:sticky;top:12px;align-self:flex-start}
+.ad{position:relative;display:flex;justify-content:center;align-items:center;max-width:100%;overflow:hidden}
+.ad small{position:absolute;top:2px;left:6px;font-size:10px;color:var(--muted);letter-spacing:.5px}
+.ad.feed{grid-column:span 2;width:auto;height:112px;border-radius:14px;background:var(--card);border:1px solid var(--line);padding-top:10px}
+.ad.feed small{top:6px;left:12px}
+.ad.half{width:300px;height:600px}
+.ad ins{width:100%;height:100%}
+footer{margin-top:56px;padding-top:24px;padding-bottom:32px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);line-height:1.7}
+@media(max-width:900px){.side{display:none}}
+@media(max-width:700px){.bar{position:static}.hero{padding-top:24px}}
+@media(prefers-reduced-motion:reduce){.tile,.chip,.promo{transition:none}.promo:hover{transform:none}.tile:hover{transform:none}}
+.consent{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:50;width:min(560px,calc(100% - 24px));display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:14px;background:#0c1222;border:1px solid var(--line);box-shadow:0 12px 40px rgba(0,0,0,.6);font-size:13px;line-height:1.5;color:var(--muted)}
+.consent p{margin:0;flex:1;min-width:220px}.consent a{color:var(--accent);text-decoration:underline}
+.consent div{display:flex;gap:8px}
+.consent button{height:36px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--text);font:600 13px Inter,system-ui,sans-serif;cursor:pointer}
+.consent button.yes{background:var(--text);color:var(--bg);border-color:var(--text)}
+.consent button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--muted);cursor:pointer;text-decoration:none}.linkbtn:hover,.linkbtn:focus-visible{color:var(--text)}
+</style>
 </head>
-
 <body>
+<canvas id="stars" aria-hidden="true"></canvas>
+<div id="intro" aria-hidden="true">
+  <div id="introTitle" class="introTitle"></div>
+  <div class="loader"><i></i></div>
+</div>
 
-  <div id="logo-aura"></div>
+<header>
+  <a class="logo" href="/">WTFQ<b>.online</b></a>
+  <nav>
+    <a href="https://forms.gle/sD4guvjkvL8nnBcR6">Suggestions</a>
+    <a href="/Aria/">Aria</a>
+    <a href="/Autofill">Autofill</a>
+    <a href="https://github.com/Pinnedyr/What-The-Facqkuit/">Source Code</a>
+    <a href="/youtubeunblocker/">Youtube Videoplayer</a>
+  </nav>
+</header>
 
-  <div id="inapp-tip" role="status">
-    <span>Tip: tap <b>•••</b> and choose <b>“Open in browser”</b> for the smoothest experience.</span>
-    <button type="button" aria-label="Dismiss" onclick="this.parentNode.remove()">×</button>
+<section class="wrap hero">
+  <div>
+    <h1 class="title">What The Facqkuit</h1>
+    <p>Browser games, school tools and more. Pick something and play.</p>
   </div>
+  <a class="promo" href="https://offgrid.wtfq.online/"><b>OFFGRID ↗</b><span>More games and websites, all in one place.</span></a>
+</section>
 
-  <div id="main-content">
-    <div class="container">
-      <div style="text-align: center;">  
-        <!-- The three big letters W, T, F stay put; the rest of each word lives in a ".grow" wrapper
-             that the intro script slides out from behind them. "Q.online" is added by the script. -->
-        <h1 id="logo" aria-label="What The Facqkuit">
-          <span class="ch">W</span><span class="grow"><span>hat</span></span><span class="grow"><span>&nbsp;</span></span><span class="ch">T</span><span class="grow"><span>he</span></span><span class="grow"><span>&nbsp;</span></span><span class="ch">F</span><span class="grow"><span>acqkuit</span></span>
-        </h1>
-      </div>
-
-      <div class="reveal">
-        <div style="text-align:center;">
-          <a class="description">Discover and play top online games, explore school tools, and have fun safely at WTFQ.online!</a>
-        </div>
-
-        <div class="offgrid-launch-wrap">
-          <a
-            class="offgrid-launch-btn"
-            href="https://offgrid.wtfq.online/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Try OFFGRID — Every website unblocked even in exam mode"
-          >
-            <span class="offgrid-launch-icon" aria-hidden="true">
-              <img src="https://offgrid.wtfq.online/logo.svg" alt="" />
-            </span>
-            <span class="offgrid-launch-copy">
-              <strong>OFFGRID</strong>
-              <small>Every website unblocked even in exam mode.</small>
-            </span>
-            <span class="offgrid-launch-spacer" aria-hidden="true"></span>
-            <span class="offgrid-launch-cta">TRY IT <span aria-hidden="true">↗</span></span>
-          </a>
-        </div>
-
-        <nav class="quick-links" aria-label="Quick links">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSckiALFsZhY7CymY6bAQRYuAGhrNWw_8QfA0eliQnA7PxNRdg/viewform?usp=header" target="_blank" rel="noopener noreferrer">Suggestions</a>
-          <span class="dot">•</span>
-          <a href="https://wtfq.online/Aria/" target="_blank" rel="noopener noreferrer">Aria</a>
-          <span class="dot">•</span>
-          <a href="https://wtfq.online/Autofill" target="_blank" rel="noopener noreferrer">Autofill</a>
-          <span class="dot">•</span>
-          <a href="https://github.com/Pinnedyr/What-The-Facqkuit/" target="_blank" rel="noopener noreferrer">Source Code</a>
-          <span class="dot">•</span>
-          <a href="https://www.wtfq.online/youtubeunblocker/" target="_blank" rel="noopener noreferrer">Youtube Videoplayer</a>
-        </nav>
-
-        <input
-          type="search"
-          id="search-input"
-          autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"
-          aria-label="Search games"
-          placeholder="Search..."
-          style="
-            width: 100%; padding: 12px 14px; border-radius: 14px;
-            border: 1px solid #334155; background: #1f2937; color: #f8fafc;
-            font-size: 1rem; margin-bottom: 12px;
-            transition: background .15s ease, border-color .15s ease;
-          "
-          onfocus="this.style.background='#111827'; this.style.borderColor='#475569';"
-          onblur="this.style.background='#1f2937'; this.style.borderColor='#334155';"
-        />
-
-        <div class="grid" id="links-grid" aria-busy="true"></div>
-        <p class="no-results" id="no-results">No results. Try another word, or send us a suggestion!</p>
-      </div>
+<div class="wrap cols">
+  <main>
+    <div class="bar">
+      <label class="sr" for="q">Search games</label>
+      <input id="q" type="search" placeholder="Search games…" autocomplete="off">
+      <div class="chips" id="cats" role="group" aria-label="Categories"></div>
     </div>
-  </div>
+    <div id="games"></div>
+    <p class="empty" id="empty" hidden>No results. Try another word, or send us a suggestion!</p>
+    <noscript><p class="empty">Please enable JavaScript to see the games.</p></noscript>
+  </main>
+  <aside class="side" id="sideWrap" hidden><div class="ad half" id="adSide"></div></aside>
+</div>
 
-  <footer class="reveal" style="text-align:center; margin-top: 36px; color: #94a3b8; font-size:0.85rem; line-height:1.4;">
-    <p>
-      © 2026 WTFQ.online • 
-      <a href="/about" style="color: #60a5fa;">About</a> • 
-      <a href="/privacy" style="color: #60a5fa;">Privacy</a> • 
-      Contact: 
-      <a href="mailto:contact@wtfq.online" style="color: #60a5fa;">contact@wtfq.online</a> 
-      or TikTok: 
-      <a href="https://www.tiktok.com/@www.wtfq.online" target="_blank" rel="noopener noreferrer" style="color: #60a5fa;">@www.wtfq.online</a>
-    </p>
-    <p style="color: #94a3b8; font-size: 0.8rem;">
-      All links and content are safe and verified for students.
-    </p>
-  </footer>
+<footer class="wrap">
+  © 2026 WTFQ.online • <a href="https://wtfq.online/about">About</a> • <a href="https://wtfq.online/privacy">Privacy</a> • Contact: <a href="https://forms.gle/sD4guvjkvL8nnBcR6" target="_blank" rel="noopener">contact form</a> or TikTok: <a href="https://www.tiktok.com/@www.wtfq.online" target="_blank" rel="noopener">@www.wtfq.online</a><br>
+  Games and tools are third-party sites we don’t control, so use your own judgment. <button type="button" id="cookieLink" class="linkbtn">Ad settings</button>
+</footer>
+<div class="consent" id="consent" role="dialog" aria-label="Ad choices" hidden>
+  <p>Ads keep this site free. Choose personalized ads, or non-personalized ads that use less tracking. See our <a href="https://wtfq.online/privacy" target="_blank" rel="noopener">privacy policy</a>.</p>
+  <div><button type="button" id="noAds">Non-personalized</button><button type="button" class="yes" id="yesAds">Personalized</button></div>
+</div>
+<button class="totop" id="totop" type="button" aria-label="Back to top" hidden>↑</button>
 
-  <script>
-    // ── Load games from games.json and render the grid ──────────────────────
-    async function loadGames() {
-      const grid = document.getElementById('links-grid');
-      const sameTab = document.documentElement.classList.contains('in-app'); // in-app browsers handle new tabs poorly
+<script>
+/* ---------- 1. GAMES: loaded from /games.json ----------
+  JSON array, one object per game: key, label, url, category, badge (optional "hot" or "new").
+  The tile icon is the favicon of the url's domain. */
+const CATEGORY_ORDER = ["Multiplayer & .io","Action & Arcade","Puzzle & Word","Idle & Adventure","Sandbox & Creative","Music & Media","Game portals","Tools & School"];
+let GAMES = [], CATS = [];
 
-      // Skeleton cards while loading, so the page never looks empty
-      grid.setAttribute('aria-busy', 'true');
-      grid.innerHTML = Array(8).fill('<div class="skeleton"></div>').join('');
+function normalize(j){
+  const arr = Array.isArray(j) ? j : ((j && (j.games || j.items)) || []);
+  return arr.filter(function(x){ return x && typeof x.url === "string" && x.url.trim(); }).map(function(x){
+    let u = x.url.trim();
+    if(!/^https?:\/\//i.test(u)) u = "https://" + u;
+    return {name: String(x.label || x.name || x.title || x.key || u), url: u, badge: x.badge, category: String(x.category || "More")};
+  });
+}
 
-      let games;
-      try {
-        const res = await fetch('games.json');
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        games = await res.json();
-      } catch (e) {
-        grid.removeAttribute('aria-busy');
-        grid.innerHTML = '<div class="grid-error">Couldn\'t load the games right now.<br><button type="button" id="retry-btn">Try again</button></div>';
-        document.getElementById('retry-btn').addEventListener('click', loadGames);
-        return;
-      }
-      grid.removeAttribute('aria-busy');
+/* ---------- 2. ADSENSE ----------
+   A slot with an empty ID is simply not shown. */
+const ADS = {
+  client: "ca-pub-3050155883792612",
+  feed: "7376688793",        // Display ad, fixed size 234x60 (half banner), fits two tiles wide
+  side: "9048416000"             // 300x600 unit slot ID
+};
+const FEED_EVERY = 6; // an ad tile after this many games
 
-      // Sort: hot first, then new, then the rest
-      const hot  = games.filter(g => g.badge === 'hot');
-      const newG = games.filter(g => g.badge === 'new');
-      const rest = games.filter(g => !g.badge);
-      const sorted = [...hot, ...newG, ...rest];
+let adsAllowed = true;
+function slotOn(id){ return adsAllowed && !!ADS.client && !!ADS[id]; }
+function fillAd(el, id, extra){
+  if(!slotOn(id)) return false;
+  el.innerHTML = '<small>Advertisement</small><ins class="adsbygoogle" style="'+extra.style+'" data-ad-client="'+ADS.client+'" data-ad-slot="'+ADS[id]+'"'+(extra.attrs||'')+'></ins>';
+  return true;
+}
+/* ad units must be in the visible page (non-zero width) before AdSense is asked to fill them */
+function pushAds(){
+  document.querySelectorAll("ins.adsbygoogle:not([data-adsbygoogle-status])").forEach(function(ins){
+    if(!ins.offsetWidth || (ins.getAttribute("data-ad-format") === "fluid" && ins.offsetWidth < 250)){ if(ins.parentNode) ins.parentNode.style.display = "none"; return; }
+    try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch(e){}
+  });
+}
 
-      grid.innerHTML = '';
-      for (const game of sorted) {
-        const a = document.createElement('a');
-        a.className = 'link';
-        a.dataset.key = game.key;
-        a.textContent = game.label;
-
-        if (game.url && game.url.trim()) {
-          a.href = game.url;
-          if (!sameTab) a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-        } else {
-          a.href = 'javascript:void(0)';
-          a.setAttribute('aria-disabled', 'true');
-        }
-
-        if (game.badge === 'new') a.classList.add('new');
-        if (game.badge === 'hot') a.classList.add('hot');
-
-        grid.appendChild(a);
-      }
-    }
-
-    loadGames();
-
-    // ── Search ───────────────────────────────────────────────────────────────
-    document.getElementById('search-input').addEventListener('input', function () {
-      const query = this.value.trim().toLowerCase();
-      let shown = 0;
-      document.querySelectorAll('#links-grid a.link').forEach(link => {
-        const text = (link.textContent + ' ' + link.dataset.key).toLowerCase();
-        const match = text.includes(query);
-        link.style.display = match ? '' : 'none';   // '' keeps the CSS display (flex on phones)
-        if (match) shown++;
-      });
-      document.getElementById('no-results').style.display = (query && !shown) ? 'block' : 'none';
+/* ---------- intro animation ---------- */
+(function(){
+  const intro = document.getElementById("intro");
+  let seen = false;
+  try{ seen = sessionStorage.getItem("wtfqIntro") === "1"; }catch(e){}
+  if(seen){ intro.remove(); return; }
+  const h = document.getElementById("introTitle");
+  "What The Facqkuit".split(" ").forEach(function(word, w){
+    const g = document.createElement("div");
+    g.style.cssText = "display:flex;margin:0 .15em";
+    word.split("").forEach(function(c, i){
+      const s = document.createElement("span");
+      s.textContent = c;
+      s.style.animationDelay = (w*0.25 + i*0.05) + "s";
+      g.appendChild(s);
     });
+    h.appendChild(g);
+  });
+  setTimeout(function(){ intro.classList.add("done"); }, 1700);
+  setTimeout(function(){ intro.remove(); }, 2300);
+  try{ sessionStorage.setItem("wtfqIntro","1"); }catch(e){}
+})();
 
-    // In-app browsers (TikTok): open the quick links in the same tab too
-    if (document.documentElement.classList.contains('in-app')) {
-      document.querySelectorAll('.quick-links a, .offgrid-launch-btn').forEach(a => a.removeAttribute('target'));
+/* ---------- categories, game grid and in-feed ads ---------- */
+const box = document.getElementById("games"), empty = document.getElementById("empty"), chips = document.getElementById("cats");
+const ALL = "All";
+let activeCat = ALL, query = "", tileCount = 0, adIdx = 0;
+
+function realUrl(u){
+  try{
+    const x = new URL(u);
+    if(/(^|\.)google\.com$/.test(x.hostname) && x.pathname === "/url" && x.searchParams.get("q")) return x.searchParams.get("q");
+  }catch(e){}
+  return u;
+}
+function favicon(u){
+  try{ return "https://www.google.com/s2/favicons?sz=128&domain=" + encodeURIComponent(new URL(realUrl(u)).hostname); }
+  catch(e){ return ""; }
+}
+const feedAds = [];
+function feedAd(k){
+  if(!slotOn("feed")) return null;
+  if(!feedAds[k]){
+    const d = document.createElement("div"); d.className = "ad feed";
+    fillAd(d, "feed", {style:"display:inline-block;width:234px;height:60px"});
+    feedAds[k] = d;
+  }
+  return feedAds[k];
+}
+function tile(g, i){
+  const a = document.createElement("a");
+  a.className = "tile"; a.href = realUrl(g.url); a.target = "_blank"; a.rel = "noopener";
+  const ico = document.createElement("div"); ico.className = "ico";
+  const im = document.createElement("img"); im.alt = ""; im.loading = "lazy"; im.src = favicon(g.url);
+  im.onerror = function(){ im.remove(); ico.textContent = g.name.charAt(0).toUpperCase(); };
+  ico.appendChild(im); a.appendChild(ico);
+  if(g.badge){ const b = document.createElement("div"); b.className = "badge " + g.badge; b.textContent = g.badge; a.appendChild(b); }
+  const s = document.createElement("span"); s.textContent = g.name; a.appendChild(s);
+  return a;
+}
+function makeGrid(items, withAds){
+  const gr = document.createElement("div"); gr.className = "grid";
+  items.forEach(function(g, i){
+    gr.appendChild(tile(g, i));
+    tileCount++;
+    // first ad after FEED_EVERY tiles, then one every 18 tiles; none while searching
+    if(withAds && (tileCount === FEED_EVERY || (tileCount > FEED_EVERY && (tileCount - FEED_EVERY) % 18 === 0))){
+      const ad = feedAd(adIdx++); if(ad) gr.appendChild(ad);
     }
-  </script>
+  });
+  return gr;
+}
+function render(){
+  box.innerHTML = ""; tileCount = 0; adIdx = 0;
+  const q = query.trim().toLowerCase();
+  const list = GAMES.filter(function(g){
+    return (activeCat === ALL || g.category === activeCat) && (!q || g.name.toLowerCase().includes(q));
+  });
+  empty.textContent = "No results. Try another word, or send us a suggestion!";
+  empty.hidden = list.length > 0;
+  if(activeCat === ALL && !q){
+    CATS.forEach(function(c){
+      const items = list.filter(function(g){ return g.category === c; });
+      if(!items.length) return;
+      const h = document.createElement("h2"); h.className = "cat"; h.textContent = c;
+      box.appendChild(h); box.appendChild(makeGrid(items, true));
+    });
+  } else {
+    box.appendChild(makeGrid(list, !q));
+  }
+  pushAds();
+}
+function buildChips(){
+  chips.innerHTML = "";
+  [ALL].concat(CATS).forEach(function(c){
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = c;
+    b.setAttribute("aria-pressed", c === activeCat ? "true" : "false");
+    b.addEventListener("click", function(){
+      activeCat = c;
+      chips.querySelectorAll(".chip").forEach(function(x){ x.setAttribute("aria-pressed", x.textContent === c ? "true" : "false"); });
+      render();
+    });
+    chips.appendChild(b);
+  });
+}
+async function loadGames(){
+  try{
+    const r = await fetch("games.json", {cache:"no-cache"});
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    GAMES = normalize(await r.json());
+  }catch(e){ GAMES = []; }
+  if(!GAMES.length){
+    empty.textContent = "Games couldn’t load. Please refresh the page or try again in a moment.";
+    empty.hidden = false;
+    return;
+  }
+  const seen = {}; GAMES.forEach(function(g){ seen[g.category] = true; });
+  CATS = CATEGORY_ORDER.filter(function(c){ return seen[c]; })
+    .concat(Object.keys(seen).filter(function(c){ return CATEGORY_ORDER.indexOf(c) < 0; }).sort());
+  buildChips();
+  render();
+}
+loadGames();
+(function(){
+  const t = document.getElementById("totop");
+  window.addEventListener("scroll", function(){ t.hidden = window.scrollY < 600; }, {passive:true});
+  t.addEventListener("click", function(){
+    const calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({top:0, behavior: calm ? "auto" : "smooth"});
+  });
+})();
+document.getElementById("q").addEventListener("input", function(e){ query = e.target.value; render(); });
 
-  <script>
-    // ── Intro animation (~2s) ────────────────────────────────────────────────
-    //  1. "WTFQ.online" is shown, centered on screen, with a soft glow
-    //  2. "Q.online" slides into the F (blur + fade)
-    //  3. The letters of each word slide out from W / T / F, de-blurring as they go.
-    //     The initials flash a glow underneath, but the sliding letters always stay on top.
-    //  4. The title glides up to its real spot, sparkles burst, the page fades in
-    // Click, key press or scroll skips it.
-    (function () {
-      var root = document.documentElement;
-      if (!root.classList.contains('intro')) return;
 
-      var h1 = document.getElementById('logo');
-      var aura = document.getElementById('logo-aura');
-      var initials = Array.prototype.slice.call(h1.querySelectorAll('.ch'));
-      var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
-      var grows = Array.prototype.slice.call(h1.querySelectorAll('.grow'));
-      var tail = null;
-      var anims = [];
-      var sparks = [];
-      var ended = false;
 
-      function done() {
-        if (ended) return;
-        ended = true;
-        anims.forEach(function (a) { a.cancel(); });
-        sparks.forEach(function (s) { s.remove(); });
-        if (tail) tail.remove();
-        if (aura) aura.remove();
-        root.classList.remove('intro');
-        h1.style.visibility = '';
-      }
+/* ---------- starfield ---------- */
+(function(){
+  const c = document.getElementById("stars"), x = c.getContext("2d");
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let w, h, dpr, S = [], mx = 0, my = 0;
+  function size(){
+    dpr = Math.min(devicePixelRatio || 1, 2); w = innerWidth; h = innerHeight;
+    c.width = w * dpr; c.height = h * dpr; x.setTransform(dpr,0,0,dpr,0,0);
+    const n = Math.round(w * h / 5500); S = [];
+    for(let i = 0; i < n; i++){ const z = Math.random(); S.push({x:Math.random()*w, y:Math.random()*h, z:z, r:.4+z*1.1, p:Math.random()*6.28}); }
+  }
+  function draw(t){
+    x.clearRect(0,0,w,h);
+    for(const s of S){
+      if(!calm){ s.y -= .03 + s.z*.12; if(s.y < -2) s.y = h + 2; }
+      const a = calm ? .6 : .35 + .35*Math.sin(t/1400 + s.p) + s.z*.3;
+      x.globalAlpha = Math.max(.1, Math.min(1, a));
+      x.fillStyle = s.z > .85 ? "#bcd0ff" : "#fff";
+      x.beginPath(); x.arc(s.x + mx*s.z*14, s.y + my*s.z*14, s.r, 0, 6.283); x.fill();
+    }
+    if(!calm) requestAnimationFrame(draw);
+  }
+  addEventListener("resize", function(){ size(); if(calm) draw(0); });
+  addEventListener("pointermove", function(e){ mx = e.clientX/w - .5; my = e.clientY/h - .5; }, {passive:true});
+  size(); requestAnimationFrame(draw);
+})();
 
-      try {
-        window.scrollTo(0, 0);
-
-        // Add "Q.online" after the F.
-        // The text is drawn by CSS (::before + data-t), so it is never real page text,
-        // and it is hidden from screen readers and search engines.
-        tail = document.createElement('span');
-        tail.className = 'grow tail';
-        tail.innerHTML = '<span data-t="Q.online"></span>';
-        tail.setAttribute('aria-hidden', 'true');
-        h1.appendChild(tail);
-
-        // Measure everything BEFORE any animation touches the layout
-        var inner = function (el) { return el.firstElementChild; };
-        var widthOf = function (el) { return inner(el).getBoundingClientRect().width; };
-        var tailW = widthOf(tail);
-        var growW = grows.map(widthOf);
-        var box = h1.getBoundingClientRect();
-        var dy = window.innerHeight / 2 - (box.top + box.height / 2);   // distance from final spot to screen center
-
-        // Timing (ms)
-        // Phones get a snappier intro (first impression = no waiting) and lighter effects
-        var mobile = root.classList.contains('mobile') || root.classList.contains('in-app');
-        var HOLD = mobile ? 250 : 450, SLIDE_IN = mobile ? 300 : 380, EXPAND = mobile ? 450 : 560,
-            MOVE = mobile ? 420 : 520, STAGGER = mobile ? 50 : 70;
-        var SPARKS = mobile ? 6 : 14;
-        var EASE_OUT = 'cubic-bezier(.22,1,.36,1)';
-        var EASE_IO  = 'cubic-bezier(.65,0,.35,1)';
-        var GLOW = '0 0 18px rgba(96,165,250,.9), 0 0 42px rgba(139,92,246,.55)';
-        var NOGLOW = '0 0 0 rgba(96,165,250,0)';
-
-        var play = function (el, keyframes, opts) {
-          var a = el.animate(keyframes, Object.assign({ fill: 'both' }, opts));
-          anims.push(a);
-          return a;
-        };
-
-        // 0: ambient aura fades in behind the logo, then out
-        play(aura, { opacity: [0, 1, 1, 0], transform: ['translate(-50%,-50%) scale(.6)', 'translate(-50%,-50%) scale(1)', 'translate(-50%,-50%) scale(1.05)', 'translate(-50%,-50%) scale(1.15)'] },
-          { delay: 0, duration: HOLD + SLIDE_IN + EXPAND + MOVE + 300, easing: 'ease-out' });
-
-        // initial glow-in while "WTFQ.online" sits in the middle
-        initials.forEach(function (c) {
-          play(c, { textShadow: [NOGLOW, GLOW] }, { delay: 0, duration: HOLD, easing: 'ease-out' });
-        });
-
-        // 1 → 2: "Q.online" slides left into the F (wrapper shrinks, text slides in sync, fading + blurring away)
-        var s1 = { delay: HOLD, duration: SLIDE_IN, easing: EASE_IO };
-        play(tail, { width: [tailW + 'px', '0px'] }, s1);
-        play(inner(tail), {
-          transform: ['translateX(0)', 'translateX(-100%)'],
-          filter: ['blur(0px)', 'blur(6px)'],
-          opacity: [1, 0.2]
-        }, s1);
-
-        // 3: letters slide out from behind W, T and F (staggered word by word), de-blurring + fading in
-        var t2 = HOLD + SLIDE_IN - 80;
-        grows.forEach(function (g, i) {
-          var word = Math.floor(i / 2);
-          var o = { delay: t2 + word * STAGGER, duration: EXPAND, easing: EASE_OUT };
-          play(g, { width: ['0px', growW[i] + 'px'] }, o);
-          play(inner(g), {
-            transform: ['translateX(-100%) scale(.9)', 'translateX(0) scale(1)'],
-            filter: ['blur(8px)', 'blur(0px)'],
-            opacity: [0, 1]
-          }, o);
-        });
-
-        // the initials pulse as their word emerges (they sit UNDER the letters, so nothing is covered)
-        initials.forEach(function (c, i) {
-          play(c, {
-            textShadow: [GLOW, '0 0 30px rgba(96,165,250,1), 0 0 60px rgba(139,92,246,.7)', NOGLOW],
-            transform: ['scale(1)', 'scale(1.08)', 'scale(1)']
-          }, { delay: t2 + i * STAGGER, duration: EXPAND + 200, easing: 'ease-out' });
-        });
-
-        // 4: title glides from screen center to its real position, page fades in
-        var t3 = t2 + 2 * STAGGER + EXPAND - 120;
-        play(h1, {
-          transform: ['translateY(' + dy + 'px) scale(1.1)', 'translateY(0) scale(1)']
-        }, { delay: t3, duration: MOVE, easing: EASE_OUT });
-
-        // final shimmer: the whole title brightens briefly as it lands
-        play(h1, {
-          textShadow: [NOGLOW, '0 0 22px rgba(147,197,253,.85)', NOGLOW]
-        }, { delay: t3 + MOVE - 150, duration: 650, easing: 'ease-in-out' });
-
-        reveals.forEach(function (el) {
-          // No blur on big page sections for phones: it janks on mid-range devices
-          var kf = {
-            opacity: [0, 1],
-            transform: ['translateY(14px)', 'translateY(0)']
-          };
-          if (!mobile) kf.filter = ['blur(6px)', 'blur(0px)'];
-          play(el, kf, { delay: t3 + 150, duration: 500, easing: 'ease-out' });
-        });
-
-        // Sparkles burst from the title center as it settles
-        var cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-        for (var k = 0; k < SPARKS; k++) {
-          var s = document.createElement('span');
-          s.className = 'spark';
-          s.style.left = cx + 'px';
-          s.style.top = cy + 'px';
-          document.body.appendChild(s);
-          sparks.push(s);
-          var ang = (Math.PI * 2 * k) / SPARKS + Math.random() * 0.4;
-          var dist = 90 + Math.random() * 160;
-          play(s, {
-            transform: ['translate(-50%,-50%) scale(1)', 'translate(' + (Math.cos(ang) * dist - 3) + 'px,' + (Math.sin(ang) * dist - 3) + 'px) scale(0)'],
-            opacity: [0, 1, 0]
-          }, { delay: t2 + EXPAND - 200 + Math.random() * 120, duration: 700 + Math.random() * 300, easing: 'cubic-bezier(.16,1,.3,1)' });
-        }
-
-        h1.style.visibility = 'visible';
-
-        // Clean up when finished, on skip, or (failsafe) if something stalls
-        Promise.all(anims.map(function (a) { return a.finished; })).then(done, done);
-        setTimeout(done, t3 + 150 + 500 + 1800);
-        ['pointerdown', 'keydown', 'wheel'].forEach(function (ev) {
-          document.addEventListener(ev, done, { once: true, passive: true });
-        });
-      } catch (e) {
-        done();
-      }
-    })();
-  </script>
-
-  <script src="https://wtfq.online/bannerad.js"></script>
-  <script src="https://wtfq.online/Tokens/tokendisplay.js"></script>
-
+/* ---------- ads: shown to everyone; the banner only chooses personalized or not ---------- */
+const banner = document.getElementById("consent");
+function setupSide(){
+  const wrap = document.getElementById("sideWrap");
+  if(matchMedia("(min-width:901px)").matches && slotOn("side")){
+    wrap.hidden = false;
+    fillAd(document.getElementById("adSide"), "side", {style:"display:inline-block;width:300px;height:600px"});
+  } else wrap.hidden = true;
+}
+let saved = null; try{ saved = localStorage.getItem("wtfqAds"); }catch(e){}
+window.adsbygoogle = window.adsbygoogle || [];
+window.adsbygoogle.requestNonPersonalizedAds = saved === "yes" ? 0 : 1; // non-personalized unless the visitor opted in
+(function(){
+  const sc = document.createElement("script");
+  sc.async = true; sc.crossOrigin = "anonymous";
+  sc.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADS.client;
+  document.head.appendChild(sc);
+})();
+setupSide();
+if(!saved) banner.hidden = false;
+function choose(v){
+  try{ localStorage.setItem("wtfqAds", v); }catch(e){}
+  banner.hidden = true;
+  if((v === "yes") !== (saved === "yes")) location.reload(); else saved = v;
+}
+document.getElementById("yesAds").addEventListener("click", function(){ choose("yes"); });
+document.getElementById("noAds").addEventListener("click", function(){ choose("no"); });
+document.getElementById("cookieLink").addEventListener("click", function(){ banner.hidden = false; });
+</script>
 </body>
 </html>
