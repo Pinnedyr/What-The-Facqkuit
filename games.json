@@ -22,6 +22,7 @@
   {"key": "spelling-bee", "label": "Spelling Bee", "url": "https://www.nytimes.com/puzzles/spelling-bee", "category": "Puzzle & Word"},
   {"key": "mini-crossword", "label": "Mini Crossword", "url": "https://www.nytimes.com/crosswords/game/mini", "category": "Puzzle & Word"},
   {"key": "semantle", "label": "Semantle", "url": "https://semantle.com/", "category": "Puzzle & Word"},
+  {"key": "krillion", "label": "Krillion", "url": "https://krillion.io/", "category": "Puzzle & Word", "badge": "new"},
   {"key": "globle", "label": "Globle", "url": "https://globle-game.com/", "category": "Puzzle & Word"},
   {"key": "worldle", "label": "Worldle", "url": "https://worldle.teuteuf.fr/", "category": "Puzzle & Word"},
   {"key": "jigsaw-planet", "label": "Jigsaw Planet", "url": "https://www.jigsawplanet.com/", "category": "Puzzle & Word"},
