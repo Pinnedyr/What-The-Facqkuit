@@ -182,7 +182,7 @@ function fillAd(el, id, extra){
 /* ad units must be in the visible page (non-zero width) before AdSense is asked to fill them */
 function pushAds(){
   document.querySelectorAll("ins.adsbygoogle:not([data-adsbygoogle-status])").forEach(function(ins){
-    if(!ins.offsetWidth || (ins.getAttribute("data-ad-format") === "fluid" && ins.offsetWidth < 250)){ if(ins.parentNode) ins.parentNode.style.display = "none"; return; }
+    if(!ins.offsetWidth) return; // not visible yet; a later render will retry instead of hiding it permanently
     try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch(e){}
   });
 }
@@ -356,7 +356,7 @@ function setupSide(){
   const wrap = document.getElementById("sideWrap");
   if(matchMedia("(min-width:901px)").matches && slotOn("side")){
     wrap.hidden = false;
-    fillAd(document.getElementById("adSide"), "side", {style:"display:inline-block;width:300px;height:600px"});
+    if(fillAd(document.getElementById("adSide"), "side", {style:"display:inline-block;width:300px;height:600px"})) pushAds();
   } else wrap.hidden = true;
 }
 let saved = null; try{ saved = localStorage.getItem("wtfqAds"); }catch(e){}
@@ -364,7 +364,7 @@ window.adsbygoogle = window.adsbygoogle || [];
 window.adsbygoogle.requestNonPersonalizedAds = saved === "yes" ? 0 : 1; // non-personalized unless the visitor opted in
 (function(){
   const sc = document.createElement("script");
-  sc.async = true; sc.crossOrigin = "anonymous";
+  sc.async = true;
   sc.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADS.client;
   document.head.appendChild(sc);
 })();
